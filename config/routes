@@ -1,0 +1,7 @@
+/api/vote/info VoteInfoR GET
+/api/vote/vote VoteActR POST
+
+/api/access/in AccessInR POST
+/api/access/out AccessOutR POST
+
+/api/joke/random JokeR GET
