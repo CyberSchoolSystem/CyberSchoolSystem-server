@@ -1,0 +1,7 @@
+host: localhost
+connections: 10
+
+database:
+  host: "127.0.0.1"
+  database: "test"
+  connections: 10

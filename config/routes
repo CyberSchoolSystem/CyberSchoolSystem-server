@@ -5,3 +5,5 @@
 /api/access/out AccessOutR POST
 
 /api/joke/random JokeR GET
+
+/ RootR GET

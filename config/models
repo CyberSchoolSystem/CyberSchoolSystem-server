@@ -1,0 +1,11 @@
+-- TODO: Research MongoDB Document IDs. R they enough
+-- TODO: How should I save border actions?
+User
+    name Text
+    class Text
+    chipId ByteString
+    login Text Maybe
+    password Text Maybe
+Vote -- TODO: maybe add json (getVoteInfoR)
+    description Text
+    choices Choice

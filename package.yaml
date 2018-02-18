@@ -32,14 +32,17 @@ ghc-options:
 - -Wincomplete-uni-patterns
 - -Wredundant-constraints
 
-library:
+library: # TODO: other-modules
   source-dirs: src
   dependencies:
     - aeson
     - persistent
     - persistent-template
-    - persistent-sqlite
+    - persistent-mongoDB
+    - yesod-persistent
     - blaze-html
+    - bytestring
+    - template-haskell
 
 executables:
   server:
