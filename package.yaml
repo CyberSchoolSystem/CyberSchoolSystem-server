@@ -32,6 +32,7 @@ ghc-options:
 
 library: # TODO: other-modules
   source-dirs: src
+  exposed-modules: Application
   dependencies:
     - aeson
     - bytestring
