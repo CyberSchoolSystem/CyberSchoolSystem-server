@@ -1,5 +1,6 @@
 /api/vote/info VoteInfoR GET
 /api/vote/vote VoteActR POST
+/api/vote/add  VoteAddR POST
 
 /api/access/in AccessInR POST
 /api/access/out AccessOutR POST

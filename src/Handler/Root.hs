@@ -6,6 +6,8 @@ module Handler.Root
 
 import Text.Blaze.Html (Html)
 import Foundation
+import Yesod.Core.Widget (whamlet)
+import Yesod.Core (defaultLayout)
 
 getRootR :: Handler Html
-getRootR = undefined
+getRootR = defaultLayout [whamlet| <h1> UI not implemented yet.|]

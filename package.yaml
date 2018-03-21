@@ -21,8 +21,6 @@ description: Please see the README on Github at <https://github.com/CyberSchoolS
 
 dependencies:
 - base >= 4.7 && < 5
-- yesod
-- yesod-core
 - text
 
 ghc-options:
@@ -36,13 +34,18 @@ library: # TODO: other-modules
   source-dirs: src
   dependencies:
     - aeson
+    - bytestring
+    - blaze-html
+    - containers
     - persistent
     - persistent-template
     - persistent-mongoDB
-    - yesod-persistent
-    - blaze-html
-    - bytestring
+    - shakespeare
     - template-haskell
+    - yesod
+    - yesod-core
+    - yesod-form
+    - yesod-persistent
 
 executables:
   server:
