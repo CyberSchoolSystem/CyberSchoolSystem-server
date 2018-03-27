@@ -4,6 +4,7 @@
 {-# LANGUAGE GADTs                      #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE FlexibleInstances          #-}
 
 module Model where
 

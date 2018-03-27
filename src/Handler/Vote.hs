@@ -67,14 +67,13 @@ instance FromJSON VoteDel where
     parseJSON invalid = typeMismatch "VoteDel" invalid
 
 {-| Handle GET on /api/vote/info -}
--- TODO: Show as JSON
-getVoteInfoR :: Handler Text
+getVoteInfoR :: Handler Value
 getVoteInfoR = do
     raw  <- parseJsonBody :: Handler (Result VoteReq) -- TODO: Check Application Type?
     case raw of
         Success inp -> do
             rec <- runDB $ selectList (reqToDBFilter inp) []
-            return $ T.pack $ show rec
+            return $ toJSON rec
         Error e -> invalidArgs [showt e]
 
 {-| Create a list of Mongo filters based on a VoteReq -}
@@ -86,7 +85,7 @@ reqToDBFilter req = catMaybes go
 {-| Handle POST on /api/vote/vote -}
 postVoteActR :: Handler ()
 postVoteActR = do
-    raw <- parseJsonBody :: Handler (Result VoteAct) -- TODO: Check for malformed JSON
+    raw <- parseJsonBody :: Handler (Result VoteAct)
     case raw of -- TODO: Ugly af
         Success inp -> do
             user <- runDB $ selectFirst [UserChipId ==. chip inp] []

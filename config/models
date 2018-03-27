@@ -7,12 +7,12 @@ User
     login Text Maybe
     password Text Maybe
     deriving (Show)
-Choice
+Choice json
     identity Int
     votes Int
     description Text
     deriving (Show)
-Vote
+Vote json
     identity Int
     description Text
     voted [UserId]
