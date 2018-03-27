@@ -3,6 +3,7 @@ module Handler.Vote
     ( getVoteInfoR
     , postVoteActR
     , postVoteAddR
+    , postVoteRemoveR
     ) where
 
 import           Database.Persist         ((==.), (=.), (+=.))
@@ -91,3 +92,6 @@ isAllowed user vote = not $ elem (entityKey user) (voteVoted . entityVal $ vote)
 
 postVoteAddR :: Handler Text
 postVoteAddR = undefined
+
+postVoteRemoveR :: Handler Text
+postVoteRemoveR = undefined

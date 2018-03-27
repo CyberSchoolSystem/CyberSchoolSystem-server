@@ -1,10 +1,15 @@
 /api/vote/info VoteInfoR GET
 /api/vote/vote VoteActR POST
 /api/vote/add  VoteAddR POST
+/api/vote/remove VoteRemoveR POST
 
 /api/access/in AccessInR POST
 /api/access/out AccessOutR POST
 
 /api/joke/random JokeR GET
+
+/api/user/add UserAddR POST
+/api/user/remove UserRemoveR POST
+/api/user/info UserInfoR GET
 
 / RootR GET
