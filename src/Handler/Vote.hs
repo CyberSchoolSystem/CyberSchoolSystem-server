@@ -9,7 +9,7 @@ module Handler.Vote
 -- TODO: Cleanup Import list
 import           Database.Persist         ((==.), (=.), (+=.))
 import           Database.Persist.Types   (Filter, Entity(..), entityKey, updateValue)
-import           Database.Persist.Class   (selectFirst, selectList, insert, update)
+import           Database.Persist.Class   (selectFirst, selectList, insert, update, delete)
 import           Database.Persist.MongoDB (nestEq, (->.), push, nestInc, eachOp)
 import           Data.Aeson
 import           Data.Maybe               (catMaybes)
@@ -18,6 +18,7 @@ import           Data.Text                (Text)
 import           Foundation
 import           Model
 import           Text.Blaze.Html          (Html)
+import           TextShow                 (showt)
 import           Yesod.Persist.Core       (runDB)
 import           Yesod.Core.Handler       (invalidArgs)
 import           Yesod.Core.Json          (FromJSON, parseJsonBody)
@@ -39,6 +40,8 @@ data VoteAdd = VoteAdd
     , addChoices  :: [Text]
     }
 
+data VoteDel = VoteDel { delId :: Int }
+
 instance FromJSON VoteReq where
     parseJSON (Object v) = VoteReq
         <$> v .:? "id"
@@ -57,6 +60,11 @@ instance FromJSON VoteAdd where
         <$> v .: "description"
         <*> v .: "choices"
     parseJSON invalid = typeMismatch "VoteAdd" invalid
+
+instance FromJSON VoteDel where
+    parseJSON (Object v) = VoteDel
+        <$> v .: "id"
+    parseJSON invalid = typeMismatch "VoteDel" invalid
 
 {-| Handle GET on /api/vote/info -}
 -- TODO: Show as JSON
@@ -132,5 +140,12 @@ addToChoices VoteAdd{addChoices = c} = addInfo c 0
     where addInfo (t:ts) i = Choice i 0 t : addInfo ts (i+1)
           addInfo [] _ = []
 
-postVoteRemoveR :: Handler Text
-postVoteRemoveR = undefined
+{-| Remove a vote from the database -}
+postVoteRemoveR :: Handler ()
+postVoteRemoveR = do
+    (Success inp) <- parseJsonBody :: Handler (Result VoteDel)
+    result <- runDB $ selectFirst [VoteIdentity ==. delId inp] []
+    case result of
+        Just ent -> runDB $ delete (entityKey ent)
+        Nothing  -> invalidArgs [ T.concat ["Id ", showt $ delId inp, " does not exist"]]
+
