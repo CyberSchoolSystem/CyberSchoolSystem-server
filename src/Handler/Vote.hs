@@ -6,23 +6,21 @@ module Handler.Vote
     , postVoteRemoveR
     ) where
 
--- TODO: Cleanup Import list
-import           Database.Persist         ((==.), (=.), (+=.))
-import           Database.Persist.Types   (Filter, Entity(..), entityKey, updateValue)
+import           Database.Persist         ((==.), (=.))
+import           Database.Persist.Types   (Filter, Entity(..), entityKey)
 import           Database.Persist.Class   (selectFirst, selectList, insert, update, delete)
-import           Database.Persist.MongoDB (nestEq, (->.), push, nestInc, eachOp)
+import           Database.Persist.MongoDB (nestEq, (->.), push)
 import           Data.Aeson
 import           Data.Maybe               (catMaybes)
 import qualified Data.Text as T
 import           Data.Text                (Text)
 import           Foundation
 import           Model
-import           Text.Blaze.Html          (Html)
 import           TextShow                 (showt)
 import           Yesod.Persist.Core       (runDB)
 import           Yesod.Core.Handler       (invalidArgs, permissionDenied)
 import           Yesod.Core.Json          (FromJSON, parseJsonBody)
-import           Data.Aeson.Types         (Result(..), Object(..), typeMismatch)
+import           Data.Aeson.Types         (Result(..), typeMismatch)
 
 data VoteReq = VoteReq
     { reqVoteId   :: Maybe Int
@@ -121,7 +119,7 @@ postVoteAddR :: Handler ()
 postVoteAddR = do
     minId <- minVoteId
     raw <- parseJsonBody :: Handler (Result VoteAdd)
-    case raw of
+    _ <- case raw of
         (Success inp) -> runDB $ insert (addToVote inp minId)
         (Error e)     -> invalidArgs [showt e]
     return ()
