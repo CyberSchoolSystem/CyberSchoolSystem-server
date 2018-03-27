@@ -34,6 +34,11 @@ data VoteAct = VoteAct
     , actChoiceId :: Int
     } deriving (Show)
 
+data VoteAdd = VoteAdd
+    { addDesc     :: Text
+    , addChoices  :: [Text]
+    }
+
 instance FromJSON VoteReq where
     parseJSON (Object v) = VoteReq
         <$> v .:? "id"
@@ -46,6 +51,12 @@ instance FromJSON VoteAct where
         <*> v .: "id"
         <*> v .: "choice"
     parseJSON invalid = typeMismatch "VoteAct" invalid
+
+instance FromJSON VoteAdd where
+    parseJSON (Object v) = VoteAdd
+        <$> v .: "description"
+        <*> v .: "choices"
+    parseJSON invalid = typeMismatch "VoteAdd" invalid
 
 {-| Handle GET on /api/vote/info -}
 -- TODO: Show as JSON
@@ -92,8 +103,34 @@ updateChoices VoteAct{actChoiceId = cid} = map inc
 isAllowed :: Entity User -> Entity Vote -> Bool
 isAllowed user vote = not $ elem (entityKey user) (voteVoted . entityVal $ vote)
 
-postVoteAddR :: Handler Text
-postVoteAddR = undefined
+{-| Add a vote to the database -}
+postVoteAddR :: Handler ()
+postVoteAddR = do
+    (Success inp) <- parseJsonBody :: Handler (Result VoteAdd)
+    minId <- minVoteId
+    _ <- runDB $ insert (addToVote inp minId)
+    return ()
+
+{-| Find the smallest available voteId -}
+minVoteId :: Handler Int
+minVoteId = do
+    votes <- runDB $ selectList [] []
+    return $ minimumFree $ map (voteIdentity . entityVal) votes
+        where minimumFree x = head $ filter (not . flip elem x) [1..]
+
+{-| Transform VoteAdd request to database entity -}
+addToVote :: VoteAdd -> Int -> Vote
+addToVote v i = Vote {
+    voteIdentity = i,
+    voteDescription = addDesc v,
+    voteVoted = [],
+    voteChoices = addToChoices v }
+
+{-| Transform VoteAdd request to Choice entity -}
+addToChoices :: VoteAdd -> [Choice]
+addToChoices VoteAdd{addChoices = c} = addInfo c 0
+    where addInfo (t:ts) i = Choice i 0 t : addInfo ts (i+1)
+          addInfo [] _ = []
 
 postVoteRemoveR :: Handler Text
 postVoteRemoveR = undefined

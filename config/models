@@ -7,14 +7,14 @@ User
     login Text Maybe
     password Text Maybe
     deriving (Show)
-Vote -- TODO: maybe add json (getVoteInfoR)
-    identity Int
-    description Text
-    voted [UserId]
-    choices [Choice]
-    deriving (Show) -- TODO: Debug. Remove
 Choice
     identity Int
     votes Int
     description Text
     deriving (Show)
+Vote
+    identity Int
+    description Text
+    voted [UserId]
+    choices [Choice]
+    deriving (Show) -- TODO: Debug. Remove
