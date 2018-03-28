@@ -19,7 +19,7 @@ import           Model
 import           TextShow                 (showt)
 import           Yesod.Persist.Core       (runDB)
 import           Yesod.Core.Handler       (invalidArgs, permissionDenied)
-import           Yesod.Core.Json          (FromJSON, parseJsonBody)
+import           Yesod.Core.Json          (FromJSON, requireJsonBody)
 import           Data.Aeson.Types         (Result(..), typeMismatch)
 
 data VoteReq = VoteReq
@@ -67,12 +67,9 @@ instance FromJSON VoteDel where
 {-| Handle GET on /api/vote/info -}
 getVoteInfoR :: Handler Value
 getVoteInfoR = do
-    raw  <- parseJsonBody :: Handler (Result VoteReq) -- TODO: Check Application Type?
-    case raw of
-        Success inp -> do
-            rec <- runDB $ selectList (reqToDBFilter inp) []
-            return $ toJSON rec
-        Error e -> invalidArgs [showt e]
+    inp  <- requireJsonBody :: Handler VoteReq -- TODO: Check Application Type?
+    rec <- runDB $ selectList (reqToDBFilter inp) []
+    return $ toJSON rec
 
 {-| Create a list of Mongo filters based on a VoteReq -}
 reqToDBFilter :: VoteReq -> [Filter Vote]
@@ -83,18 +80,15 @@ reqToDBFilter req = catMaybes go
 {-| Handle POST on /api/vote/vote -}
 postVoteActR :: Handler ()
 postVoteActR = do
-    raw <- parseJsonBody :: Handler (Result VoteAct)
-    case raw of -- TODO: Ugly af
-        Success inp -> do
-            user <- runDB $ selectFirst [UserChipId ==. chip inp] []
-            vote <- runDB $ selectFirst [VoteIdentity ==. actVoteId inp,
-                                        VoteChoices ->. ChoiceIdentity `nestEq` actChoiceId inp] []
-            case (user, vote) of
-                (Just u, Just v) -> if isAllowed u v
-                                        then updateVote u v inp
-                                        else permissionDenied "You already voted"
-                _                -> invalidArgs ["User or Vote not found"]
-        Error e -> invalidArgs [showt e]
+    inp <- requireJsonBody :: Handler VoteAct
+    user <- runDB $ selectFirst [UserChipId ==. chip inp] []
+    vote <- runDB $ selectFirst [VoteIdentity ==. actVoteId inp,
+                                VoteChoices ->. ChoiceIdentity `nestEq` actChoiceId inp] []
+    case (user, vote) of
+        (Just u, Just v) -> if isAllowed u v
+                                then updateVote u v inp
+                                else permissionDenied "You already voted"
+        _                -> invalidArgs ["User or Vote not found"]
 
 {-| Vote. Update all neccessary records -}
 updateVote :: Entity User -> Entity Vote -> VoteAct -> Handler ()
@@ -118,10 +112,8 @@ isAllowed user vote = not $ elem (entityKey user) (voteVoted . entityVal $ vote)
 postVoteAddR :: Handler ()
 postVoteAddR = do
     minId <- minVoteId
-    raw <- parseJsonBody :: Handler (Result VoteAdd)
-    _ <- case raw of
-        (Success inp) -> runDB $ insert (addToVote inp minId)
-        (Error e)     -> invalidArgs [showt e]
+    inp <- requireJsonBody :: Handler VoteAdd
+    runDB $ insert (addToVote inp minId)
     return ()
 
 {-| Find the smallest available voteId -}
@@ -148,12 +140,8 @@ addToChoices VoteAdd{addChoices = c} = addInfo c 0
 {-| Remove a vote from the database -}
 postVoteRemoveR :: Handler ()
 postVoteRemoveR = do
-    raw <- parseJsonBody :: Handler (Result VoteDel)
-    case raw of
-        Success inp -> do
-            result <- runDB $ selectFirst [VoteIdentity ==. delId inp] []
-            case result of
-                Just ent -> runDB $ delete (entityKey ent)
-                Nothing  -> invalidArgs [ T.concat ["Id ", showt $ delId inp, " does not exist"]]
-        Error e -> invalidArgs [showt e]
-
+    inp <- requireJsonBody :: Handler VoteDel
+    result <- runDB $ selectFirst [VoteIdentity ==. delId inp] []
+    case result of
+        Just ent -> runDB $ delete (entityKey ent)
+        Nothing  -> invalidArgs [ T.concat ["Id ", showt $ delId inp, " does not exist"]]
