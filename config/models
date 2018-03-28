@@ -1,12 +1,14 @@
--- TODO: Research MongoDB Document IDs. R they enough
--- TODO: How should I save border actions?
-User
+User json
     name Text
-    class Text
+    grade Text
     chipId Text -- Base64?
     login Text Maybe
     password Text Maybe
-    deriving (Show)
+    access [Access]
+Access json
+    time UTCTime
+    inside Bool
+    deriving (Eq)
 Vote -- TODO: maybe add json (getVoteInfoR)
     identity Int
     description Text
