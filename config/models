@@ -9,14 +9,14 @@ Access json
     time UTCTime
     inside Bool
     deriving (Eq)
-Vote -- TODO: maybe add json (getVoteInfoR)
+Choice json
+    identity Int
+    votes Int
+    description Text
+    deriving (Show)
+Vote json
     identity Int
     description Text
     voted [UserId]
     choices [Choice]
     deriving (Show) -- TODO: Debug. Remove
-Choice
-    identity Int
-    votes Int
-    description Text
-    deriving (Show)

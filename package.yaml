@@ -44,6 +44,7 @@ library: # TODO: other-modules
     - shakespeare
     - template-haskell
     - time
+    - text-show
     - yesod
     - yesod-core
     - yesod-form
