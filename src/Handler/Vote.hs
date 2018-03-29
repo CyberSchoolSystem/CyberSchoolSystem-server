@@ -42,14 +42,14 @@ data VoteDel = VoteDel { delId :: Int }
 
 instance FromJSON VoteReq where
     parseJSON (Object v) = VoteReq
-        <$> v .:? "id"
+        <$> v .:? "vid"
         <*> v .:? "choice"
     parseJSON invalid = typeMismatch "VoteReq" invalid
 
 instance FromJSON VoteAct where
     parseJSON (Object v) = VoteAct
         <$> v .: "chip"
-        <*> v .: "id"
+        <*> v .: "vid"
         <*> v .: "choice"
     parseJSON invalid = typeMismatch "VoteAct" invalid
 
