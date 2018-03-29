@@ -61,7 +61,7 @@ instance FromJSON VoteAdd where
 
 instance FromJSON VoteDel where
     parseJSON (Object v) = VoteDel
-        <$> v .: "id"
+        <$> v .: "vid"
     parseJSON invalid = typeMismatch "VoteDel" invalid
 
 {-| Handle GET on /api/vote/info -}
