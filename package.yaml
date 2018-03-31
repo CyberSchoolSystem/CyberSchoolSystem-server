@@ -45,6 +45,7 @@ library: # TODO: other-modules
     - template-haskell
     - time
     - text-show
+    - unordered-containers
     - yesod
     - yesod-core
     - yesod-form

@@ -9,6 +9,7 @@ module Handler.User
 
 import           Data.Aeson
 import           Data.Aeson.Types       (typeMismatch)
+import           Data.HashMap.Lazy (member)
 import           Data.Maybe             (catMaybes)
 import           Data.Text              (Text)
 import qualified Data.Text as T
@@ -23,6 +24,9 @@ import           Yesod.Core.Handler     (invalidArgs)
 import           Yesod.Core.Json        (requireJsonBody)
 import           Yesod.Persist.Core
 
+{-| Uniquely identifies a user -}
+data IdUser = IdChip Text | IdUsername Text -- TODO: Elliminate case statements
+
 data AddUserReq = AddUserReq
     { addFirstName :: Text
     , addLastName :: Text
@@ -32,10 +36,7 @@ data AddUserReq = AddUserReq
     , addPassword :: Maybe Text
     }
 
-data RmUserReq = RmUserReq
-    { rmChipId :: Maybe Text
-    , rmUsername :: Maybe Text
-    }
+data RmUserReq = RmUserReq { rmId :: IdUser } 
 
 data InfoUserReq = InfoUserReq
     { infoFirstName :: Maybe Text
@@ -46,11 +47,9 @@ data InfoUserReq = InfoUserReq
     }
 
 -- TODO Do not give people full access on this
--- TODO How to handle resting fails & managing access
-type ChipId = Text
-type Username = Text
+-- TODO How to handle reseting fails & managing access
 data UpdateUserReq = UpdateUserReq
-    { idUser :: Either ChipId Username
+    { idUser :: IdUser
     , updateFirstName :: Maybe Text
     , updateLastName :: Maybe Text
     , updateGrade :: Maybe Text
@@ -58,6 +57,13 @@ data UpdateUserReq = UpdateUserReq
     , updateUsername :: Maybe Text
     , updatePassword :: Maybe Text
     }
+
+instance FromJSON IdUser where
+    parseJSON (Object v) = val (member "chip" v) (member "username" v)
+        where val hasChip hasUser 
+                  | hasChip = IdChip <$> v .: "chip"
+                  | hasUser = IdUsername <$> v .: "username"
+    parseJSON invalid = typeMismatch "IdUser" invalid
 
 instance FromJSON AddUserReq where
     parseJSON (Object v) = AddUserReq
@@ -71,8 +77,7 @@ instance FromJSON AddUserReq where
 
 instance FromJSON RmUserReq where
     parseJSON (Object v) = RmUserReq
-        <$> v .:? "chip"
-        <*> v .:? "username"
+        <$> v .: "uid"
     parseJSON invalid = typeMismatch "RmUserReq" invalid
 
 instance FromJSON InfoUserReq where
@@ -86,7 +91,7 @@ instance FromJSON InfoUserReq where
 
 instance FromJSON UpdateUserReq where
     parseJSON (Object v) = UpdateUserReq
-        <$> v .: "id"
+        <$> v .: "uid"
         <*> v .:? "firstName"
         <*> v .:? "lastName"
         <*> v .:? "grade"
@@ -123,14 +128,15 @@ postUserRemoveR = do
 
 {-| Construct invalid args error message, according to a RmUserReq -}
 rmInvalidArgs :: RmUserReq -> [Text]
-rmInvalidArgs req = catMaybes [ (\x -> T.concat ["Chip ", showt x, " nonexistent"]) <$> rmChipId req
-                              , (\x -> T.concat ["Username ", showt x, " nonexistent"]) 
-                                <$> rmUsername req ]
+rmInvalidArgs req = case rmId req of
+                        IdChip chip -> [T.concat ["Chip ID ", chip, " not available"]]
+                        IdUsername user -> [T.concat ["Username ", user, "not available"]]
 
 {-| Construct DB Filters according to a RmUserReq -}
 rmToFilter :: RmUserReq -> [Filter User]
-rmToFilter req = catMaybes [ (UserUsername ==.) <$> Just (rmUsername req) -- FIXME
-                           , (UserChipId ==.) <$> rmChipId req ]
+rmToFilter req = case rmId req of
+                     IdChip chip -> [UserChipId ==. chip]
+                     IdUsername user -> [UserUsername ==. Just user]
 
 postUserUpdateR :: Handler ()
 postUserUpdateR = do
@@ -140,17 +146,19 @@ postUserUpdateR = do
         Just e -> runDB $ update (entityKey e) (updateToUpdate req)
         Nothing -> invalidArgs $ updateInvalidArgs req
 
+{-| Create Database updates from a update request -}
 updateToFilter :: UpdateUserReq -> [Filter User]
 updateToFilter u = case idUser u of
-                       Left chip -> [UserChipId ==. chip]
-                       Right user -> [UserUsername ==. Just user]
+                       IdUsername chip -> [UserChipId ==. chip]
+                       IdChip user -> [UserUsername ==. Just user]
 
+{-| Create errors from a update request -}
 updateInvalidArgs :: UpdateUserReq -> [Text]
 updateInvalidArgs u = case idUser u of
-                          Left chip -> [T.concat ["Unknown chip: ", showt chip]]
-                          Right user -> [T.concat ["Unknown username: ", showt user]]
+                          IdChip chip -> [T.concat ["Unknown chip: ", showt chip]]
+                          IdUsername user -> [T.concat ["Unknown username: ", showt user]]
 
--- TODO Use ListT
+{-| Create a database update from a update request -}
 updateToUpdate :: UpdateUserReq -> [Update User]
 updateToUpdate UpdateUserReq{..} = catMaybes [ (UserFirstName =.) <$> updateFirstName
                                              , (UserLastName =.) <$> updateLastName
@@ -165,6 +173,7 @@ getUserInfoR = do
     users <- runDB $ selectList (infoToFilter req) []
     return $ toJSON users
 
+{-| Create a database filter from a info request -}
 infoToFilter :: InfoUserReq -> [Filter User]
 infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName ==.) <$> infoFirstName
                                          , (UserLastName ==.) <$> infoLastName
