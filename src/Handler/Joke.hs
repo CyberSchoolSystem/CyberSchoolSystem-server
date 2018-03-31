@@ -13,5 +13,5 @@ import Data.ByteString()
 
 getJokeR :: Handler ()
 getJokeR = do
-    _ <- runDB . insert $ User "Fabian" "Geiselhart" "10c" "0" Nothing Nothing 0 []
+    _ <- runDB . insert $ User "Fabian" "Geiselhart" "10c" "0" "JESUS" Nothing 0 []
     redirect RootR

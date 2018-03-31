@@ -32,7 +32,7 @@ data AddUserReq = AddUserReq
     , addLastName :: Text
     , addGrade :: Text
     , addChipId :: Text
-    , addUsername :: Maybe Text
+    , addUsername :: Text
     , addPassword :: Maybe Text
     }
 
@@ -71,7 +71,7 @@ instance FromJSON AddUserReq where
         <*> v .: "lastName"
         <*> v .: "grade"
         <*> v .: "chip"
-        <*> v .:? "username"
+        <*> v .: "username"
         <*> v .:? "password"
     parseJSON invalid = typeMismatch "AddUserReq" invalid
 
@@ -136,7 +136,7 @@ rmInvalidArgs req = case rmId req of
 rmToFilter :: RmUserReq -> [Filter User]
 rmToFilter req = case rmId req of
                      IdChip chip -> [UserChipId ==. chip]
-                     IdUsername user -> [UserUsername ==. Just user]
+                     IdUsername user -> [UserUsername ==. user]
 
 postUserUpdateR :: Handler ()
 postUserUpdateR = do
@@ -150,7 +150,7 @@ postUserUpdateR = do
 updateToFilter :: UpdateUserReq -> [Filter User]
 updateToFilter u = case idUser u of
                        IdUsername chip -> [UserChipId ==. chip]
-                       IdChip user -> [UserUsername ==. Just user]
+                       IdChip user -> [UserUsername ==. user]
 
 {-| Create errors from a update request -}
 updateInvalidArgs :: UpdateUserReq -> [Text]
@@ -164,7 +164,7 @@ updateToUpdate UpdateUserReq{..} = catMaybes [ (UserFirstName =.) <$> updateFirs
                                              , (UserLastName =.) <$> updateLastName
                                              , (UserGrade =.) <$> updateGrade
                                              , (UserChipId =.) <$> updateChipId
-                                             , (UserUsername =.) <$> Just <$> updateUsername
+                                             , (UserUsername =.) <$> updateUsername
                                              , (UserPassword =.) <$> Just <$> updatePassword ]
 
 postUserInfoR :: Handler Value
@@ -179,4 +179,4 @@ infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName ==.) <$> infoFirstName
                                          , (UserLastName ==.) <$> infoLastName
                                          , (UserGrade ==.) <$> infoGrade
                                          , (UserChipId ==.) <$> infoChipId
-                                         , (UserUsername ==.) <$> Just <$> infoUsername ]
+                                         , (UserUsername ==.) <$> infoUsername ]
