@@ -1,21 +1,23 @@
 User json
-    name Text
+    firstName Text
+    lastName Text
     grade Text
-    chipId Text -- Base64?
-    login Text Maybe
+    chipId Text -- TODO: Unique
+    username Text Maybe -- TODO: Unique
     password Text Maybe
+    fails Int
     access [Access]
 Access json
     time UTCTime
     inside Bool
     deriving (Eq)
 Choice json
-    identity Int
+    identity Int -- TODO: Unique
     votes Int
     description Text
     deriving (Show)
 Vote json
-    identity Int
+    identity Int -- TODO: Unique
     description Text
     voted [UserId]
     choices [Choice]

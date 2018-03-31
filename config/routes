@@ -11,5 +11,6 @@
 /api/user/add UserAddR POST
 /api/user/remove UserRemoveR POST
 /api/user/info UserInfoR GET
+/api/user/test UserUpdateR POST
 
 / RootR GET
