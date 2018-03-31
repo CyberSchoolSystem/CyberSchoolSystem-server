@@ -7,21 +7,21 @@ module Handler.User
     , postUserUpdateR
     ) where
 
-import Text.Blaze.Html (Html)
-import Foundation
-import Data.Aeson
-import Yesod.Core.Json (requireJsonBody)
-import Database.Persist.Class (insert_, selectFirst, delete, update, selectList)
+import           Data.Aeson
+import           Data.Aeson.Types       (typeMismatch)
+import           Data.Maybe             (catMaybes)
+import           Data.Text              (Text)
 import qualified Data.Text as T
-import Data.Text (Text)
-import Model
-import Yesod.Persist.Core
-import Data.Aeson.Types (typeMismatch)
-import Data.Maybe (catMaybes)
-import Database.Persist.Types (Filter, Entity(..), Update)
-import Database.Persist ((==.), (=.))
-import TextShow (showt)
-import Yesod.Core.Handler (invalidArgs)
+import           Database.Persist       ((==.), (=.))
+import           Database.Persist.Class (insert_, selectFirst, delete, update, selectList)
+import           Database.Persist.Types (Filter, Entity(..), Update)
+import           Foundation
+import           Model
+import           Text.Blaze.Html        (Html)
+import           TextShow               (showt)
+import           Yesod.Core.Handler     (invalidArgs)
+import           Yesod.Core.Json        (requireJsonBody)
+import           Yesod.Persist.Core
 
 data AddUserReq = AddUserReq
     { addFirstName :: Text
