@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Handler.Vote
-    ( getVoteInfoR
+    ( postVoteInfoR
     , postVoteActR
     , postVoteAddR
     , postVoteRemoveR
@@ -48,7 +48,7 @@ instance FromJSON VoteReq where
 
 instance FromJSON VoteAct where
     parseJSON (Object v) = VoteAct
-        <$> v .: "chip"
+        <$> v .: "chip" -- TODO: Transform to uid field
         <*> v .: "vid"
         <*> v .: "choice"
     parseJSON invalid = typeMismatch "VoteAct" invalid
@@ -64,9 +64,9 @@ instance FromJSON VoteDel where
         <$> v .: "vid"
     parseJSON invalid = typeMismatch "VoteDel" invalid
 
-{-| Handle GET on /api/vote/info -}
-getVoteInfoR :: Handler Value
-getVoteInfoR = do
+{-| Handle Post on /api/vote/info -}
+postVoteInfoR :: Handler Value
+postVoteInfoR = do
     inp  <- requireJsonBody :: Handler VoteReq -- TODO: Check Application Type?
     rec <- runDB $ selectList (reqToDBFilter inp) []
     return $ toJSON rec

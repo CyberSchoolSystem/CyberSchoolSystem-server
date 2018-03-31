@@ -3,7 +3,7 @@
 module Handler.User
     ( postUserAddR
     , postUserRemoveR
-    , getUserInfoR
+    , postUserInfoR
     , postUserUpdateR
     ) where
 
@@ -167,8 +167,8 @@ updateToUpdate UpdateUserReq{..} = catMaybes [ (UserFirstName =.) <$> updateFirs
                                              , (UserUsername =.) <$> Just <$> updateUsername
                                              , (UserPassword =.) <$> Just <$> updatePassword ]
 
-getUserInfoR :: Handler Value
-getUserInfoR = do
+postUserInfoR :: Handler Value
+postUserInfoR = do
     req <- requireJsonBody :: Handler InfoUserReq
     users <- runDB $ selectList (infoToFilter req) []
     return $ toJSON users

@@ -1,4 +1,4 @@
-/api/vote/info VoteInfoR GET
+/api/vote/info VoteInfoR POST
 /api/vote/vote VoteActR POST
 /api/vote/add  VoteAddR POST
 /api/vote/remove VoteRemoveR POST
@@ -10,7 +10,7 @@
 
 /api/user/add UserAddR POST
 /api/user/remove UserRemoveR POST
-/api/user/info UserInfoR GET
+/api/user/info UserInfoR POST
 /api/user/test UserUpdateR POST
 
 / RootR GET

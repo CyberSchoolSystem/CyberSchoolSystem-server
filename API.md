@@ -3,6 +3,7 @@
 ## Voting
 | URI | Request Method | Request Body Type | Request Body Keys |
 |-----|----------------|-------------------|---------------------|
+|`/api/vote/info` | POST | `application/json` | Optional: "vid", "choice"
 |`/api/vote/act` | POST | `application/json` | "chip", "vid", "choice" |
 |`/api/vote/add` | POST | `application/json` | "description", "choices" |
 |`/api/vote/remove` | POST | `application/json` | "vid" |
