@@ -1,20 +1,34 @@
 # API Overview
 
 ## Voting
-| URI | Request Method | Request Body Type | Request Body Content|
+| URI | Request Method | Request Body Type | Request Body Keys |
 |-----|----------------|-------------------|---------------------|
-|`/api/vote/act` | POST | `application/json` | `{ "chip": "CHIPID", "vid": VOTEID, "choice": CHOICEID }` |
-|`/api/vote/add` | POST | `application/json` | `{ "description": "DESCRIPTION", "choices": [ "CHOICE" ] }`|
-|`/api/vote/remove` | POST | `application/json` | `{ "vid": VOTEID }` |
+|`/api/vote/act` | POST | `application/json` | "chip", "vid", "choice" |
+|`/api/vote/add` | POST | `application/json` | "description", "choices" |
+|`/api/vote/remove` | POST | `application/json` | "vid" |
 
 ## Access
-| URI | Request Method | Request Body Type | Request Body Content|
+| URI | Request Method | Request Body Type | Request Body Keys |
 |-----|----------------|-------------------|---------------------|
-|`/api/access/in` | POST | `application/json` | `{ "chip": "CHIPID" }` |
-|`/api/access/out` | POST | `application/json` | `{ "chip": "CHIPID" }` |
+|`/api/access/in` | POST | `application/json` | "chip" |
+|`/api/access/out` | POST | `application/json` | "chip" |
 
-`CHIPID`: String
-`VOTEID`: Number
-`CHOICEID`: Number
-`DESCRIPTION`: String
-`CHOICE`: String
+## Users
+| URI | Request Method | Request Body Type | Request Body Keys |
+|-----|----------------|-------------------|---------------------|
+|`/api/user/add`| POST | `application/json` | "firstname", "lastname", "grade", "chip" <br> Optional: "username", "password"
+|`/api/user/remove` | POST | `application/json` | "uid"
+|`/api/user/update` | POST | `application/json` | "uid" <br> Optional: "firstName", "lastName", "grade", "chip", "username", "password"
+|`/api/user/info` | POST | `application/json` | Optional: "firstName", "lastName", "grade", "chip", "username"
+
+`firstName`: String
+`lastName`: String
+`grade`: String
+`chip`: String (?)
+`username`: String
+`password`: String
+`uid`: Object. Keys: Either "chip" or "username"
+`vid`: Integer
+`choice`: Integer
+`choices`: Array of Strings
+`description`: String
