@@ -21,14 +21,26 @@
 |`/api/user/update` | POST | `application/json` | "uid" <br> Optional: "firstName", "lastName", "grade", "chip", "username", "password"
 |`/api/user/info` | POST | `application/json` | Optional: "firstName", "lastName", "grade", "chip", "username"
 
+
+## Keys
 `firstName`: String
+
 `lastName`: String
+
 `grade`: String
+
 `chip`: String (?)
+
 `username`: String
+
 `password`: String
+
 `uid`: Object. Keys: Either "chip" or "username"
+
 `vid`: Integer
+
 `choice`: Integer
+
 `choices`: Array of Strings
+
 `description`: String
