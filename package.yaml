@@ -43,7 +43,9 @@ library: # TODO: other-modules
     - persistent-mongoDB
     - shakespeare
     - template-haskell
+    - time
     - text-show
+    - unordered-containers
     - yesod
     - yesod-core
     - yesod-form

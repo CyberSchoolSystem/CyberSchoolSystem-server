@@ -1,19 +1,23 @@
--- TODO: Research MongoDB Document IDs. R they enough
--- TODO: How should I save border actions?
-User
-    name Text
-    class Text
-    chipId Text -- Base64?
-    login Text Maybe
+User json
+    firstName Text
+    lastName Text
+    grade Text
+    chipId Text -- TODO: Unique
+    username Text Maybe -- TODO: Unique
     password Text Maybe
-    deriving (Show)
-Choice
-    identity Int
+    fails Int
+    access [Access]
+Access json
+    time UTCTime
+    inside Bool
+    deriving (Eq)
+Choice json
+    identity Int -- TODO: Unique
     votes Int
     description Text
     deriving (Show)
-Vote
-    identity Int
+Vote json
+    identity Int -- TODO: Unique
     description Text
     voted [UserId]
     choices [Choice]
