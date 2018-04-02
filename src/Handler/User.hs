@@ -32,8 +32,9 @@ data AddUserReq = AddUserReq
     , addLastName :: Text
     , addGrade :: Text
     , addChipId :: Text
-    , addUsername :: Maybe Text
+    , addUsername :: Text
     , addPassword :: Maybe Text
+    , addRoles :: Role
     }
 
 data RmUserReq = RmUserReq { rmId :: IdUser } 
@@ -44,6 +45,7 @@ data InfoUserReq = InfoUserReq
     , infoGrade :: Maybe Text
     , infoChipId :: Maybe Text
     , infoUsername :: Maybe Text
+    , infoRole :: Maybe Role
     }
 
 -- TODO Do not give people full access on this
@@ -56,6 +58,7 @@ data UpdateUserReq = UpdateUserReq
     , updateChipId :: Maybe Text
     , updateUsername :: Maybe Text
     , updatePassword :: Maybe Text
+    , updateRole :: Maybe Role
     }
 
 instance FromJSON IdUser where
@@ -71,8 +74,9 @@ instance FromJSON AddUserReq where
         <*> v .: "lastName"
         <*> v .: "grade"
         <*> v .: "chip"
-        <*> v .:? "username"
+        <*> v .: "username"
         <*> v .:? "password"
+        <*> v .: "role"
     parseJSON invalid = typeMismatch "AddUserReq" invalid
 
 instance FromJSON RmUserReq where
@@ -87,6 +91,7 @@ instance FromJSON InfoUserReq where
         <*> v .:? "grade"
         <*> v .:? "chip"
         <*> v .:? "username"
+        <*> v .:? "role"
     parseJSON invalid = typeMismatch "InfoUserReq" invalid
 
 instance FromJSON UpdateUserReq where
@@ -98,6 +103,7 @@ instance FromJSON UpdateUserReq where
         <*> v .:? "chip"
         <*> v .:? "username"
         <*> v .:? "password"
+        <*> v .:? "role"
     parseJSON invalid = typeMismatch "UpdateUserReq" invalid
 
 postUserAddR :: Handler ()
@@ -113,7 +119,8 @@ addToUser AddUserReq{..} = User
     , userGrade = addGrade
     , userChipId = addChipId
     , userUsername = addUsername
-    , userPassword = addPassword
+    , userPassword = addPassword -- TODO: Hash
+    , userRoles = addRoles
     , userFails = 0
     , userAccess = []
     }
@@ -136,7 +143,7 @@ rmInvalidArgs req = case rmId req of
 rmToFilter :: RmUserReq -> [Filter User]
 rmToFilter req = case rmId req of
                      IdChip chip -> [UserChipId ==. chip]
-                     IdUsername user -> [UserUsername ==. Just user]
+                     IdUsername user -> [UserUsername ==. user]
 
 postUserUpdateR :: Handler ()
 postUserUpdateR = do
@@ -150,7 +157,7 @@ postUserUpdateR = do
 updateToFilter :: UpdateUserReq -> [Filter User]
 updateToFilter u = case idUser u of
                        IdUsername chip -> [UserChipId ==. chip]
-                       IdChip user -> [UserUsername ==. Just user]
+                       IdChip user -> [UserUsername ==. user]
 
 {-| Create errors from a update request -}
 updateInvalidArgs :: UpdateUserReq -> [Text]
@@ -164,8 +171,9 @@ updateToUpdate UpdateUserReq{..} = catMaybes [ (UserFirstName =.) <$> updateFirs
                                              , (UserLastName =.) <$> updateLastName
                                              , (UserGrade =.) <$> updateGrade
                                              , (UserChipId =.) <$> updateChipId
-                                             , (UserUsername =.) <$> Just <$> updateUsername
-                                             , (UserPassword =.) <$> Just <$> updatePassword ]
+                                             , (UserUsername =.) <$> updateUsername
+                                             , (UserPassword =.) <$> Just <$> updatePassword
+                                             , (UserRoles =.) <$> updateRole ] -- TODO: Make more flexible
 
 postUserInfoR :: Handler Value
 postUserInfoR = do
@@ -179,4 +187,5 @@ infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName ==.) <$> infoFirstName
                                          , (UserLastName ==.) <$> infoLastName
                                          , (UserGrade ==.) <$> infoGrade
                                          , (UserChipId ==.) <$> infoChipId
-                                         , (UserUsername ==.) <$> Just <$> infoUsername ]
+                                         , (UserUsername ==.) <$> infoUsername
+                                         , (UserRoles ==.) <$> infoRole ]

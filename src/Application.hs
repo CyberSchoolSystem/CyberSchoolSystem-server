@@ -14,12 +14,14 @@ import Handler
 import Database.Persist
 import Database.Persist.MongoDB
 import Settings
+import Yesod.Auth
 
 mkYesodDispatch "App" resourcesApp
 
 mkFoundation :: AppSettings -> IO App
 mkFoundation appSettings = do
     appConnPool <- createPoolConfig $ appDatabaseConf appSettings
+
     return App {..}
 
 -- develMain = undefined
