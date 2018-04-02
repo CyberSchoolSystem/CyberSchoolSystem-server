@@ -7,11 +7,17 @@ User json
     password Text Maybe
     fails Int
     access [Access]
+    roles Role
     UniqueUser username -- Compatibility for Yesod.Auth.HashDB
 Access json
     time UTCTime
     inside Bool
     deriving (Eq)
+Role json
+    citizen Bool
+    representative Bool
+    admin Bool
+    teacher Text Maybe
 Choice json
     identity Int -- TODO: Unique
     votes Int

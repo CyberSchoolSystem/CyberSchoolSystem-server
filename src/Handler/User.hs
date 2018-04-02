@@ -34,6 +34,7 @@ data AddUserReq = AddUserReq
     , addChipId :: Text
     , addUsername :: Text
     , addPassword :: Maybe Text
+    , addRoles :: Role
     }
 
 data RmUserReq = RmUserReq { rmId :: IdUser } 
@@ -44,6 +45,7 @@ data InfoUserReq = InfoUserReq
     , infoGrade :: Maybe Text
     , infoChipId :: Maybe Text
     , infoUsername :: Maybe Text
+    , infoRole :: Maybe Role
     }
 
 -- TODO Do not give people full access on this
@@ -56,6 +58,7 @@ data UpdateUserReq = UpdateUserReq
     , updateChipId :: Maybe Text
     , updateUsername :: Maybe Text
     , updatePassword :: Maybe Text
+    , updateRole :: Maybe Role
     }
 
 instance FromJSON IdUser where
@@ -73,6 +76,7 @@ instance FromJSON AddUserReq where
         <*> v .: "chip"
         <*> v .: "username"
         <*> v .:? "password"
+        <*> v .: "role"
     parseJSON invalid = typeMismatch "AddUserReq" invalid
 
 instance FromJSON RmUserReq where
@@ -87,6 +91,7 @@ instance FromJSON InfoUserReq where
         <*> v .:? "grade"
         <*> v .:? "chip"
         <*> v .:? "username"
+        <*> v .:? "role"
     parseJSON invalid = typeMismatch "InfoUserReq" invalid
 
 instance FromJSON UpdateUserReq where
@@ -98,6 +103,7 @@ instance FromJSON UpdateUserReq where
         <*> v .:? "chip"
         <*> v .:? "username"
         <*> v .:? "password"
+        <*> v .:? "role"
     parseJSON invalid = typeMismatch "UpdateUserReq" invalid
 
 postUserAddR :: Handler ()
@@ -113,7 +119,8 @@ addToUser AddUserReq{..} = User
     , userGrade = addGrade
     , userChipId = addChipId
     , userUsername = addUsername
-    , userPassword = addPassword
+    , userPassword = addPassword -- TODO: Hash
+    , userRoles = addRoles
     , userFails = 0
     , userAccess = []
     }
@@ -165,7 +172,8 @@ updateToUpdate UpdateUserReq{..} = catMaybes [ (UserFirstName =.) <$> updateFirs
                                              , (UserGrade =.) <$> updateGrade
                                              , (UserChipId =.) <$> updateChipId
                                              , (UserUsername =.) <$> updateUsername
-                                             , (UserPassword =.) <$> Just <$> updatePassword ]
+                                             , (UserPassword =.) <$> Just <$> updatePassword
+                                             , (UserRoles =.) <$> updateRole ] -- TODO: Make more flexible
 
 postUserInfoR :: Handler Value
 postUserInfoR = do
@@ -179,4 +187,5 @@ infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName ==.) <$> infoFirstName
                                          , (UserLastName ==.) <$> infoLastName
                                          , (UserGrade ==.) <$> infoGrade
                                          , (UserChipId ==.) <$> infoChipId
-                                         , (UserUsername ==.) <$> infoUsername ]
+                                         , (UserUsername ==.) <$> infoUsername
+                                         , (UserRoles ==.) <$> infoRole ]
