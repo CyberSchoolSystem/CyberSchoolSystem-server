@@ -4,8 +4,8 @@ module Settings
     ( AppSettings (..)
     ) where
 
-import Data.Aeson
-import Database.Persist.MongoDB (MongoConf)
+import          Data.Aeson
+import          Database.Persist.MongoDB (MongoConf)
 
 data AppSettings = AppSettings -- TODO: Add useful settings from Scaffold
     { appDatabaseConf :: MongoConf

@@ -18,7 +18,6 @@ import           Database.Persist.Class (insert_, selectFirst, delete, update, s
 import           Database.Persist.Types (Filter, Entity(..), Update)
 import           Foundation
 import           Model
-import           Text.Blaze.Html        (Html)
 import           TextShow               (showt)
 import           Yesod.Core.Handler     (invalidArgs)
 import           Yesod.Core.Json        (requireJsonBody)
@@ -66,6 +65,7 @@ instance FromJSON IdUser where
         where val hasChip hasUser 
                   | hasChip = IdChip <$> v .: "chip"
                   | hasUser = IdUsername <$> v .: "username"
+              val _ _ = fail "uid object has neither 'chip' nor 'username' field"
     parseJSON invalid = typeMismatch "IdUser" invalid
 
 instance FromJSON AddUserReq where

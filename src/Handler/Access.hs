@@ -5,7 +5,6 @@ module Handler.Access
     ) where
 
 import           Control.Monad.IO.Class   (liftIO)
-import           Foundation
 import           Data.Aeson
 import           Data.Aeson.Types         (typeMismatch)
 import           Data.Bits                (xor)
@@ -16,6 +15,7 @@ import           Database.Persist         ((==.))
 import           Database.Persist.Class   (selectFirst, update)
 import           Database.Persist.Types   (Entity(..))
 import           Database.Persist.MongoDB (push)
+import           Foundation
 import           Model
 import           Yesod.Core.Handler       (invalidArgs, permissionDenied)
 import           Yesod.Core.Json          (requireJsonBody)

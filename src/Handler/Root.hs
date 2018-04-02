@@ -5,12 +5,11 @@ module Handler.Root
     ( getRootR
     ) where
 
-import Text.Blaze.Html (Html)
-import Foundation
-import Yesod
-import Yesod.Auth
-import Yesod.Core.Widget (whamlet)
-import Yesod.Core (defaultLayout)
+import           Foundation
+import           Text.Blaze.Html (Html)
+import           Yesod.Auth
+import           Yesod.Core.Widget (whamlet)
+import           Yesod.Core (defaultLayout)
 
 getRootR :: Handler Html
 getRootR = do

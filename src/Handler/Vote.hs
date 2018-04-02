@@ -11,6 +11,7 @@ import           Database.Persist.Types   (Filter, Entity(..), entityKey)
 import           Database.Persist.Class   (selectFirst, selectList, insert, update, delete)
 import           Database.Persist.MongoDB (nestEq, (->.), push)
 import           Data.Aeson
+import           Data.Aeson.Types         (typeMismatch)
 import           Data.Maybe               (catMaybes)
 import qualified Data.Text as T
 import           Data.Text                (Text)
@@ -20,7 +21,6 @@ import           TextShow                 (showt)
 import           Yesod.Persist.Core       (runDB)
 import           Yesod.Core.Handler       (invalidArgs, permissionDenied)
 import           Yesod.Core.Json          (FromJSON, requireJsonBody)
-import           Data.Aeson.Types         (Result(..), typeMismatch)
 
 data VoteReq = VoteReq
     { reqVoteId   :: Maybe Int
@@ -113,7 +113,7 @@ postVoteAddR :: Handler ()
 postVoteAddR = do
     minId <- minVoteId
     inp <- requireJsonBody :: Handler VoteAdd
-    runDB $ insert (addToVote inp minId)
+    _ <- runDB $ insert (addToVote inp minId)
     return ()
 
 {-| Find the smallest available voteId -}

@@ -2,19 +2,19 @@
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
+{-# OPTIONS_GHC -Wno-orphans   #-} -- Do not fail at -Werror
 
 module Application
     ( appMain
     ) where
 
-import Foundation
-import Yesod.Core
-import Yesod.Default.Config2 (loadYamlSettings, useEnv, configSettingsYml)
-import Handler
-import Database.Persist
-import Database.Persist.MongoDB
-import Settings
-import Yesod.Auth
+import           Database.Persist.MongoDB
+import           Foundation
+import           Handler
+import           Settings
+import           Yesod.Auth
+import           Yesod.Core
+import           Yesod.Default.Config2 (loadYamlSettings, useEnv, configSettingsYml)
 
 mkYesodDispatch "App" resourcesApp
 
