@@ -2,6 +2,7 @@
 {-# LANGUAGE TypeFamilies      #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE CPP              #-}
 module Foundation where
 
 import Data.Default.Class (def)
@@ -34,8 +35,13 @@ instance Yesod App where-- TODO: SSL
     -- yesodMiddleware = (sslOnleMiddleware 20) . defaultYesodMiddleware
     -- makeSessionBackend _ = sslOnlySessions $ fmap Just $
     makeSessionBackend _ = fmap Just $
+#ifdef DEVELOPMENT
         defaultClientSessionBackend 5 "client_session_key.aes"
+#else
+        defaultClientSessionBackend 20 "client_session_key.aes"
+#endif
 
+#ifndef NO_AUTH
     isAuthorized VoteActR _ = isCitizen
     isAuthorized VoteAddR _ = isRepresentative
     isAuthorized VoteRemoveR _ = isRepresentative
@@ -43,6 +49,7 @@ instance Yesod App where-- TODO: SSL
     isAuthorized UserRemoveR _ = isAdmin
     isAuthorized UserInfoR _ = isAdmin
     isAuthorized UserUpdateR _ = isAdmin
+#endif
     isAuthorized _ _ = return Authorized
 
 instance RenderMessage App FormMessage where
