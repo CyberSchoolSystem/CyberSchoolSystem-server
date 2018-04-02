@@ -3,10 +3,11 @@ User json
     lastName Text
     grade Text
     chipId Text -- TODO: Unique
-    username Text Maybe -- TODO: Unique
+    username Text -- TODO: Unique
     password Text Maybe
     fails Int
     access [Access]
+    UniqueUser username -- Compatibility for Yesod.Auth.HashDB
 Access json
     time UTCTime
     inside Bool

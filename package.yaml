@@ -38,6 +38,8 @@ library: # TODO: other-modules
     - bytestring
     - blaze-html
     - containers
+    - data-default-class
+    - http-conduit
     - persistent
     - persistent-template
     - persistent-mongoDB
@@ -47,6 +49,8 @@ library: # TODO: other-modules
     - text-show
     - unordered-containers
     - yesod
+    - yesod-auth
+    - yesod-auth-hashdb
     - yesod-core
     - yesod-form
     - yesod-persistent
