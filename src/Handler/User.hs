@@ -9,18 +9,15 @@ module Handler.User
 
 import           Data.Aeson
 import           Data.Aeson.Types       (typeMismatch)
-import           Data.HashMap.Lazy (member)
+import           Data.HashMap.Lazy      (member)
 import           Data.Maybe             (catMaybes)
 import           Data.Text              (Text)
-import qualified Data.Text as T
 import           Database.Persist       ((==.), (=.))
 import           Database.Persist.Class (insert_, selectFirst, delete, update, selectList)
 import           Database.Persist.Types (Filter, Entity(..), Update)
+import           Error
 import           Foundation
 import           Model
-import           Text.Blaze.Html        (Html)
-import           TextShow               (showt)
-import           Yesod.Core.Handler     (invalidArgs)
 import           Yesod.Core.Json        (requireJsonBody)
 import           Yesod.Persist.Core
 
@@ -32,8 +29,9 @@ data AddUserReq = AddUserReq
     , addLastName :: Text
     , addGrade :: Text
     , addChipId :: Text
-    , addUsername :: Maybe Text
+    , addUsername :: Text
     , addPassword :: Maybe Text
+    , addRoles :: Role
     }
 
 data RmUserReq = RmUserReq { rmId :: IdUser } 
@@ -44,6 +42,7 @@ data InfoUserReq = InfoUserReq
     , infoGrade :: Maybe Text
     , infoChipId :: Maybe Text
     , infoUsername :: Maybe Text
+    , infoRole :: Maybe Role
     }
 
 -- TODO Do not give people full access on this
@@ -56,6 +55,7 @@ data UpdateUserReq = UpdateUserReq
     , updateChipId :: Maybe Text
     , updateUsername :: Maybe Text
     , updatePassword :: Maybe Text
+    , updateRole :: Maybe Role
     }
 
 instance FromJSON IdUser where
@@ -63,6 +63,7 @@ instance FromJSON IdUser where
         where val hasChip hasUser 
                   | hasChip = IdChip <$> v .: "chip"
                   | hasUser = IdUsername <$> v .: "username"
+              val _ _ = fail "uid object has neither 'chip' nor 'username' field"
     parseJSON invalid = typeMismatch "IdUser" invalid
 
 instance FromJSON AddUserReq where
@@ -71,8 +72,9 @@ instance FromJSON AddUserReq where
         <*> v .: "lastName"
         <*> v .: "grade"
         <*> v .: "chip"
-        <*> v .:? "username"
+        <*> v .: "username"
         <*> v .:? "password"
+        <*> v .: "role"
     parseJSON invalid = typeMismatch "AddUserReq" invalid
 
 instance FromJSON RmUserReq where
@@ -87,6 +89,7 @@ instance FromJSON InfoUserReq where
         <*> v .:? "grade"
         <*> v .:? "chip"
         <*> v .:? "username"
+        <*> v .:? "role"
     parseJSON invalid = typeMismatch "InfoUserReq" invalid
 
 instance FromJSON UpdateUserReq where
@@ -98,12 +101,14 @@ instance FromJSON UpdateUserReq where
         <*> v .:? "chip"
         <*> v .:? "username"
         <*> v .:? "password"
+        <*> v .:? "role"
     parseJSON invalid = typeMismatch "UpdateUserReq" invalid
 
-postUserAddR :: Handler ()
+postUserAddR :: Handler Value
 postUserAddR = do
     user <- addToUser <$> requireJsonBody
     runDB $ insert_ user
+    return Null
 
 {-| Transform a request to a User -}
 addToUser :: AddUserReq -> User
@@ -113,50 +118,51 @@ addToUser AddUserReq{..} = User
     , userGrade = addGrade
     , userChipId = addChipId
     , userUsername = addUsername
-    , userPassword = addPassword
+    , userPassword = addPassword -- TODO: Hash
+    , userRoles = addRoles
     , userFails = 0
     , userAccess = []
     }
 
-postUserRemoveR :: Handler ()
+postUserRemoveR :: Handler Value
 postUserRemoveR = do
     req <- requireJsonBody :: Handler RmUserReq
     del <- runDB $ selectFirst (rmToFilter req) []
     case del of
-        Just e -> runDB $ delete (entityKey e)
-        Nothing -> invalidArgs $ rmInvalidArgs req
+        Just e -> runDB $ delete (entityKey e) >>= (\_ -> return Null)
+        Nothing -> return . toJSON . WrongFieldValue $ rmInvalidArgs req
 
 {-| Construct invalid args error message, according to a RmUserReq -}
-rmInvalidArgs :: RmUserReq -> [Text]
+rmInvalidArgs :: RmUserReq -> [(Text,Text)]
 rmInvalidArgs req = case rmId req of
-                        IdChip chip -> [T.concat ["Chip ID ", chip, " not available"]]
-                        IdUsername user -> [T.concat ["Username ", user, "not available"]]
+                        IdChip chip -> [("chip", chip)]
+                        IdUsername user -> [("username", user)]
 
 {-| Construct DB Filters according to a RmUserReq -}
 rmToFilter :: RmUserReq -> [Filter User]
 rmToFilter req = case rmId req of
                      IdChip chip -> [UserChipId ==. chip]
-                     IdUsername user -> [UserUsername ==. Just user]
+                     IdUsername user -> [UserUsername ==. user]
 
-postUserUpdateR :: Handler ()
+postUserUpdateR :: Handler Value
 postUserUpdateR = do
     req <- requireJsonBody :: Handler UpdateUserReq
     user <- runDB $ selectFirst (updateToFilter req) []
     case user of
-        Just e -> runDB $ update (entityKey e) (updateToUpdate req)
-        Nothing -> invalidArgs $ updateInvalidArgs req
+        Just e -> runDB $ update (entityKey e) (updateToUpdate req) >>= (\_ -> return Null)
+        Nothing -> return . toJSON . WrongFieldValue  $ updateInvalidArgs req
 
 {-| Create Database updates from a update request -}
 updateToFilter :: UpdateUserReq -> [Filter User]
 updateToFilter u = case idUser u of
                        IdUsername chip -> [UserChipId ==. chip]
-                       IdChip user -> [UserUsername ==. Just user]
+                       IdChip user -> [UserUsername ==. user]
 
 {-| Create errors from a update request -}
-updateInvalidArgs :: UpdateUserReq -> [Text]
+updateInvalidArgs :: UpdateUserReq -> [(Text,Text)]
 updateInvalidArgs u = case idUser u of
-                          IdChip chip -> [T.concat ["Unknown chip: ", showt chip]]
-                          IdUsername user -> [T.concat ["Unknown username: ", showt user]]
+                          IdChip chip -> [("chip", chip)]
+                          IdUsername user -> [("username", user)]
 
 {-| Create a database update from a update request -}
 updateToUpdate :: UpdateUserReq -> [Update User]
@@ -164,8 +170,9 @@ updateToUpdate UpdateUserReq{..} = catMaybes [ (UserFirstName =.) <$> updateFirs
                                              , (UserLastName =.) <$> updateLastName
                                              , (UserGrade =.) <$> updateGrade
                                              , (UserChipId =.) <$> updateChipId
-                                             , (UserUsername =.) <$> Just <$> updateUsername
-                                             , (UserPassword =.) <$> Just <$> updatePassword ]
+                                             , (UserUsername =.) <$> updateUsername
+                                             , (UserPassword =.) <$> Just <$> updatePassword
+                                             , (UserRoles =.) <$> updateRole ] -- TODO: Make more flexible
 
 postUserInfoR :: Handler Value
 postUserInfoR = do
@@ -179,4 +186,5 @@ infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName ==.) <$> infoFirstName
                                          , (UserLastName ==.) <$> infoLastName
                                          , (UserGrade ==.) <$> infoGrade
                                          , (UserChipId ==.) <$> infoChipId
-                                         , (UserUsername ==.) <$> Just <$> infoUsername ]
+                                         , (UserUsername ==.) <$> infoUsername
+                                         , (UserRoles ==.) <$> infoRole ]

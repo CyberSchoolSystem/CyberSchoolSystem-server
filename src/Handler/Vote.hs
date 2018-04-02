@@ -11,16 +11,14 @@ import           Database.Persist.Types   (Filter, Entity(..), entityKey)
 import           Database.Persist.Class   (selectFirst, selectList, insert, update, delete)
 import           Database.Persist.MongoDB (nestEq, (->.), push)
 import           Data.Aeson
+import           Data.Aeson.Types         (typeMismatch)
 import           Data.Maybe               (catMaybes)
-import qualified Data.Text as T
 import           Data.Text                (Text)
+import           Error
 import           Foundation
 import           Model
-import           TextShow                 (showt)
 import           Yesod.Persist.Core       (runDB)
-import           Yesod.Core.Handler       (invalidArgs, permissionDenied)
 import           Yesod.Core.Json          (FromJSON, requireJsonBody)
-import           Data.Aeson.Types         (Result(..), typeMismatch)
 
 data VoteReq = VoteReq
     { reqVoteId   :: Maybe Int
@@ -78,7 +76,7 @@ reqToDBFilter req = catMaybes go
                 (nestEq $ VoteChoices ->. ChoiceIdentity) <$> reqChoiceId req] -- TODO: Obsolete?
 
 {-| Handle POST on /api/vote/vote -}
-postVoteActR :: Handler ()
+postVoteActR :: Handler Value
 postVoteActR = do
     inp <- requireJsonBody :: Handler VoteAct
     user <- runDB $ selectFirst [UserChipId ==. chip inp] []
@@ -87,15 +85,18 @@ postVoteActR = do
     case (user, vote) of
         (Just u, Just v) -> if isAllowed u v
                                 then updateVote u v inp
-                                else permissionDenied "You already voted"
-        _                -> invalidArgs ["User or Vote not found"]
+                                else return . toJSON $ PermissionDenied ("You already voted" :: Text)
+        (_,_) -> return . toJSON . WrongFieldValue $
+                   catMaybes [ const ("chip", toJSON $ chip inp) <$> user
+                             , const ("vid", toJSON $ actVoteId inp) <$> vote ]
 
 {-| Vote. Update all neccessary records -}
-updateVote :: Entity User -> Entity Vote -> VoteAct -> Handler ()
+updateVote :: Entity User -> Entity Vote -> VoteAct -> Handler Value
 updateVote user vote inp = do
     let choices = voteChoices . entityVal $ vote
     runDB $ update (entityKey vote) [push VoteVoted (entityKey user)]
     runDB $ update (entityKey vote) [VoteChoices =. updateChoices inp choices]
+    return Null
 
 {-| Insert Description -}
 updateChoices :: VoteAct -> [Choice] -> [Choice]
@@ -109,12 +110,12 @@ isAllowed :: Entity User -> Entity Vote -> Bool
 isAllowed user vote = not $ elem (entityKey user) (voteVoted . entityVal $ vote)
 
 {-| Add a vote to the database -}
-postVoteAddR :: Handler ()
+postVoteAddR :: Handler Value
 postVoteAddR = do
     minId <- minVoteId
     inp <- requireJsonBody :: Handler VoteAdd
-    runDB $ insert (addToVote inp minId)
-    return ()
+    key <- runDB $ insert (addToVote inp minId)
+    return . toJSON $ key
 
 {-| Find the smallest available voteId -}
 minVoteId :: Handler Int
@@ -138,10 +139,10 @@ addToChoices VoteAdd{addChoices = c} = addInfo c 0
           addInfo [] _ = []
 
 {-| Remove a vote from the database -}
-postVoteRemoveR :: Handler ()
+postVoteRemoveR :: Handler Value
 postVoteRemoveR = do
     inp <- requireJsonBody :: Handler VoteDel
     result <- runDB $ selectFirst [VoteIdentity ==. delId inp] []
     case result of
-        Just ent -> runDB $ delete (entityKey ent)
-        Nothing  -> invalidArgs [ T.concat ["Id ", showt $ delId inp, " does not exist"]]
+        Just ent -> runDB $ delete (entityKey ent) >>= (\_ -> return Null)
+        Nothing  -> return . toJSON $ WrongFieldValue [("vid", delId inp)]

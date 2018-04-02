@@ -6,18 +6,29 @@ author:              "Fabian Geiselhart"
 maintainer:          ""
 copyright:           "2018 CyberSchoolSystem"
 
+# Metadata used when publishing your package
+synopsis:            Voting system for the "Schule als Staat" project
+category:            Web
+
+description: Please see the README on Github at <https://github.com/CyberSchoolSystem/CyberSchoolSystem-Server#readme>
+
 extra-source-files:
 - README.md
 - ChangeLog.md
 
-# Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
+flags:
+  noAuth:
+    description: Do not include the authentication system
+    default: False
+    manual: False
+  dev:
+    description: Use development settings
+    default: False
+    manual: False
 
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
-description: Please see the README on Github at <https://github.com/CyberSchoolSystem/CyberSchoolSystem-Server#readme>
+extra-source-files:
+- README.md
+- ChangeLog.md
 
 dependencies:
 - base >= 4.7 && < 5
@@ -29,15 +40,33 @@ ghc-options:
 - -Wincomplete-record-updates
 - -Wincomplete-uni-patterns
 - -Wredundant-constraints
+- -Werror
+
+flags:
+  noAuth:
+    description: Do not include the authentication system
+    default: False
+    manual: False
+  dev:
+    description: Use development settings
+    default: False
+    manual: False
 
 library: # TODO: other-modules
   source-dirs: src
   exposed-modules: Application
+  when:
+    - condition: flag(noAuth)
+      cpp-options: -DNO_AUTH
+    - condition: flag(dev)
+      cpp-options: -DDEVELOPMENT
   dependencies:
     - aeson
     - bytestring
     - blaze-html
     - containers
+    - data-default-class
+    - http-conduit
     - persistent
     - persistent-template
     - persistent-mongoDB
@@ -47,6 +76,8 @@ library: # TODO: other-modules
     - text-show
     - unordered-containers
     - yesod
+    - yesod-auth
+    - yesod-auth-hashdb
     - yesod-core
     - yesod-form
     - yesod-persistent

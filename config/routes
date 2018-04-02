@@ -13,4 +13,6 @@
 /api/user/info UserInfoR POST
 /api/user/test UserUpdateR POST
 
+/auth AuthR Auth getAuth
+
 / RootR GET
