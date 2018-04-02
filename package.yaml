@@ -16,6 +16,20 @@ extra-source-files:
 - README.md
 - ChangeLog.md
 
+flags:
+  noAuth:
+    description: Do not include the authentication system
+    default: False
+    manual: False
+  dev:
+    description: Use development settings
+    default: False
+    manual: False
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
 dependencies:
 - base >= 4.7 && < 5
 - text
@@ -36,6 +50,10 @@ flags:
     description: Use development settings
     default: False
     manual: False
+when:
+  - condition: flag(dev)
+    ghc-options:
+      -Werror
 
 library: # TODO: other-modules
   source-dirs: src
