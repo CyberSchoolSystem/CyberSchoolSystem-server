@@ -40,6 +40,7 @@ ghc-options:
 - -Wincomplete-record-updates
 - -Wincomplete-uni-patterns
 - -Wredundant-constraints
+- -Werror
 
 flags:
   noAuth:
@@ -50,10 +51,6 @@ flags:
     description: Use development settings
     default: False
     manual: False
-when:
-  - condition: flag(dev)
-    ghc-options:
-      -Werror
 
 library: # TODO: other-modules
   source-dirs: src
