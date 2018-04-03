@@ -2,10 +2,12 @@
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE CPP               #-}
 {-# OPTIONS_GHC -Wno-orphans   #-} -- Do not fail at -Werror
 
 module Application
     ( appMain
+    , mkFoundation
     ) where
 
 import           Database.Persist.MongoDB
@@ -28,7 +30,12 @@ mkFoundation appSettings = do
 
 appMain :: IO ()
 appMain = do
-    settings <- loadYamlSettings [configSettingsYml] [] useEnv -- TODO: Maybe do at compile time. Speed?
+    settings <- loadYamlSettings [
+#ifdef DEVELOPMENT
+                                 "config/settings-devel.yml" ,
+#endif
+                                 configSettingsYml
+                                 ] [] useEnv -- TODO: Maybe do at compile time. Speed?
     foundation <- mkFoundation settings
 
     warp 3000 foundation

@@ -32,7 +32,13 @@ extra-source-files:
 
 dependencies:
 - base >= 4.7 && < 5
+- aeson
+- persistent
+- persistent-mongoDB
 - text
+- yesod
+- yesod-auth
+- yesod-core
 
 ghc-options:
 - -Wall
@@ -52,33 +58,31 @@ flags:
     default: False
     manual: False
 
-library: # TODO: other-modules
+
+library:
   source-dirs: src
-  exposed-modules: Application
+  exposed-modules:
+    - Application
+    - Foundation
+    - Model
+    - Settings
   when:
     - condition: flag(noAuth)
       cpp-options: -DNO_AUTH
     - condition: flag(dev)
       cpp-options: -DDEVELOPMENT
   dependencies:
-    - aeson
-    - bytestring
     - blaze-html
     - containers
     - data-default-class
     - http-conduit
-    - persistent
     - persistent-template
-    - persistent-mongoDB
     - shakespeare
     - template-haskell
     - time
     - text-show
     - unordered-containers
-    - yesod
-    - yesod-auth
     - yesod-auth-hashdb
-    - yesod-core
     - yesod-form
     - yesod-persistent
 
@@ -101,5 +105,9 @@ tests:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -Wno-unused-top-binds
     dependencies:
     - CyberSchoolSystem-Server
+    - hspec
+    - QuickCheck
+    - yesod-test

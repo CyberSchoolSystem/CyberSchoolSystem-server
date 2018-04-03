@@ -1,0 +1,6 @@
+development: True
+
+database:
+  host: "127.0.0.1"
+  database: "devel"
+  connections: 10

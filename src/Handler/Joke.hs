@@ -9,7 +9,6 @@ import           Yesod
 import           Foundation
 import           Model
 import           Data.Text()
-import           Data.ByteString()
 
 getJokeR :: Handler ()
 getJokeR = do

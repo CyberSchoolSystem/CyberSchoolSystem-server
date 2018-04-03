@@ -1,2 +1,1 @@
-main :: IO ()
-main = putStrLn "Dummy testsuite"
+{-# OPTIONS_GHC -F -pgmF hspec-discover #-}

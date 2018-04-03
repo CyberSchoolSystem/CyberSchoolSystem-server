@@ -1,8 +1,8 @@
-{-# LANGUAGE TemplateHaskell   #-}
-{-# LANGUAGE TypeFamilies      #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE CPP              #-}
+{-# LANGUAGE CPP                   #-}
 module Foundation where
 
 import           Data.Text (Text)
@@ -16,6 +16,7 @@ import           Text.Shakespeare.I18N ()
 import           Yesod
 import           Yesod.Auth
 import           Yesod.Auth.HashDB (authHashDB)
+import           Yesod.Auth.Dummy (authDummy)
 import           Yesod.Core (defaultClientSessionBackend)
 import           Yesod.Form.Types (FormMessage)
 import           Yesod.Persist.Core (runDB)
@@ -35,7 +36,7 @@ instance Yesod App where-- TODO: SSL
 #ifdef DEVELOPMENT
         defaultClientSessionBackend 5 "client_session_key.aes"
 #else
-        defaultClientSessionBackend 20 "client_session_key.aes"
+        defaultClientSessionBackend 20 "client_session_key.aes" --TODO: Use Config file
 #endif
 
 #ifndef NO_AUTH
@@ -57,7 +58,8 @@ instance YesodAuth App where
     loginDest _ = RootR
     logoutDest _ = RootR
 
-    authPlugins _ = [ authHashDB (Just . UniqueUser) ]
+    authPlugins app = [ authHashDB (Just . UniqueUser)] ++ extra
+        where extra = [authDummy | appDummyLogin $ appSettings app]
 
     getAuthId creds = runDB $ do
         req <- selectFirst [UserUsername ==. (credsIdent creds)] []
