@@ -65,7 +65,7 @@ instance YesodAuth App where
         req <- selectFirst [UserUsername ==. (credsIdent creds)] []
         case req of
             Just (Entity eid _) -> return . Just $ eid
-            Nothing -> undefined
+            Nothing -> return Nothing
 
     authHttpManager = error "W T F"
 

@@ -36,6 +36,7 @@ dependencies:
 - persistent
 - persistent-mongoDB
 - text
+- time
 - yesod
 - yesod-auth
 - yesod-core
@@ -79,7 +80,6 @@ library:
     - persistent-template
     - shakespeare
     - template-haskell
-    - time
     - text-show
     - unordered-containers
     - yesod-auth-hashdb
@@ -102,12 +102,18 @@ tests:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
-    - -threaded
+    # - -threaded
     - -rtsopts
-    - -with-rtsopts=-N
+    # - -with-rtsopts=-N
     - -Wno-unused-top-binds
+    - -Wno-orphans
+    - -Wno-redundant-constraints
     dependencies:
     - CyberSchoolSystem-Server
     - hspec
+    - mongoDB
     - QuickCheck
+    - quickcheck-instances
+    - utf8-string
+    - wai-extra
     - yesod-test

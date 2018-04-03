@@ -9,23 +9,25 @@ User json
     access [Access]
     roles Role
     UniqueUser username -- Compatibility for Yesod.Auth.HashDB
+    deriving Show Eq
 Access json
     time UTCTime
     inside Bool
-    deriving (Eq)
+    deriving Eq Show
 Role json
     citizen Bool
     representative Bool
     admin Bool
     teacher Text Maybe
+    deriving Show Eq
 Choice json
     identity Int -- TODO: Unique
     votes Int
     description Text
-    deriving (Show)
+    deriving Show Eq
 Vote json
     identity Int -- TODO: Unique
     description Text
     voted [UserId]
     choices [Choice]
-    deriving (Show) -- TODO: Debug. Remove
+    deriving Show Eq
