@@ -3,23 +3,26 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE CPP                   #-}
+{-# OPTIONS_GHC -Wno-unused-imports   #-}
 module Foundation where
 
-import           Data.Text (Text)
-import           Database.Persist ((==.))
-import           Database.Persist.Class (selectFirst)
+import           Data.Text                (Text)
+import           Database.Persist         ((==.))
+import           Database.Persist.Class   (selectFirst)
 import           Database.Persist.MongoDB
-import           Database.Persist.Types (Entity(..))
-import           Model (UserId, EntityField (..), Unique(..), User(..), Role(..))
+import           Database.Persist.Types   (Entity(..))
+import           Model                    (UserId, EntityField (..), Unique(..), User(..), Role(..))
 import           Settings
-import           Text.Shakespeare.I18N ()
+import           Text.Shakespeare.I18N    ()
+import           Text.Hamlet              (hamletFile, hamletFileReload)
 import           Yesod
 import           Yesod.Auth
-import           Yesod.Auth.HashDB (authHashDB)
-import           Yesod.Auth.Dummy (authDummy)
-import           Yesod.Core (defaultClientSessionBackend)
-import           Yesod.Form.Types (FormMessage)
-import           Yesod.Persist.Core (runDB)
+import           Yesod.Auth.HashDB        (authHashDB)
+import           Yesod.Auth.Dummy         (authDummy)
+import           Yesod.Core               (defaultClientSessionBackend)
+import           Yesod.Core.Handler       (withUrlRenderer)
+import           Yesod.Form.Types         (FormMessage)
+import           Yesod.Persist.Core       (runDB)
 
 data App = App
     { appSettings :: AppSettings
@@ -32,6 +35,11 @@ instance Yesod App where-- TODO: SSL
     -- approot = ApprootStatic
     -- yesodMiddleware = (sslOnleMiddleware 20) . defaultYesodMiddleware
     -- makeSessionBackend _ = sslOnlySessions $ fmap Just $
+    defaultLayout contents = do
+        maid <- maybeAuthId
+        PageContent title headTags bodyTags <- widgetToPageContent contents
+        withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
+        
     makeSessionBackend _ = fmap Just $
 #ifdef DEVELOPMENT
         defaultClientSessionBackend 5 "client_session_key.aes"
@@ -47,6 +55,7 @@ instance Yesod App where-- TODO: SSL
     isAuthorized UserRemoveR _ = isAdmin
     isAuthorized UserInfoR _ = isAdmin
     isAuthorized UserUpdateR _ = isAdmin
+    isAuthorized DashboardR _ = isAuthenticated
 #endif
     isAuthorized _ _ = return Authorized
 
@@ -85,6 +94,13 @@ isRepresentative = maybeAuthId >>= checkAuth roleRepresentative "You are not a r
 
 isAdmin :: Handler AuthResult
 isAdmin = maybeAuthId >>= checkAuth roleAdmin "You are not an admin"
+
+isAuthenticated :: Handler AuthResult
+isAuthenticated = do
+    m <- maybeAuthId
+    case m of
+        Just _ -> return Authorized
+        Nothing -> return AuthenticationRequired
 
 isTeacher :: Handler AuthResult
 isTeacher = undefined

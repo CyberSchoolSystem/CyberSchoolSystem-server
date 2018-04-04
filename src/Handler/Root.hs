@@ -7,20 +7,13 @@ module Handler.Root
 
 import           Foundation
 import           Text.Blaze.Html (Html)
-import           Yesod.Auth
 import           Yesod.Core.Widget (whamlet)
 import           Yesod.Core (defaultLayout)
 
 getRootR :: Handler Html
 getRootR = do
-    maid <- maybeAuthId
     defaultLayout
         [whamlet|
-            <p>Your current auth ID: #{show maid}
-            $maybe _ <- maid
-                <p>
-                    <a href=@{AuthR LogoutR}>Logout
-            $nothing
-                <p>
-                    <a href=@{AuthR LoginR}>Go to the login page
+            <h1> WELCOME TO THE SHOW!
+            <p> Not implemented
         |]

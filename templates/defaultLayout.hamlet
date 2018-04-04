@@ -1,0 +1,15 @@
+$doctype 5
+
+<html>
+    <head>
+        <title>#{title}
+        ^{headTags}
+    <body>
+        <header>
+            $maybe _ <- maid
+                <a href=@{AuthR LogoutR}>Logout
+            $nothing
+                <a href=@{AuthR LoginR}>Login
+            <a href=@{DashboardR}>Dashboard
+            <a href=@{RootR}>Home
+        ^{bodyTags}
