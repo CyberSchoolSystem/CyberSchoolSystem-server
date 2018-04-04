@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Handler.Access 
-    ( postAccessInR
-    , postAccessOutR
+    ( postApiAccessInR
+    , postApiAccessOutR
     ) where
 
 import           Control.Monad.IO.Class   (liftIO)
@@ -31,8 +31,8 @@ instance FromJSON AccessUser where
     parseJSON invalid = typeMismatch "AccessUser" invalid
 
 {-| Access -}
-postAccessInR :: Handler Value
-postAccessInR = do
+postApiAccessInR :: Handler Value
+postApiAccessInR = do
     req <- requireJsonBody :: Handler AccessUser
     user <- runDB $ selectFirst [UserChipId ==. chip req] []
     addToDB True req user
@@ -60,8 +60,8 @@ addToDB direction req user =
         Nothing -> return . toJSON $ WrongFieldValue [("chip", chip req)]
 
 {-| Leave -}
-postAccessOutR :: Handler Value
-postAccessOutR = do
+postApiAccessOutR :: Handler Value
+postApiAccessOutR = do
     req <- requireJsonBody :: Handler AccessUser
     user <- runDB $ selectFirst [UserChipId ==. chip req] []
     addToDB False req user

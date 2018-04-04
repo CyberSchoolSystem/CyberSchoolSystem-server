@@ -5,16 +5,16 @@ import TestImport
 
 spec :: Spec
 spec = withApp $ do
-    describe "Handler.Access.postAccessInR" $ do
+    describe "Handler.Access.postApiAccessInR" $ do
         it "lets users in" $ prepareUsers
 
         it "does not let them in a second time" $ do
             prepareUsers
-            access AccessInR "User was let in a second time" "F"
+            access ApiAccessInR "User was let in a second time" "F"
                   (encode $ object [ "impossible" .= [toJSON (("chip", "F") :: (String, String))
                                                      ,toJSON (("inside", True) :: (String, Bool))] ])
 
-    describe "Handler.Access.postAccessOutR" $ do
+    describe "Handler.Access.postApiAccessOutR" $ do
         it "lets users out" $ do
             prepareUsers
             letout
@@ -22,7 +22,7 @@ spec = withApp $ do
         it "does not let them out a second time" $ do
             prepareUsers
             letout
-            access AccessOutR "User was let out a second time" "F"
+            access ApiAccessOutR "User was let out a second time" "F"
                   (encode $ object [ "impossible" .= [toJSON (("chip", "F") :: (String, String))
                                                      ,toJSON (("inside", False) :: (String, Bool))] ])
 
@@ -33,9 +33,9 @@ access route msg chip cmp = do
     assertEq (msg <> (toString $ simpleBody r)) (simpleBody r) cmp
 
 letout :: YesodExample App ()
-letout = access AccessOutR "User was not let out" "F" "null"
+letout = access ApiAccessOutR "User was not let out" "F" "null"
 
 prepareUsers :: YesodExample App ()
 prepareUsers = do
     _ <- addUser "" "" "" "F" "" Nothing nobody
-    access AccessInR "User was not let in" "F" "null"
+    access ApiAccessInR "User was not let in" "F" "null"

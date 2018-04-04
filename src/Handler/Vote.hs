@@ -1,9 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Handler.Vote
-    ( postVoteInfoR
-    , postVoteActR
-    , postVoteAddR
-    , postVoteRemoveR
+    ( postApiVoteInfoR
+    , postApiVoteActR
+    , postApiVoteAddR
+    , postApiVoteRemoveR
     ) where
 
 import           Database.Persist         ((==.), (=.))
@@ -25,13 +25,13 @@ data VoteReq = VoteReq
     , reqChoiceId :: Maybe Int
     } deriving (Show)
 
-data VoteAct = VoteAct
+data ApiVoteAct = ApiVoteAct
     { chip        :: Text
     , actVoteId   :: Int
     , actChoiceId :: Int
     } deriving (Show)
 
-data VoteAdd = VoteAdd
+data ApiVoteAdd = ApiVoteAdd
     { addDesc     :: Text
     , addChoices  :: [Text]
     }
@@ -44,18 +44,18 @@ instance FromJSON VoteReq where
         <*> v .:? "choice"
     parseJSON invalid = typeMismatch "VoteReq" invalid
 
-instance FromJSON VoteAct where
-    parseJSON (Object v) = VoteAct
+instance FromJSON ApiVoteAct where
+    parseJSON (Object v) = ApiVoteAct
         <$> v .: "chip" -- TODO: Transform to uid field
         <*> v .: "vid"
         <*> v .: "choice"
-    parseJSON invalid = typeMismatch "VoteAct" invalid
+    parseJSON invalid = typeMismatch "ApiVoteAct" invalid
 
-instance FromJSON VoteAdd where
-    parseJSON (Object v) = VoteAdd
+instance FromJSON ApiVoteAdd where
+    parseJSON (Object v) = ApiVoteAdd
         <$> v .: "description"
         <*> v .: "choices"
-    parseJSON invalid = typeMismatch "VoteAdd" invalid
+    parseJSON invalid = typeMismatch "ApiVoteAdd" invalid
 
 instance FromJSON VoteDel where
     parseJSON (Object v) = VoteDel
@@ -63,8 +63,8 @@ instance FromJSON VoteDel where
     parseJSON invalid = typeMismatch "VoteDel" invalid
 
 {-| Handle Post on /api/vote/info -}
-postVoteInfoR :: Handler Value
-postVoteInfoR = do
+postApiVoteInfoR :: Handler Value
+postApiVoteInfoR = do
     inp  <- requireJsonBody :: Handler VoteReq -- TODO: Check Application Type?
     rec <- runDB $ selectList (reqToDBFilter inp) []
     return $ toJSON rec
@@ -76,9 +76,9 @@ reqToDBFilter req = catMaybes go
                 (nestEq $ VoteChoices ->. ChoiceIdentity) <$> reqChoiceId req] -- TODO: Obsolete?
 
 {-| Handle POST on /api/vote/vote -}
-postVoteActR :: Handler Value
-postVoteActR = do
-    inp <- requireJsonBody :: Handler VoteAct
+postApiVoteActR :: Handler Value
+postApiVoteActR = do
+    inp <- requireJsonBody :: Handler ApiVoteAct
     user <- runDB $ selectFirst [UserChipId ==. chip inp] []
     vote <- runDB $ selectFirst [VoteIdentity ==. actVoteId inp,
                                 VoteChoices ->. ChoiceIdentity `nestEq` actChoiceId inp] []
@@ -91,7 +91,7 @@ postVoteActR = do
                              , const ("vid", toJSON $ actVoteId inp) <$> vote ]
 
 {-| Vote. Update all neccessary records -}
-updateVote :: Entity User -> Entity Vote -> VoteAct -> Handler Value
+updateVote :: Entity User -> Entity Vote -> ApiVoteAct -> Handler Value
 updateVote user vote inp = do
     let choices = voteChoices . entityVal $ vote
     runDB $ update (entityKey vote) [push VoteVoted (entityKey user)]
@@ -99,8 +99,8 @@ updateVote user vote inp = do
     return Null
 
 {-| Insert Description -}
-updateChoices :: VoteAct -> [Choice] -> [Choice]
-updateChoices VoteAct{actChoiceId = cid} = map inc
+updateChoices :: ApiVoteAct -> [Choice] -> [Choice]
+updateChoices ApiVoteAct{actChoiceId = cid} = map inc
     where inc x = if choiceIdentity x == cid
                       then x { choiceVotes = choiceVotes x + 1}
                       else x
@@ -110,10 +110,10 @@ isAllowed :: Entity User -> Entity Vote -> Bool
 isAllowed user vote = not $ elem (entityKey user) (voteVoted . entityVal $ vote)
 
 {-| Add a vote to the database -}
-postVoteAddR :: Handler Value
-postVoteAddR = do
+postApiVoteAddR :: Handler Value
+postApiVoteAddR = do
     minId <- minVoteId
-    inp <- requireJsonBody :: Handler VoteAdd
+    inp <- requireJsonBody :: Handler ApiVoteAdd
     key <- runDB $ insert (addToVote inp minId)
     return . toJSON $ key
 
@@ -124,23 +124,23 @@ minVoteId = do
     return $ minimumFree $ map (voteIdentity . entityVal) votes
         where minimumFree x = head $ filter (not . flip elem x) [1..]
 
-{-| Transform VoteAdd request to database entity -}
-addToVote :: VoteAdd -> Int -> Vote
+{-| Transform ApiVoteAdd request to database entity -}
+addToVote :: ApiVoteAdd -> Int -> Vote
 addToVote v i = Vote {
     voteIdentity = i,
     voteDescription = addDesc v,
     voteVoted = [],
     voteChoices = addToChoices v }
 
-{-| Transform VoteAdd request to Choice entity -}
-addToChoices :: VoteAdd -> [Choice]
-addToChoices VoteAdd{addChoices = c} = addInfo c 0
+{-| Transform ApiVoteAdd request to Choice entity -}
+addToChoices :: ApiVoteAdd -> [Choice]
+addToChoices ApiVoteAdd{addChoices = c} = addInfo c 0
     where addInfo (t:ts) i = Choice i 0 t : addInfo ts (i+1)
           addInfo [] _ = []
 
 {-| Remove a vote from the database -}
-postVoteRemoveR :: Handler Value
-postVoteRemoveR = do
+postApiVoteRemoveR :: Handler Value
+postApiVoteRemoveR = do
     inp <- requireJsonBody :: Handler VoteDel
     result <- runDB $ selectFirst [VoteIdentity ==. delId inp] []
     case result of

@@ -48,13 +48,13 @@ instance Yesod App where-- TODO: SSL
 #endif
 
 #ifndef NO_AUTH
-    isAuthorized VoteActR _ = isCitizen
-    isAuthorized VoteAddR _ = isRepresentative
-    isAuthorized VoteRemoveR _ = isRepresentative
-    isAuthorized UserAddR _ = isAdmin
-    isAuthorized UserRemoveR _ = isAdmin
-    isAuthorized UserInfoR _ = isAdmin
-    isAuthorized UserUpdateR _ = isAdmin
+    isAuthorized ApiVoteActR _ = isCitizen
+    isAuthorized ApiVoteAddR _ = isRepresentative
+    isAuthorized ApiVoteRemoveR _ = isRepresentative
+    isAuthorized ApiUserAddR _ = isAdmin
+    isAuthorized ApiUserRemoveR _ = isAdmin
+    isAuthorized ApiUserInfoR _ = isAdmin
+    isAuthorized ApiUserUpdateR _ = isAdmin
     isAuthorized DashboardR _ = isAuthenticated
 #endif
     isAuthorized _ _ = return Authorized

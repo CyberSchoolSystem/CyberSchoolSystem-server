@@ -3,12 +3,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Handler.Dashboard
     ( getDashboardR
+    , getUiUserAddR
     ) where
 
 import           Foundation
 import           Text.Blaze.Html (Html)
 import           Yesod.Core (defaultLayout)
 import           Yesod.Core.Widget (whamlet)
+
+getUiUserAddR :: Handler Html
+getUiUserAddR = undefined
 
 getDashboardR :: Handler Html
 getDashboardR = defaultLayout
@@ -23,5 +27,6 @@ getDashboardR = defaultLayout
         <ul>
             <li> Access times
         <h1> Admin Stuff
-        <ul> User management
+        <ul> 
+            <li> <a href=@{UiUserAddR}
     |]

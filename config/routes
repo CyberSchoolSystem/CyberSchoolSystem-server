@@ -1,18 +1,19 @@
-/api/vote/info VoteInfoR POST
-/api/vote/vote VoteActR POST
-/api/vote/add  VoteAddR POST
-/api/vote/remove VoteRemoveR POST
+/api/vote/info ApiVoteInfoR POST
+/api/vote/vote ApiVoteActR POST
+/api/vote/add  ApiVoteAddR POST
+/api/vote/remove ApiVoteRemoveR POST
 
-/api/access/in AccessInR POST
-/api/access/out AccessOutR POST
+/api/access/in ApiAccessInR POST
+/api/access/out ApiAccessOutR POST
 
 /api/joke/random JokeR GET
 
-/api/user/add UserAddR POST
-/api/user/remove UserRemoveR POST
-/api/user/info UserInfoR POST
-/api/user/test UserUpdateR POST
+/api/user/add ApiUserAddR POST
+/api/user/remove ApiUserRemoveR POST
+/api/user/info ApiUserInfoR POST
+/api/user/test ApiUserUpdateR POST
 
+/user/add UiUserAddR GET
 /dashboard DashboardR GET
 
 / RootR GET

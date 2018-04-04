@@ -1,10 +1,10 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Handler.User
-    ( postUserAddR
-    , postUserRemoveR
-    , postUserInfoR
-    , postUserUpdateR
+    ( postApiUserAddR
+    , postApiUserRemoveR
+    , postApiUserInfoR
+    , postApiUserUpdateR
     ) where
 
 import           Data.Aeson
@@ -104,8 +104,8 @@ instance FromJSON UpdateUserReq where
         <*> v .:? "role"
     parseJSON invalid = typeMismatch "UpdateUserReq" invalid
 
-postUserAddR :: Handler Value
-postUserAddR = do
+postApiUserAddR :: Handler Value
+postApiUserAddR = do
     user <- addToUser <$> requireJsonBody
     runDB $ insert_ user
     return Null
@@ -124,8 +124,8 @@ addToUser AddUserReq{..} = User
     , userAccess = []
     }
 
-postUserRemoveR :: Handler Value
-postUserRemoveR = do
+postApiUserRemoveR :: Handler Value
+postApiUserRemoveR = do
     req <- requireJsonBody :: Handler RmUserReq
     del <- runDB $ selectFirst (rmToFilter req) []
     case del of
@@ -144,8 +144,8 @@ rmToFilter req = case rmId req of
                      IdChip chip -> [UserChipId ==. chip]
                      IdUsername user -> [UserUsername ==. user]
 
-postUserUpdateR :: Handler Value
-postUserUpdateR = do
+postApiUserUpdateR :: Handler Value
+postApiUserUpdateR = do
     req <- requireJsonBody :: Handler UpdateUserReq
     user <- runDB $ selectFirst (updateToFilter req) []
     case user of
@@ -174,8 +174,8 @@ updateToUpdate UpdateUserReq{..} = catMaybes [ (UserFirstName =.) <$> updateFirs
                                              , (UserPassword =.) <$> Just <$> updatePassword
                                              , (UserRoles =.) <$> updateRole ] -- TODO: Make more flexible
 
-postUserInfoR :: Handler Value
-postUserInfoR = do
+postApiUserInfoR :: Handler Value
+postApiUserInfoR = do
     req <- requireJsonBody :: Handler InfoUserReq
     users <- runDB $ selectList (infoToFilter req) []
     return $ toJSON users

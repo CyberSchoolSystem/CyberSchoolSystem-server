@@ -5,8 +5,8 @@ import TestImport
 
 spec :: Spec
 spec = withApp $ do
-    describe "Handler.User.postUserAddR" $ do
-        it "can only be used by admins" $ testAuth modAdmin UserAddR
+    describe "Handler.User.postApiUserAddR" $ do
+        it "can only be used by admins" $ testAuth modAdmin ApiUserAddR
         it "makes adding users with the same Username or ChipId impossible" $ do
             authenticateAs (Entity undefined adm)
             sameCID <- liftIO $ generate (arbitrary :: Gen User)
@@ -25,16 +25,16 @@ spec = withApp $ do
             _ <- apiAddUser sameUname'
             bodyNotContains "null"
 
-    describe "Handler.User.postUserInfoR" $ do
-        it "can only be used by admins" $ testAuth modAdmin UserInfoR
+    describe "Handler.User.postApiUserInfoR" $ do
+        it "can only be used by admins" $ testAuth modAdmin ApiUserInfoR
     --     it "gives correct information" $
     --         pending
-    describe "Handler.User.postUserUpdateR" $ do
-        it "can only be used by admins" $ testAuth modAdmin UserUpdateR
+    describe "Handler.User.postApiUserUpdateR" $ do
+        it "can only be used by admins" $ testAuth modAdmin ApiUserUpdateR
         -- it "updates users correctly" $ do
         --     pending
-    describe "Handler.User.postUserRemoveR" $ do
-        it "can only be used by admins" $ testAuth modAdmin UserRemoveR
+    describe "Handler.User.postApiUserRemoveR" $ do
+        it "can only be used by admins" $ testAuth modAdmin ApiUserRemoveR
         it "removes users correctly" $ do
             authenticateAs (Entity undefined adm)
             u <- liftIO $ generate (arbitrary :: Gen User)
@@ -45,12 +45,12 @@ spec = withApp $ do
             let j = object ["uid" .= object ["chip" .= userChipId u]]
                 j' = object ["uid" .= object ["username" .= userUsername u']]
 
-            postBody UserRemoveR $ encode j
+            postBody ApiUserRemoveR $ encode j
             bodyContains "null"
             r <- runDB $ selectList [UserId ==. uk] []
             assertEq "User is still in database" r []
 
-            postBody UserRemoveR $ encode j'
+            postBody ApiUserRemoveR $ encode j'
             bodyContains "null"
             r' <- runDB $ selectList [UserId ==. uk'] []
             assertEq "User is still in database" r' []
@@ -64,6 +64,6 @@ apiAddUser u = do
                    , "username" .= userUsername u
                    , "password" .= userPassword u
                    , "role" .= userRoles u ]
-    postBody UserAddR (encode j)
+    postBody ApiUserAddR (encode j)
     getResponse
 
