@@ -28,7 +28,6 @@ $(document).ready(function() {
 });
 
 function addRow(d) {
-    console.log(d);
     var roles = d["roles"];
     delete d["roles"]
     var u = Object.assign(d, roles);
