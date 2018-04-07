@@ -1,0 +1,56 @@
+$(document).ready(function() {
+    $("#submit").click( function() {
+        var doc = document.getElementById("infoForm");
+        var data = { firstName: doc["firstName"].value,
+                     lastName: doc["lastName"].value,
+                     username: doc["username"].value,
+                     grade: doc["grade"].value,
+                     chip: doc["chip"].value };
+        filter(data);
+        $.ajax({ url: "@{ApiUserInfoR}",
+                 type: "POST",
+                 data: JSON.stringify(data),
+                 contentType: "application/json",
+                 dataType: "json",
+                 statusCode: {
+                    400: function () {
+                        alert("Malformed json. Please report bug");
+                    }
+                 },
+                 success: function (d) {
+                    $('#result tbody').empty();
+                    for (var u in d) {
+                        addRow(d[u]);
+                    }
+                 }
+        });
+    });
+});
+
+function addRow(d) {
+    console.log(d);
+    var roles = d["roles"];
+    delete d["roles"]
+    var u = Object.assign(d, roles);
+    var mk = "<tr><td>" + u["firstName"] +
+            "</td><td>" + u["lastName"] +
+            "</td><td>" + u["username"] +
+            "</td><td>" + u["grade"] +
+            "</td><td>" + u["admin"] +
+            "</td><td>" + u["citizen"] +
+            "</td><td>" + u["teacher"] +
+            "</td><td>" + u["representative"] + "</td></tr>";
+    $("#result tbody").append(mk);
+}
+
+function filter(obj) {
+    $.each(obj, function(key, value){
+        if (value === ""){
+            delete obj[key];
+        } else if (Object.prototype.toString.call(value) === '[object Object]') {
+            filter(value);
+        } else if ($.isArray(value)) {
+            $.each(value, function (k,v) { filter(v); });
+        }
+    });
+}

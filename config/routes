@@ -14,6 +14,7 @@
 /api/user/test ApiUserUpdateR POST
 
 /user/add UiUserAddR GET
+/user/info UiUserInfoR GET
 /dashboard DashboardR GET
 
 / RootR GET
