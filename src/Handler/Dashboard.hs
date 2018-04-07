@@ -7,16 +7,27 @@ module Handler.Dashboard
     ) where
 
 import           Foundation
-import           Text.Blaze.Html (Html)
-import           Yesod.Core (defaultLayout)
-import           Yesod.Core.Widget (whamlet)
+import           Settings           (appReload)
+import           Text.Blaze.Html    (Html)
+import           Text.Julius        (juliusFile, juliusFileReload)
+import           Text.Hamlet        (hamlet, hamletFile)
+import           Yesod.Core         (defaultLayout)
+import           Yesod.Core.Handler (getYesod)
+import           Yesod.Core.Widget  (toWidget)
 
 getUiUserAddR :: Handler Html
-getUiUserAddR = undefined
+getUiUserAddR = defaultLayout $ do
+    -- addScriptRemote "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"
+    app <- getYesod
+    toWidget $(hamletFile "templates/addUser.hamlet")
+    if appReload . appSettings $ app
+        then toWidget $(juliusFileReload "templates/addUser.julius")
+        else toWidget $(juliusFile "templates/addUser.julius")
 
 getDashboardR :: Handler Html
-getDashboardR = defaultLayout
-    [whamlet|
+getDashboardR = defaultLayout $ toWidget
+    [hamlet|
+        <p> todo: check logged in status
         <h1> Citizen Stuff
         <ul>
             <li> Votes
@@ -27,6 +38,6 @@ getDashboardR = defaultLayout
         <ul>
             <li> Access times
         <h1> Admin Stuff
-        <ul> 
-            <li> <a href=@{UiUserAddR}
+        <ul>
+            <li> <a href=@{UiUserAddR}>User add
     |]

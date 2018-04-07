@@ -1,0 +1,15 @@
+<h1> user add
+<div id="msg"> No msg
+<form name="form" id="addForm">
+    First Name: <input type="text" name="firstName"> <br>
+    Last Name: <input type="text" name="lastName"> <br>
+    Username: <input type="text" name="username"> <br>
+    Grade: <input type="text" name="grade"> <br>
+    Chip: <input type="text" name="chip"> <br>
+    Password: <input type="text" name="password"> <br>
+    Role: <br>
+    <input type="checkbox" name="admin" value="admin"> admin <br>
+    <input type="checkbox" name="rep" value="representative"> representative <br>
+    <input type="checkbox" name="citizen" value="citizen"> citizen <br>
+    <input type="checkbox" name="teacher" value="teacher"> teacher <br>
+    <input type="button" value="Submit" onclick="test()">

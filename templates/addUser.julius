@@ -1,0 +1,23 @@
+function test() {
+    var doc = document.getElementById("addForm");
+    if (doc["teacher"].checked == false) {
+        var teach = null;
+    } else {
+        var teach = undefined;
+    }
+    var data = { firstName: doc["firstName"].value,
+                    lastName: doc["lastName"].value,
+                    username: doc["username"].value,
+                    grade: doc["grade"].value,
+                    chip: doc["chip"].value,
+                    password: doc["password"].value,
+                    role: { admin: doc["admin"].checked,
+                            citizen: doc["citizen"].checked,
+                            teacher: teach,
+                            representative: doc["rep"].checked }};
+    console.log(JSON.stringify(data));
+    var req = new XMLHttpRequest;
+    req.open("POST", "@{ApiUserAddR}", true);
+    req.send(JSON.stringify(data));
+    console.log(req.responseText);
+}

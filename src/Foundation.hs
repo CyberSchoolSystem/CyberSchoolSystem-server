@@ -55,6 +55,7 @@ instance Yesod App where-- TODO: SSL
     isAuthorized ApiUserRemoveR _ = isAdmin
     isAuthorized ApiUserInfoR _ = isAdmin
     isAuthorized ApiUserUpdateR _ = isAdmin
+    isAuthorized UiUserAddR _ = isAdmin
     isAuthorized DashboardR _ = isAuthenticated
 #endif
     isAuthorized _ _ = return Authorized
