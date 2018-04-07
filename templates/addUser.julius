@@ -1,23 +1,50 @@
-function test() {
-    var doc = document.getElementById("addForm");
-    if (doc["teacher"].checked == false) {
-        var teach = null;
-    } else {
-        var teach = undefined;
-    }
-    var data = { firstName: doc["firstName"].value,
-                    lastName: doc["lastName"].value,
-                    username: doc["username"].value,
-                    grade: doc["grade"].value,
-                    chip: doc["chip"].value,
-                    password: doc["password"].value,
-                    role: { admin: doc["admin"].checked,
-                            citizen: doc["citizen"].checked,
-                            teacher: teach,
-                            representative: doc["rep"].checked }};
-    console.log(JSON.stringify(data));
-    var req = new XMLHttpRequest;
-    req.open("POST", "@{ApiUserAddR}", true);
-    req.send(JSON.stringify(data));
-    console.log(req.responseText);
+$(document).ready(function() {
+    $("#teacher").change( function() {
+        if(this.checked) {
+            $("#teachGrade").prop('disabled', false);
+        } else {
+            $("#teachGrade").prop('disabled', true);
+        }
+    });
+    $("#submit").click( function() {
+        var doc = document.getElementById("addForm");
+        if (doc["teacher"].checked == false) {
+            var teach = null;
+        } else {
+            var teach = doc["teachGrade"].value;
+        }
+        var data = { firstName: doc["firstName"].value,
+                     lastName: doc["lastName"].value,
+                     username: doc["username"].value,
+                     grade: doc["grade"].value,
+                     chip: doc["chip"].value,
+                     password: doc["password"].value,
+                     role: { admin: doc["admin"].checked,
+                             citizen: doc["citizen"].checked,
+                             teacher: teach,
+                             representative: doc["rep"].checked }};
+        $.ajax({ url: "@{ApiUserAddR}",
+                 type: "POST",
+                 data: JSON.stringify(data),
+                 contentType: "application/json",
+                 dataType: "json",
+                 statusCode: {
+                    400: function () {
+                        alert("Malformed json. Please report bug");
+                    }
+                 },
+                 success: function (d) {
+                    if (d == null) {
+                        $("#addForm")[0].reset();
+                        setmsg("Okay");
+                    } else {
+                        setmsg(JSON.stringify(d));
+                    }
+                 }
+        });
+    });
+});
+
+function setmsg(d) {
+    document.getElementById("msg").innerHTML = d;
 }

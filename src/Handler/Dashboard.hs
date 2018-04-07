@@ -13,11 +13,11 @@ import           Text.Julius        (juliusFile, juliusFileReload)
 import           Text.Hamlet        (hamlet, hamletFile)
 import           Yesod.Core         (defaultLayout)
 import           Yesod.Core.Handler (getYesod)
-import           Yesod.Core.Widget  (toWidget)
+import           Yesod.Core.Widget  (toWidget, addScriptRemote)
 
 getUiUserAddR :: Handler Html
 getUiUserAddR = defaultLayout $ do
-    -- addScriptRemote "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"
+    addScriptRemote "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"
     app <- getYesod
     toWidget $(hamletFile "templates/addUser.hamlet")
     if appReload . appSettings $ app
