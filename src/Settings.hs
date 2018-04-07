@@ -11,6 +11,7 @@ data AppSettings = AppSettings -- TODO: Add useful settings from Scaffold
     { appDatabaseConf :: MongoConf
     , appDevelopment :: Bool
     , appDummyLogin :: Bool
+    , appReload :: Bool
     }
 
 instance FromJSON AppSettings where
@@ -18,5 +19,6 @@ instance FromJSON AppSettings where
         appDatabaseConf <- o .: "database"
         appDevelopment <- o .:? "development" .!= False
         appDummyLogin <- o .:? "dummyLogin" .!= appDevelopment
+        appReload <- o .:? "reloadeMode" .!= appDevelopment
 
         return AppSettings {..}

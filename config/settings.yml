@@ -3,6 +3,7 @@ connections: 10
 
 # development: False
 # dummyLogin: False
+# reloadeMode: False
 
 database:
   host: "127.0.0.1"
