@@ -1,0 +1,7 @@
+function setmsg(d) {
+    document.getElementById("msg").innerHTML = "Message: " + d;
+}
+
+function seterror(d) {
+    document.getElementById("error").innerHTML = "Error: " + d;
+}

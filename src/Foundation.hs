@@ -3,10 +3,10 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE CPP                   #-}
-{-# OPTIONS_GHC -Wno-unused-imports   #-}
 module Foundation where
 
 import           Data.Text                (Text)
+import           Data.Monoid              ((<>))
 import           Database.Persist         ((==.))
 import           Database.Persist.Class   (selectFirst)
 import           Database.Persist.MongoDB
@@ -14,13 +14,15 @@ import           Database.Persist.Types   (Entity(..))
 import           Model                    (UserId, EntityField (..), Unique(..), User(..), Role(..))
 import           Settings
 import           Text.Shakespeare.I18N    ()
-import           Text.Hamlet              (hamletFile, hamletFileReload)
+import           Text.Hamlet              (hamletFile)
+import           Text.Julius              (juliusFile)
 import           Yesod
 import           Yesod.Auth
 import           Yesod.Auth.HashDB        (authHashDB)
 import           Yesod.Auth.Dummy         (authDummy)
 import           Yesod.Core               (defaultClientSessionBackend)
 import           Yesod.Core.Handler       (withUrlRenderer)
+import           Yesod.Core.Widget        (toWidget, addScriptRemote)
 import           Yesod.Form.Types         (FormMessage)
 import           Yesod.Persist.Core       (runDB)
 
@@ -37,7 +39,10 @@ instance Yesod App where-- TODO: SSL
     -- makeSessionBackend _ = sslOnlySessions $ fmap Just $
     defaultLayout contents = do
         maid <- maybeAuthId
-        PageContent title headTags bodyTags <- widgetToPageContent contents
+        let widget = contents
+                     <> addScriptRemote "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"
+                     <> toWidget $(juliusFile "templates/defaultLayout.julius")
+        PageContent title headTags bodyTags <- widgetToPageContent widget
         withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
         
     makeSessionBackend _ = fmap Just $

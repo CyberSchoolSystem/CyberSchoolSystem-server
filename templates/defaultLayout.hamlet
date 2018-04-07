@@ -12,4 +12,7 @@ $doctype 5
                 <a href=@{AuthR LoginR}>Login
             <a href=@{DashboardR}>Dashboard
             <a href=@{RootR}>Home
+        <h1>#{title}
+        <div id="error">
+        <div id="msg">
         ^{bodyTags}
