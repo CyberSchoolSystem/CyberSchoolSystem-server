@@ -25,7 +25,6 @@ Choice json
     description Text
     deriving Show Eq
 Vote json
-    identity Int -- TODO: Unique
     description Text
     voted [UserId]
     choices [Choice]

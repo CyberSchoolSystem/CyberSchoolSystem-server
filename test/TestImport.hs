@@ -14,7 +14,6 @@ module TestImport
     , modRep
     , modAdmin
     , modUsername
-    , modChipId
     , modCit
     , testAuth
     ) where
@@ -47,12 +46,11 @@ instance Arbitrary User where
     arbitrary = do
         fn     <- arbitrary :: Gen Text
         ln     <- arbitrary :: Gen Text
-        chip   <- arbitrary :: Gen Text
         grade  <- arbitrary :: Gen Text
         user   <- arbitrary :: Gen Text
         access <- arbitrary :: Gen [Access]
         role   <- arbitrary :: Gen Role
-        return User{userFirstName = fn, userLastName = ln, userChipId = chip, userUsername = user,
+        return User{userFirstName = fn, userLastName = ln, userUsername = user,
                     userPassword = Nothing, userFails = 0, userAccess = access, userRoles = role,
                     userGrade = grade}
 
@@ -95,7 +93,7 @@ runDBWithApp app query = do
     liftIO $ runMongoDBPool (mgAccessMode $ appDatabaseConf $ appSettings app) query (appConnPool app)
 
 adm :: User
-adm = User "" "" "" "" "adm" Nothing 0 [] everything
+adm = User "" "" "" "adm" Nothing 0 [] everything
 
 wipeDB :: App -> IO ()
 wipeDB app = void $ runDBWithApp app dropAllCollections
@@ -107,8 +105,8 @@ dropAllCollections = allCollections >>=
           isSystemCollection = isPrefixOf "system."
 
 
-addUser :: Text -> Text -> Text -> Text -> Text -> Maybe Text -> Role -> YesodExample App (Key User)
-addUser fn ln grade chip user pw role = runDB . insert $ User fn ln grade chip user pw 0 [] role
+addUser :: Text -> Text -> Text -> Text -> Maybe Text -> Role -> YesodExample App (Key User)
+addUser fn ln grade user pw role = runDB . insert $ User fn ln grade user pw 0 [] role
 
 addUser' :: User -> YesodExample App (Key User)
 addUser' = runDB . insert
@@ -167,9 +165,6 @@ modAdmin b u = u{userRoles = modAdmin' b $ userRoles u}
 
 modUsername :: Text -> User -> User
 modUsername n u = u{userUsername = n}
-
-modChipId :: Text -> User -> User
-modChipId c u = u{userChipId = c}
 
 modAdmin' :: Bool ->  Role -> Role
 modAdmin' b r = r{roleAdmin = b}

@@ -11,7 +11,7 @@ spec = withApp $ do
         it "does not let them in a second time" $ do
             prepareUsers
             access ApiAccessInR "User was let in a second time" "F"
-                  (encode $ object [ "impossible" .= [toJSON (("chip", "F") :: (String, String))
+                  (encode $ object [ "impossible" .= [toJSON (("username", "F") :: (String, String))
                                                      ,toJSON (("inside", True) :: (String, Bool))] ])
 
     describe "Handler.Access.postApiAccessOutR" $ do
@@ -23,7 +23,7 @@ spec = withApp $ do
             prepareUsers
             letout
             access ApiAccessOutR "User was let out a second time" "F"
-                  (encode $ object [ "impossible" .= [toJSON (("chip", "F") :: (String, String))
+                  (encode $ object [ "impossible" .= [toJSON (("username", "F") :: (String, String))
                                                      ,toJSON (("inside", False) :: (String, Bool))] ])
 
 access :: Yesod site => Route site -> String -> String -> ByteString -> YesodExample site ()
@@ -37,5 +37,5 @@ letout = access ApiAccessOutR "User was not let out" "F" "null"
 
 prepareUsers :: YesodExample App ()
 prepareUsers = do
-    _ <- addUser "" "" "" "F" "" Nothing nobody
+    _ <- addUser "" "" "F" "" Nothing nobody
     access ApiAccessInR "User was not let in" "F" "null"

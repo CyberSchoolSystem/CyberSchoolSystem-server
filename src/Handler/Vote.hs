@@ -21,13 +21,13 @@ import           Yesod.Persist.Core       (runDB)
 import           Yesod.Core.Json          (FromJSON, requireJsonBody)
 
 data VoteReq = VoteReq
-    { reqVoteId   :: Maybe Int
+    { reqVoteId   :: Maybe (Key Vote)
     , reqChoiceId :: Maybe Int
     } deriving (Show)
 
 data ApiVoteAct = ApiVoteAct
     { idUser      :: Text
-    , actVoteId   :: Int
+    , actVoteId   :: Key Vote
     , actChoiceId :: Int
     } deriving (Show)
 
@@ -36,7 +36,7 @@ data ApiVoteAdd = ApiVoteAdd
     , addChoices  :: [Text]
     }
 
-data VoteDel = VoteDel { delId :: Int }
+data VoteDel = VoteDel { delId :: Key Vote }
 
 instance FromJSON VoteReq where
     parseJSON (Object v) = VoteReq
@@ -72,7 +72,7 @@ postApiVoteInfoR = do
 {-| Create a list of Mongo filters based on a VoteReq -}
 reqToDBFilter :: VoteReq -> [Filter Vote]
 reqToDBFilter req = catMaybes go
-    where go = [(VoteIdentity ==.) <$> reqVoteId req,
+    where go = [(VoteId ==.) <$> reqVoteId req,
                 (nestEq $ VoteChoices ->. ChoiceIdentity) <$> reqChoiceId req] -- TODO: Obsolete?
 
 {-| Handle POST on /api/vote/vote -}
@@ -80,7 +80,7 @@ postApiVoteActR :: Handler Value
 postApiVoteActR = do
     inp <- requireJsonBody :: Handler ApiVoteAct
     user <- runDB $ selectFirst [UserUsername ==. idUser inp] []
-    vote <- runDB $ selectFirst [VoteIdentity ==. actVoteId inp,
+    vote <- runDB $ selectFirst [VoteId ==. actVoteId inp,
                                 VoteChoices ->. ChoiceIdentity `nestEq` actChoiceId inp] []
     case (user, vote) of
         (Just u, Just v) -> if isAllowed u v
@@ -112,22 +112,14 @@ isAllowed user vote = not $ elem (entityKey user) (voteVoted . entityVal $ vote)
 {-| Add a vote to the database -}
 postApiVoteAddR :: Handler Value
 postApiVoteAddR = do
-    minId <- minVoteId
     inp <- requireJsonBody :: Handler ApiVoteAdd
-    _ <- runDB $ insert (addToVote inp minId)
+    _ <- runDB $ insert (addToVote inp)
     return Null
 
-{-| Find the smallest available voteId -}
-minVoteId :: Handler Int
-minVoteId = do
-    votes <- runDB $ selectList [] []
-    return $ minimumFree $ map (voteIdentity . entityVal) votes
-        where minimumFree x = head $ filter (not . flip elem x) [1..]
 
 {-| Transform ApiVoteAdd request to database entity -}
-addToVote :: ApiVoteAdd -> Int -> Vote
-addToVote v i = Vote {
-    voteIdentity = i,
+addToVote :: ApiVoteAdd -> Vote
+addToVote v = Vote {
     voteDescription = addDesc v,
     voteVoted = [],
     voteChoices = addToChoices v }
@@ -142,7 +134,7 @@ addToChoices ApiVoteAdd{addChoices = c} = addInfo c 0
 postApiVoteRemoveR :: Handler Value
 postApiVoteRemoveR = do
     inp <- requireJsonBody :: Handler VoteDel
-    result <- runDB $ selectFirst [VoteIdentity ==. delId inp] []
+    result <- runDB $ selectFirst [VoteId ==. delId inp] []
     case result of
         Just ent -> runDB $ delete (entityKey ent) >>= (\_ -> return Null)
         Nothing  -> return . toJSON $ WrongFieldValue [("vid", delId inp)]

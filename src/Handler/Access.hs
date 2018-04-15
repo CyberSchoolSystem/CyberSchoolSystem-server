@@ -55,9 +55,9 @@ addToDB direction req user =
                           access <- liftIO $ newAccess direction
                           runDB $ update (entityKey u) [push UserAccess access]
                           return Null
-                      else return . toJSON $ Impossible [("idUser", toJSON $ idUser req)
+                      else return . toJSON $ Impossible [("username", toJSON $ idUser req)
                                                         ,("inside", toJSON $ direction)]
-        Nothing -> return . toJSON $ WrongFieldValue [("idUser", idUser req)]
+        Nothing -> return . toJSON $ WrongFieldValue [("username", idUser req)]
 
 {-| Leave -}
 postApiAccessOutR :: Handler Value
