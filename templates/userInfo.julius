@@ -38,7 +38,8 @@ function addRow(d) {
             "</td><td>" + u["admin"] +
             "</td><td>" + u["citizen"] +
             "</td><td>" + u["teacher"] +
-            "</td><td>" + u["representative"] + "</td></tr>";
+            "</td><td>" + u["representative"] + 
+            "</td><td>deleteme</td><td>changeme</td></tr>";
     $("#result tbody").append(mk);
 }
 

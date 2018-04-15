@@ -15,6 +15,10 @@
 
 /user/add UiUserAddR GET
 /user/info UiUserInfoR GET
+
+/vote/add UiVoteAddR GET
+/vote/info UiVoteInfoR GET
+
 /dashboard DashboardR GET
 
 / RootR GET

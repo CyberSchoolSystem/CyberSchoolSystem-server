@@ -38,7 +38,7 @@ $(document).ready(function() {
                         $("#addForm")[0].reset();
                         setmsg("Okay");
                     } else {
-                        setmsg(JSON.stringify(d));
+                        seterror(JSON.stringify(d));
                     }
                  }
         });
