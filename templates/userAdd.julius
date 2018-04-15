@@ -17,7 +17,6 @@ $(document).ready(function() {
                      lastName: doc["lastName"].value,
                      username: doc["username"].value,
                      grade: doc["grade"].value,
-                     chip: doc["chip"].value,
                      password: doc["password"].value,
                      role: { admin: doc["admin"].checked,
                              citizen: doc["citizen"].checked,

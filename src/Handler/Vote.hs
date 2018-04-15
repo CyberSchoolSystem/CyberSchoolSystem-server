@@ -26,7 +26,7 @@ data VoteReq = VoteReq
     } deriving (Show)
 
 data ApiVoteAct = ApiVoteAct
-    { chip        :: Text
+    { idUser      :: Text
     , actVoteId   :: Int
     , actChoiceId :: Int
     } deriving (Show)
@@ -46,7 +46,7 @@ instance FromJSON VoteReq where
 
 instance FromJSON ApiVoteAct where
     parseJSON (Object v) = ApiVoteAct
-        <$> v .: "chip" -- TODO: Transform to uid field
+        <$> v .: "username" -- TODO: Transform to uid field
         <*> v .: "vid"
         <*> v .: "choice"
     parseJSON invalid = typeMismatch "ApiVoteAct" invalid
@@ -79,7 +79,7 @@ reqToDBFilter req = catMaybes go
 postApiVoteActR :: Handler Value
 postApiVoteActR = do
     inp <- requireJsonBody :: Handler ApiVoteAct
-    user <- runDB $ selectFirst [UserChipId ==. chip inp] []
+    user <- runDB $ selectFirst [UserUsername ==. idUser inp] []
     vote <- runDB $ selectFirst [VoteIdentity ==. actVoteId inp,
                                 VoteChoices ->. ChoiceIdentity `nestEq` actChoiceId inp] []
     case (user, vote) of
@@ -87,7 +87,7 @@ postApiVoteActR = do
                                 then updateVote u v inp
                                 else return . toJSON $ PermissionDenied ("You already voted" :: Text)
         (_,_) -> return . toJSON . WrongFieldValue $
-                   catMaybes [ const ("chip", toJSON $ chip inp) <$> user
+                   catMaybes [ const ("username", toJSON $ idUser inp) <$> user
                              , const ("vid", toJSON $ actVoteId inp) <$> vote ]
 
 {-| Vote. Update all neccessary records -}
@@ -114,8 +114,8 @@ postApiVoteAddR :: Handler Value
 postApiVoteAddR = do
     minId <- minVoteId
     inp <- requireJsonBody :: Handler ApiVoteAdd
-    key <- runDB $ insert (addToVote inp minId)
-    return . toJSON $ key
+    _ <- runDB $ insert (addToVote inp minId)
+    return Null
 
 {-| Find the smallest available voteId -}
 minVoteId :: Handler Int

@@ -2,7 +2,6 @@ User json
     firstName Text
     lastName Text
     grade Text
-    chipId Text -- TODO: Unique
     username Text -- TODO: Unique
     password Text Maybe
     fails Int

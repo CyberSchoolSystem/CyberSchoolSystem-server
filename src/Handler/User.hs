@@ -9,7 +9,6 @@ module Handler.User
 
 import           Data.Aeson
 import           Data.Aeson.Types       (typeMismatch)
-import           Data.HashMap.Lazy      (member)
 import           Data.Maybe             (catMaybes)
 import           Data.Text              (Text)
 import           Database.Persist       ((==.), (=.))
@@ -21,26 +20,21 @@ import           Model
 import           Yesod.Core.Json        (requireJsonBody)
 import           Yesod.Persist.Core
 
-{-| Uniquely identifies a user -}
-data IdUser = IdChip Text | IdUsername Text -- TODO: Elliminate case statements
-
 data AddUserReq = AddUserReq
     { addFirstName :: Text
     , addLastName :: Text
     , addGrade :: Text
-    , addChipId :: Text
     , addUsername :: Text
     , addPassword :: Maybe Text
     , addRoles :: Role
     }
 
-data RmUserReq = RmUserReq { rmId :: IdUser } 
+data RmUserReq = RmUserReq { rmId :: Text } 
 
 data InfoUserReq = InfoUserReq
     { infoFirstName :: Maybe Text
     , infoLastName :: Maybe Text
     , infoGrade :: Maybe Text
-    , infoChipId :: Maybe Text
     , infoUsername :: Maybe Text
     , infoRole :: Maybe Role
     }
@@ -48,30 +42,20 @@ data InfoUserReq = InfoUserReq
 -- TODO Do not give people full access on this
 -- TODO How to handle reseting fails & managing access
 data UpdateUserReq = UpdateUserReq
-    { idUser :: IdUser
+    { idUsername :: Text
     , updateFirstName :: Maybe Text
     , updateLastName :: Maybe Text
     , updateGrade :: Maybe Text
-    , updateChipId :: Maybe Text
     , updateUsername :: Maybe Text
     , updatePassword :: Maybe Text
     , updateRole :: Maybe Role
     }
-
-instance FromJSON IdUser where
-    parseJSON (Object v) = val (member "chip" v) (member "username" v)
-        where val hasChip hasUser 
-                  | hasChip = IdChip <$> v .: "chip"
-                  | hasUser = IdUsername <$> v .: "username"
-              val _ _ = fail "uid object has neither 'chip' nor 'username' field"
-    parseJSON invalid = typeMismatch "IdUser" invalid
 
 instance FromJSON AddUserReq where
     parseJSON (Object v) = AddUserReq
         <$> v .: "firstName"
         <*> v .: "lastName"
         <*> v .: "grade"
-        <*> v .: "chip"
         <*> v .: "username"
         <*> v .:? "password"
         <*> v .: "role"
@@ -79,7 +63,7 @@ instance FromJSON AddUserReq where
 
 instance FromJSON RmUserReq where
     parseJSON (Object v) = RmUserReq
-        <$> v .: "uid"
+        <$> v .: "idUsername"
     parseJSON invalid = typeMismatch "RmUserReq" invalid
 
 instance FromJSON InfoUserReq where
@@ -87,18 +71,16 @@ instance FromJSON InfoUserReq where
         <$> v .:? "firstName"
         <*> v .:? "lastName"
         <*> v .:? "grade"
-        <*> v .:? "chip"
         <*> v .:? "username"
         <*> v .:? "role"
     parseJSON invalid = typeMismatch "InfoUserReq" invalid
 
 instance FromJSON UpdateUserReq where
     parseJSON (Object v) = UpdateUserReq
-        <$> v .: "uid"
+        <$> v .: "idUsername"
         <*> v .:? "firstName"
         <*> v .:? "lastName"
         <*> v .:? "grade"
-        <*> v .:? "chip"
         <*> v .:? "username"
         <*> v .:? "password"
         <*> v .:? "role"
@@ -116,7 +98,6 @@ addToUser AddUserReq{..} = User
     { userFirstName = addFirstName
     , userLastName = addLastName
     , userGrade = addGrade
-    , userChipId = addChipId
     , userUsername = addUsername
     , userPassword = addPassword -- TODO: Hash
     , userRoles = addRoles
@@ -134,15 +115,11 @@ postApiUserRemoveR = do
 
 {-| Construct invalid args error message, according to a RmUserReq -}
 rmInvalidArgs :: RmUserReq -> [(Text,Text)]
-rmInvalidArgs req = case rmId req of
-                        IdChip chip -> [("chip", chip)]
-                        IdUsername user -> [("username", user)]
+rmInvalidArgs req = [("username", rmId req)]
 
 {-| Construct DB Filters according to a RmUserReq -}
 rmToFilter :: RmUserReq -> [Filter User]
-rmToFilter req = case rmId req of
-                     IdChip chip -> [UserChipId ==. chip]
-                     IdUsername user -> [UserUsername ==. user]
+rmToFilter req = [UserUsername ==. rmId req]
 
 postApiUserUpdateR :: Handler Value
 postApiUserUpdateR = do
@@ -154,22 +131,17 @@ postApiUserUpdateR = do
 
 {-| Create Database updates from a update request -}
 updateToFilter :: UpdateUserReq -> [Filter User]
-updateToFilter u = case idUser u of
-                       IdUsername chip -> [UserChipId ==. chip]
-                       IdChip user -> [UserUsername ==. user]
+updateToFilter u =  [UserUsername ==. idUsername u]
 
 {-| Create errors from a update request -}
 updateInvalidArgs :: UpdateUserReq -> [(Text,Text)]
-updateInvalidArgs u = case idUser u of
-                          IdChip chip -> [("chip", chip)]
-                          IdUsername user -> [("username", user)]
+updateInvalidArgs u = [("username", idUsername u)]
 
 {-| Create a database update from a update request -}
 updateToUpdate :: UpdateUserReq -> [Update User]
 updateToUpdate UpdateUserReq{..} = catMaybes [ (UserFirstName =.) <$> updateFirstName
                                              , (UserLastName =.) <$> updateLastName
                                              , (UserGrade =.) <$> updateGrade
-                                             , (UserChipId =.) <$> updateChipId
                                              , (UserUsername =.) <$> updateUsername
                                              , (UserPassword =.) <$> Just <$> updatePassword
                                              , (UserRoles =.) <$> updateRole ] -- TODO: Make more flexible
@@ -185,6 +157,5 @@ infoToFilter :: InfoUserReq -> [Filter User]
 infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName ==.) <$> infoFirstName
                                          , (UserLastName ==.) <$> infoLastName
                                          , (UserGrade ==.) <$> infoGrade
-                                         , (UserChipId ==.) <$> infoChipId
                                          , (UserUsername ==.) <$> infoUsername
                                          , (UserRoles ==.) <$> infoRole ]

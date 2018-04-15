@@ -2,7 +2,6 @@
     First Name: <input type="text" name="firstName"> <br>
     Last Name: <input type="text" name="lastName"> <br>
     Username: <input type="text" name="username"> <br>
-    Chip: <input type="text" name="chip"> <br>
     Grade: <input type="text" name="grade"> <br>
     <input type="button" value="Submit" id="submit">
 <table id="result">

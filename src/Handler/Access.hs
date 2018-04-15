@@ -22,19 +22,19 @@ import           Yesod.Core.Json          (requireJsonBody)
 import           Yesod.Persist.Core       (runDB)
 
 data AccessUser = AccessUser
-    { chip :: T.Text
+    { idUser :: T.Text
     }
 
 instance FromJSON AccessUser where
     parseJSON (Object v) = AccessUser 
-        <$> v .: "chip"
+        <$> v .: "username"
     parseJSON invalid = typeMismatch "AccessUser" invalid
 
 {-| Access -}
 postApiAccessInR :: Handler Value
 postApiAccessInR = do
     req <- requireJsonBody :: Handler AccessUser
-    user <- runDB $ selectFirst [UserChipId ==. chip req] []
+    user <- runDB $ selectFirst [UserUsername ==. idUser req] []
     addToDB True req user
 
 {-| Check wether use is inside -}
@@ -55,13 +55,13 @@ addToDB direction req user =
                           access <- liftIO $ newAccess direction
                           runDB $ update (entityKey u) [push UserAccess access]
                           return Null
-                      else return . toJSON $ Impossible [("chip", toJSON $ chip req)
+                      else return . toJSON $ Impossible [("idUser", toJSON $ idUser req)
                                                         ,("inside", toJSON $ direction)]
-        Nothing -> return . toJSON $ WrongFieldValue [("chip", chip req)]
+        Nothing -> return . toJSON $ WrongFieldValue [("idUser", idUser req)]
 
 {-| Leave -}
 postApiAccessOutR :: Handler Value
 postApiAccessOutR = do
     req <- requireJsonBody :: Handler AccessUser
-    user <- runDB $ selectFirst [UserChipId ==. chip req] []
+    user <- runDB $ selectFirst [UserUsername ==. idUser req] []
     addToDB False req user
