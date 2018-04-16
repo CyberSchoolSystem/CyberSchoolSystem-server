@@ -34,8 +34,6 @@ $doctype 5
                     <li class="nav-item">
                         $maybe _ <- maid
                         <a href=@{AuthR LogoutR} class="nav-link">Logout
-
-                            <i class="fa fa-fw fa-sign-out">
         <div class="content-wrapper">
             <div class="container-fluid">
                 <ol class="breadcrumb">

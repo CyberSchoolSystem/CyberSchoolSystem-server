@@ -86,6 +86,10 @@ instance YesodAuth App where
     loginDest _ = RootR
     logoutDest _ = RootR
 
+    authLayout widget = do
+        PageContent title headTags bodyTags <- widgetToPageContent widget
+        withUrlRenderer $(hamletFile "templates/loginLayout.hamlet")
+
     authPlugins app = [ authHashDB (Just . UniqueUser)] ++ extra
         where extra = [authDummy | appDummyLogin $ appSettings app]
 
