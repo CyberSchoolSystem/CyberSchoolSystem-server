@@ -30,4 +30,5 @@ Vote json
     description Text
     voted [UserId]
     choices [Choice]
+    endOfLife UTCTime
     deriving Show Eq

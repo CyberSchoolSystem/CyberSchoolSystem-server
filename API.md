@@ -5,7 +5,7 @@
 |-----|----------------|-------------------|---------------------|------|
 |`/api/vote/info` | POST | `application/json` | Optional: "vid", "choice" | `[ vote ]` |
 |`/api/vote/act` | POST | `application/json` | "username", "vid", "choice" | "error" |
-|`/api/vote/add` | POST | `application/json` | "description", "choices" | `null` |
+|`/api/vote/add` | POST | `application/json` | "description", "choices", "endOfLife" | `null` |
 |`/api/vote/remove` | POST | `application/json` | "vid" | "error" | "error" |
 
 ## Access
@@ -43,7 +43,7 @@
 
 `vid`: String
 
-`vote`: Object( `id`: String, `description`: String, `choices`: List of Objects (`votes`: Integer, `identity`: Integer, `description`: String))
+`vote`: Object( `id`: String, `endOfLife`: String (Format: `2018-08-08T19:20:20Z`) `description`: String, `choices`: List of Objects (`votes`: Integer, `identity`: Integer, `description`: String))
 
 `error`: Either `null` or Object (`missingField`: List o. strings, `wrongFieldValue`: List o. String value tuples, `impossible`: S. `wrongFieldValue`, `permissionDenied`: Value)
 
@@ -56,3 +56,5 @@
 `choices`: Array of Strings
 
 `description`: String
+
+`endOfLife`: String. Time format "YYYY-MM-DD HH:MM:SS Z" (Z: Timezone. e.g `Z` (UTC) `(+1)` UTC +1)
