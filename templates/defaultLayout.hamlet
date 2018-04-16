@@ -51,3 +51,5 @@ $doctype 5
                             <small>© CyberSchoolSystem 2018</small>
             <a href=@{DashboardR}>Dashboard
             <a href=@{RootR}>Home
+
+    ^{bodyTags}
