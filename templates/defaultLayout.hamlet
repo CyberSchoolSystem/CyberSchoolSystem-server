@@ -15,10 +15,18 @@ $doctype 5
                 <span class="navbar-toggler-icon">
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Startseite">
                         <a class="nav-link" href="/">
-                            <i class="fa fa-fw fa-dashboard">
+                            <i class="fa fa-fw fa-graduation-cap">
                             <span class="nav-link-text">Startseite
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                        <a class="nav-link" href=@{DashboardR}>
+                            <i class="fa fa-fw fa-dashboard">
+                            <span class="nav-link-text">Dashboard
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
+                        <a class="nav-link" href=@{RootR}>
+                            <i class="fa fa-fw fa-home">
+                            <span class="nav-link-text">Home
                 <ul class="navbar-nav sidenav-toggler">
                     <li class="nav-item">
                         <a class="nav-link text-center" id="sidenavToggler">
@@ -40,15 +48,6 @@ $doctype 5
                                 <i class="fa fa-fw fa-sign-out">
         <div class="content-wrapper">
             <div class="container-fluid">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="/">Startseite
-                    <li class="breadcrumb-item">
-                        <a href=@{AuthR LoginR}>Login
-                    <li class="breadcrumb-item">
-                        <a href=@{DashboardR}>Dashboard
-                    <li class="breadcrumb-item">
-                        <a href=@{RootR}>Home
                 <div class="row">
                     <div class="col-12">
                         <h1>#{title}
@@ -59,4 +58,3 @@ $doctype 5
                     <div class="container">
                         <div class="text-center">
                             <small>© CyberSchoolSystem 2018</small>
-
