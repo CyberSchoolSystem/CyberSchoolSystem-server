@@ -1,18 +1,59 @@
 $doctype 5
 
-<html>
+<html lang="de">
     <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>#{title}
         ^{headTags}
-    <body>
-        <header>
-            $maybe _ <- maid
-                <a href=@{AuthR LogoutR}>Logout
-            $nothing
-                <a href=@{AuthR LoginR}>Login
+    <body class="fixed-nav sticky-footer bg-dark" id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+            <a class="navbar-brand" href="/">CyberSchoolSystem
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon">
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                        <a class="nav-link" href="/">
+                            <i class="fa fa-fw fa-dashboard">
+                            <span class="nav-link-text">Startseite
+                <ul class="navbar-nav sidenav-toggler">
+                    <li class="nav-item">
+                        <a class="nav-link text-center" id="sidenavToggler">
+                            <i class="fa fa-fw fa-angle-left">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle mr-lg-2" id="messagesDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fa fa-fw fa-envelope">
+                          <span class="d-lg-none">Nachrichten
+                              <span class="badge badge-pill badge-primary">12 neue
+                          <span class="indicator text-primary d-none d-lg-block">
+                              <i class="fa fa-fw fa-circle">
+                    <li class="nav-item">
+                    $maybe _ <- maid
+                        <a href=@{AuthR LogoutR} class="nav-link">Logout
+                    $nothing
+                            <i class="fa fa-fw fa-sign-out">
+        <div class="content-wrapper">
+            <div class="container-fluid">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/">Startseite
+
+                <div class="row">
+                    <div class="col-12">
+                        <h1>#{title}
+                        <h1>Hier sollte dein Haskell ein Titel posten?!
+
+                <footer class="sticky-footer">
+                    <div class="container">
+                        <div class="text-center">
+                            <small>© CyberSchoolSystem 2018</small>
+            <a href=@{AuthR LoginR}>Login
             <a href=@{DashboardR}>Dashboard
             <a href=@{RootR}>Home
-        <h1>#{title}
-        <div id="error">
-        <div id="msg">
-        ^{bodyTags}
+            <div id="error">
+            <div id="msg">
+    ^{bodyTags}

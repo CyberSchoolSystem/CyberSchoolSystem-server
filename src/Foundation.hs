@@ -45,15 +45,15 @@ instance Yesod App where -- TODO: SSL
                 if (appReload . appSettings $ app)
                     then toWidget $(luciusFileReload "templates/defaultLayout.lucius")
                     else toWidget $(luciusFile "templates/defaultLayout.lucius")
-            widget = addStylesheetRemote "https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
-                     <> addScriptRemote "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"
-                     <> addScriptRemote "https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.bundle.min.js"
+            widget = addStylesheetRemote "https://cloud.lexodexo.de/bootstrap/css/bootstrap.min.css"
+                     <> addStylesheetRemote "https://cloud.lexodexo.de/font-awesome/css/font-awesome.min.css"
+                     <> addStylesheetRemote "https://cloud.lexodexo.de/css/sb-admin.css"
                      <> css
                      <> contents
                      <> toWidget $(juliusFile "templates/defaultLayout.julius")
         PageContent title headTags bodyTags <- widgetToPageContent widget
         withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
-        
+
     makeSessionBackend _ = fmap Just $
 #ifdef DEVELOPMENT
         defaultClientSessionBackend 5 "client_session_key.aes"
