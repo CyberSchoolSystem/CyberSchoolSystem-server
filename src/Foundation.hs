@@ -23,7 +23,7 @@ import           Yesod.Auth.HashDB        (authHashDB)
 import           Yesod.Auth.Dummy         (authDummy)
 import           Yesod.Core               (defaultClientSessionBackend)
 import           Yesod.Core.Handler       (withUrlRenderer)
-import           Yesod.Core.Widget        (toWidget, addScriptRemote)
+import           Yesod.Core.Widget        (toWidget)
 import           Yesod.Form.Types         (FormMessage)
 import           Yesod.Persist.Core       (runDB)
 
