@@ -23,7 +23,7 @@ import           Yesod.Persist.Core
 data AddUserReq = AddUserReq
     { addFirstName :: Text
     , addLastName :: Text
-    , addGrade :: Text
+    , addGrade :: Key Grade
     , addUsername :: Text
     , addPassword :: Maybe Text
     , addRoles :: Role
@@ -34,7 +34,7 @@ data RmUserReq = RmUserReq { rmId :: Text }
 data InfoUserReq = InfoUserReq
     { infoFirstName :: Maybe Text
     , infoLastName :: Maybe Text
-    , infoGrade :: Maybe Text
+    , infoGrade :: Maybe (Key Grade)
     , infoUsername :: Maybe Text
     , infoRole :: Maybe Role
     }
@@ -45,7 +45,7 @@ data UpdateUserReq = UpdateUserReq
     { idUsername :: Text
     , updateFirstName :: Maybe Text
     , updateLastName :: Maybe Text
-    , updateGrade :: Maybe Text
+    , updateGrade :: Maybe (Key Grade)
     , updateUsername :: Maybe Text
     , updatePassword :: Maybe Text
     , updateRole :: Maybe Role
@@ -55,7 +55,7 @@ instance FromJSON AddUserReq where
     parseJSON (Object v) = AddUserReq
         <$> v .: "firstName"
         <*> v .: "lastName"
-        <*> v .: "grade"
+        <*> v .: "gradeId"
         <*> v .: "username"
         <*> v .:? "password"
         <*> v .: "role"
@@ -70,7 +70,7 @@ instance FromJSON InfoUserReq where
     parseJSON (Object v) = InfoUserReq
         <$> v .:? "firstName"
         <*> v .:? "lastName"
-        <*> v .:? "grade"
+        <*> v .:? "gradeId"
         <*> v .:? "username"
         <*> v .:? "role"
     parseJSON invalid = typeMismatch "InfoUserReq" invalid
@@ -80,7 +80,7 @@ instance FromJSON UpdateUserReq where
         <$> v .: "idUsername"
         <*> v .:? "firstName"
         <*> v .:? "lastName"
-        <*> v .:? "grade"
+        <*> v .:? "gradeId"
         <*> v .:? "username"
         <*> v .:? "password"
         <*> v .:? "role"
@@ -110,7 +110,7 @@ postApiUserRemoveR = do
     req <- requireJsonBody :: Handler RmUserReq
     del <- runDB $ selectFirst (rmToFilter req) []
     case del of
-        Just e -> runDB $ delete (entityKey e) >>= (\_ -> return Null)
+        Just e -> runDB $ delete (entityKey e) >> return Null
         Nothing -> return . toJSON . WrongFieldValue $ rmInvalidArgs req
 
 {-| Construct invalid args error message, according to a RmUserReq -}

@@ -17,10 +17,13 @@
 ## Users
 | URI | Request Method | Request Body Type | Request Body Keys | Return |
 |-----|----------------|-------------------|---------------------|------|
-|`/api/user/add`| POST | `application/json` | "firstname", "lastname", "grade" <br> Optional: "username", "password" | "error" |
+|`/api/user/add`| POST | `application/json` | "firstname", "lastname", "gradeId" <br> Optional: "username", "password" | "error" |
 |`/api/user/remove` | POST | `application/json` | "username" | "error" |
-|`/api/user/update` | POST | `application/json` | "idUsername" <br> Optional: "firstName", "lastName", "grade", "username", "password" | "error" |
-|`/api/user/info` | POST | `application/json` | Optional: "firstName", "lastName", "grade", "username" | `[ user ]` |
+|`/api/user/update` | POST | `application/json` | "idUsername" <br> Optional: "firstName", "lastName", "gradeId", "username", "password" | "error" |
+|`/api/user/info` | POST | `application/json` | Optional: "firstName", "lastName", "gradeId", "username" | `[ user ]` |
+|`/api/user/grade/add` | POST | `application/json` | "grade" | "gradeId" |
+|`/api/user/grade/info` | GET | | | `[ { "id": gradeId, "name": grade } ] ` |
+|`/api/user/grade/remove` | POST | `application/json` | "gradeId" | "error" |
 
 
 ## Keys
@@ -29,6 +32,8 @@
 `lastName`: String
 
 `grade`: String
+
+`gradeId`: String
 
 `username`: String
 

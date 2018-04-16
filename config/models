@@ -1,7 +1,7 @@
 User json
     firstName Text
     lastName Text
-    grade Text
+    grade GradeId
     username Text -- TODO: Unique
     password Text Maybe
     fails Int
@@ -13,11 +13,13 @@ Access json
     time UTCTime
     inside Bool
     deriving Eq Show
+Grade json
+    name Text
 Role json
     citizen Bool
     representative Bool
     admin Bool
-    teacher Text Maybe
+    teacher GradeId Maybe
     deriving Show Eq
 Choice json
     identity Int -- TODO: Unique

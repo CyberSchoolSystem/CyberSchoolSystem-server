@@ -12,6 +12,9 @@
 /api/user/remove ApiUserRemoveR POST
 /api/user/info ApiUserInfoR POST
 /api/user/test ApiUserUpdateR POST
+/api/user/grade/add ApiGradeAddR POST
+/api/user/grade/info ApiGradeInfoR GET
+/api/user/grade/remove ApiGradeRemoveR POST
 
 /user/add UiUserAddR GET
 /user/info UiUserInfoR GET
