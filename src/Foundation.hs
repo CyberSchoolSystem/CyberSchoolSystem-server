@@ -45,9 +45,13 @@ instance Yesod App where -- TODO: SSL
                 if (appReload . appSettings $ app)
                     then toWidget $(luciusFileReload "templates/defaultLayout.lucius")
                     else toWidget $(luciusFile "templates/defaultLayout.lucius")
-            widget = addStylesheetRemote "https://cloud.lexodexo.de/bootstrap/css/bootstrap.min.css"
-                     <> addStylesheetRemote "https://cloud.lexodexo.de/font-awesome/css/font-awesome.min.css"
+            widget = addStylesheetRemote "https://cloud.lexodexo.de/vendor/bootstrap/css/bootstrap.min.css"
+                     <> addStylesheetRemote "https://cloud.lexodexo.de/vendor/font-awesome/css/font-awesome.min.css"
                      <> addStylesheetRemote "https://cloud.lexodexo.de/css/sb-admin.css"
+                     <> addScriptRemote "https://cloud.lexodexo.de/vendor/jquery/jquery.min.js"
+                     <> addScriptRemote "https://cloud.lexodexo.de/vendor/bootstrap/js/bootstrap.bundle.min.js"
+                     <> addScriptRemote "https://cloud.lexodexo.de/vendor/jquery-easing/jquery.easing.min.js"
+                     <> addScriptRemote "https://cloud.lexodexo.de/js/sb-admin.min.js"
                      <> css
                      <> contents
                      <> toWidget $(juliusFile "templates/defaultLayout.julius")
