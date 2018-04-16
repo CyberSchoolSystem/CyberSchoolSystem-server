@@ -16,6 +16,7 @@ import           Settings
 import           Text.Shakespeare.I18N    ()
 import           Text.Hamlet              (hamletFile)
 import           Text.Julius              (juliusFile)
+import           Text.Lucius              (luciusFileReload, luciusFile)
 import           Yesod
 import           Yesod.Auth
 import           Yesod.Auth.HashDB        (authHashDB)
@@ -33,14 +34,22 @@ data App = App
 
 mkYesodData "App" $(parseRoutesFile "config/routes")
 
-instance Yesod App where-- TODO: SSL
+instance Yesod App where -- TODO: SSL
     -- approot = ApprootStatic
     -- yesodMiddleware = (sslOnleMiddleware 20) . defaultYesodMiddleware
     -- makeSessionBackend _ = sslOnlySessions $ fmap Just $
     defaultLayout contents = do
         maid <- maybeAuthId
-        let widget = contents
+        app <- getYesod
+        let css =
+                if (appReload . appSettings $ app)
+                    then toWidget $(luciusFileReload "templates/defaultLayout.lucius")
+                    else toWidget $(luciusFile "templates/defaultLayout.lucius")
+            widget = addStylesheetRemote "https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
                      <> addScriptRemote "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"
+                     <> addScriptRemote "https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.bundle.min.js"
+                     <> css
+                     <> contents
                      <> toWidget $(juliusFile "templates/defaultLayout.julius")
         PageContent title headTags bodyTags <- widgetToPageContent widget
         withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
