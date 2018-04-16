@@ -36,7 +36,7 @@
 
 `password`: String
 
-`vid`: Integer
+`vid`: String
 
 `vote`: Object( `id`: String, `description`: String, `choices`: List of Objects (`votes`: Integer, `identity`: Integer, `description`: String))
 
