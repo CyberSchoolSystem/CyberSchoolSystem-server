@@ -52,6 +52,8 @@ instance Yesod App where -- TODO: SSL
                      <> addScriptRemote "https://cloud.lexodexo.de/vendor/bootstrap/js/bootstrap.bundle.min.js"
                      <> addScriptRemote "https://cloud.lexodexo.de/vendor/jquery-easing/jquery.easing.min.js"
                      <> addScriptRemote "https://cloud.lexodexo.de/js/sb-admin.min.js"
+                     <> addScriptRemote "https://cloud.lexodexo.de/js/sb-admin-charts.min.js"
+                     <> addScriptRemote "https://cloud.lexodexo.de/vendor/chart.js/Chart.min.js"
                      <> css
                      <> contents
                      <> toWidget $(juliusFile "templates/defaultLayout.julius")

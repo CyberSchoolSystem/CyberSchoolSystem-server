@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fa fa-pie-chart"></i> Sollen die Toiletten öfters gereinigt werden für eine Steuererhöhung um 2,3%?</div>
+                    <div class="card-body">
+                        Hier Kuchendiagramm vorstellen ;)
+                    <div class="card-footer small text-muted">Umfrage beendet um 12:43</div>
+
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fa fa-pie-chart"></i> Öffnungszeiten bis 17.00 auf freiwilliger Basis verlängern?</div>
+                    <div class="card-body">
+                        Hier Kuchendiagramm vorstellen ;)
+                    <div class="card-footer small text-muted">Umfrage beendet um 13:52</div>
