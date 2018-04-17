@@ -16,13 +16,16 @@ import           Handler
 import           Settings
 import           Yesod.Auth
 import           Yesod.Core
-import           Yesod.Default.Config2 (loadYamlSettings, useEnv, configSettingsYml)
+import           Yesod.Default.Config2 (loadYamlSettings, useEnv)
+import           Yesod.Static          (staticDevel, static)
 
 mkYesodDispatch "App" resourcesApp
 
 mkFoundation :: AppSettings -> IO App
 mkFoundation appSettings = do
     appConnPool <- createPoolConfig $ appDatabaseConf appSettings
+    appStatic <- (if appReload appSettings then staticDevel else static)
+                 (appStaticDir appSettings)
 
     return App {..}
 
@@ -30,12 +33,7 @@ mkFoundation appSettings = do
 
 appMain :: IO ()
 appMain = do
-    settings <- loadYamlSettings [
-#ifdef DEVELOPMENT
-                                 "config/settings-devel.yml" ,
-#endif
-                                 configSettingsYml
-                                 ] [] useEnv -- TODO: Maybe do at compile time. Speed?
+    settings <- loadYamlSettings [configSettingsYml] [] useEnv -- TODO: Maybe do at compile time. Speed?
     foundation <- mkFoundation settings
 
     warp 3000 foundation

@@ -74,14 +74,19 @@ library:
       cpp-options: -DDEVELOPMENT
   dependencies:
     - blaze-html
+    - bytestring
     - containers
     - data-default-class
+    - file-embed
+    - hjsmin
     - http-conduit
     - persistent-template
     - shakespeare
     - template-haskell
     - text-show
     - unordered-containers
+    - utf8-string
+    - yaml
     - yesod-auth-hashdb
     - yesod-form
     - yesod-persistent

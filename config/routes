@@ -24,3 +24,4 @@
 / RootR GET
 
 /auth AuthR Auth getAuth
+/static StaticR Static appStatic

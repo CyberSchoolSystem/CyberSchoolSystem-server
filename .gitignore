@@ -2,3 +2,4 @@
 CyberSchoolSystem-Server.cabal
 client_session_key.aes
 *~
+static/tmp
