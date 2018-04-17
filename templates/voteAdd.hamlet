@@ -1,10 +1,13 @@
 <div class="col-lg-8">
     <form>
         <div class="form-group row">
-            <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+            <label for="titel" class="col-sm-2 col-form-label">Titel</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="staticEmail" placeholder"email@example.com">
+                <input type="text" class="form-control" id="titel" placeholder="Steuererhöhung um 2,3%">
         <div class="form-group row">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+            <label for="beschreibung" class="col-sm-2 col-form-label">Beschreibung</label>
             <div class="col-sm-10">
-                <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                <input type="text" class="form-control" id="beschreibung" placeholder="Diese zusätzlichen einnahmen werden für eine intensivere Toilettenreinigung invesitert.">
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button type="submit" value="Submit" id="submit" class="btn btn-primary">Veröffentlichen</button>
