@@ -25,20 +25,28 @@ $doctype 5
                             <span class="nav-link-text">Dashboard
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
                         <a class="nav-link" href=@{RootR}>
-                            <i class="fa fa-fw fa-home">
-                            <span class="nav-link-text">Home
+                            <i class="fa fa-fw fa-users">
+                            <span class="nav-link-text">Bürger
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
+                        <a class="nav-link" href=@{RootR}>
+                            <i class="fa fa-fw fa-id-user">
+                            <span class="nav-link-text">Lehrer
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
+                        <a class="nav-link" href=@{RootR}>
+                            <i class="fa fa-fw fa-id-card">
+                            <span class="nav-link-text">Verwaltung
                 <ul class="navbar-nav sidenav-toggler">
                     <li class="nav-item">
                         <a class="nav-link text-center" id="sidenavToggler">
                             <i class="fa fa-fw fa-angle-left">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle mr-lg-2" id="messagesDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-fw fa-envelope">
-                          <span class="d-lg-none">Nachrichten
-                              <span class="badge badge-pill badge-primary">12 neue
-                          <span class="indicator text-primary d-none d-lg-block">
-                              <i class="fa fa-fw fa-circle">
+                    $#<li class="nav-item dropdown">
+                        $#<a class="nav-link dropdown-toggle mr-lg-2" id="messagesDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          $#<i class="fa fa-fw fa-envelope">
+                          $#<span class="d-lg-none">Nachrichten
+                              $#<span class="badge badge-pill badge-primary">12 neue
+                          $#<span class="indicator text-primary d-none d-lg-block">
+                              $#<i class="fa fa-fw fa-circle">
                     <li class="nav-item">
                         $maybe _ <- maid
                             <a href=@{AuthR LogoutR} class="nav-link">Logout
@@ -46,6 +54,7 @@ $doctype 5
                         $nothing
                             <a href=@{AuthR LoginR} class="nav-link">Login
                                 <i class="fa fa-fw fa-sign-out">
+
         <div class="content-wrapper">
             <div class="container-fluid">
                 <div class="row">
