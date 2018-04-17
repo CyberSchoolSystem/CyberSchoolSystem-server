@@ -14,7 +14,7 @@ import           Data.Monoid        ((<>))
 import           Settings           (appReload)
 import           Text.Blaze.Html    (Html)
 import           Text.Julius        (juliusFile, juliusFileReload)
-import           Text.Hamlet        (hamlet, hamletFile, hamletFileReload)
+import           Text.Hamlet        (hamletFile, hamletFileReload)
 import           Yesod.Core         (defaultLayout)
 import           Yesod.Core.Handler (getYesod)
 import           Yesod.Core.Widget  (toWidget, setTitle)
@@ -61,27 +61,10 @@ getUiVoteInfoR = defaultLayout $ do
 getDashboardR :: Handler Html
 getDashboardR = defaultLayout $ do
     setTitle "Dashboard"
-    toWidget
-        [hamlet|
-            <p> todo: check logged in status
-            <h1> Citizen Stuff
-            <ul>
-                <li>
-                    <a href=@{UiVoteInfoR}>Vote info
-                    TODO: Zeigt alle Votes an und lässt user voten
-            <h1> Rep Stuff
-            <ul>
-                <li>
-                    <a href=@{UiVoteAddR}>Add vote
-                    TODO: Implement
-            <h1> Teacher stuff
-            <ul>
-                <li> Access times (lass mich das machen)
-            <h1> Admin Stuff
-            <ul>
-                <li>
-                    <a href=@{UiUserAddR}>User add
-                <li>
-                    <a href=@{UiUserInfoR}>User search
-                    TODO: Die User sollten hier verändert / gelöschct werden können.
-        |]
+    app <- getYesod
+    if appReload . appSettings $ app
+        then toWidget $(juliusFileReload "templates/dashboard.julius")
+             <> toWidget $(hamletFileReload "templates/dashboard.hamlet")
+        else toWidget $(juliusFile "templates/dashboard.hamlet")
+             <> toWidget $(hamletFileReload "templates/dashboard.hamlet")
+
