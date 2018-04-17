@@ -66,7 +66,7 @@ $doctype 5
                                 <a class="nav-link" href=@{UiUserAddR}>
                                     <i class="fa fa-fw fa-user-plus"></i>
                                     <span class="nav-link-text">Benutzer hinzufügen</span>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Wahlergebnisse">
                         <a class="nav-link" href=@{UiVoteInfoR}>
                             <i class="fa fa-fw fa-pie-chart">
                             <span class="nav-link-text">Wahlergebnisse
