@@ -29,7 +29,7 @@ $doctype 5
                             <span class="nav-link-text">Bürger
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
                         <a class="nav-link" href=@{RootR}>
-                            <i class="fa fa-fw fa-id-user">
+                            <i class="fa fa-fw fa-user">
                             <span class="nav-link-text">Lehrer
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
                         <a class="nav-link" href=@{RootR}>
