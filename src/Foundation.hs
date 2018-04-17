@@ -5,59 +5,58 @@
 {-# LANGUAGE CPP                   #-}
 module Foundation where
 
-import           Data.Text                (Text)
-import           Data.Monoid              ((<>))
-import           Database.Persist         ((==.))
-import           Database.Persist.Class   (selectFirst)
+import           Data.Text                 (Text)
+import           Data.Monoid               ((<>))
+import           Database.Persist          ((==.))
+import           Database.Persist.Class    (selectFirst)
 import           Database.Persist.MongoDB
-import           Database.Persist.Types   (Entity(..))
-import           Model                    (UserId, EntityField (..), Unique(..), User(..), Role(..))
+import           Database.Persist.Types    (Entity(..))
+import           Model                     (UserId, EntityField (..), Unique(..), User(..), Role(..))
 import           Settings
-import           Text.Shakespeare.I18N    ()
-import           Text.Hamlet              (hamletFile)
-import           Text.Julius              (juliusFile)
-import           Text.Lucius              (luciusFileReload, luciusFile)
+import           Settings.Static
+import           Text.Shakespeare.I18N     ()
+import           Text.Hamlet               (hamletFile)
+import           Text.Jasmine              (minifym)
+import           Text.Julius               (juliusFile)
+import           Text.Lucius               (luciusFileReload, luciusFile)
 import           Yesod
 import           Yesod.Auth
-import           Yesod.Auth.HashDB        (authHashDB)
-import           Yesod.Auth.Dummy         (authDummy)
-import           Yesod.Core               (defaultClientSessionBackend)
-import           Yesod.Core.Handler       (withUrlRenderer)
-import           Yesod.Core.Widget        (toWidget)
-import           Yesod.Form.Types         (FormMessage)
-import           Yesod.Persist.Core       (runDB)
+import           Yesod.Auth.HashDB         (authHashDB)
+import           Yesod.Auth.Dummy          (authDummy)
+import           Yesod.Core                (defaultClientSessionBackend)
+import           Yesod.Core.Handler        (withUrlRenderer)
+import           Yesod.Core.Widget         (toWidget)
+import           Yesod.Default.Util        (addStaticContentExternal)
+import           Yesod.Form.Types          (FormMessage)
+import           Yesod.Persist.Core        (runDB)
+import           Yesod.Static
 
 data App = App
     { appSettings :: AppSettings
     , appConnPool :: ConnectionPool
+    , appStatic   :: Static
     }
 
 mkYesodData "App" $(parseRoutesFile "config/routes")
+staticFiles (appStaticDir $ compileTimeAppSettings)
 
 instance Yesod App where -- TODO: SSL
     -- approot = ApprootStatic
     -- yesodMiddleware = (sslOnleMiddleware 20) . defaultYesodMiddleware
     -- makeSessionBackend _ = sslOnlySessions $ fmap Just $
-    defaultLayout contents = do
-        maid <- maybeAuthId
+    addStaticContent ext mime content = do
         app <- getYesod
-        let css =
-                if (appReload . appSettings $ app)
-                    then toWidget $(luciusFileReload "templates/defaultLayout.lucius")
-                    else toWidget $(luciusFile "templates/defaultLayout.lucius")
-            widget = addStylesheetRemote "https://cloud.lexodexo.de/vendor/bootstrap/css/bootstrap.min.css"
-                     <> addStylesheetRemote "https://cloud.lexodexo.de/vendor/font-awesome/css/font-awesome.min.css"
-                     <> addStylesheetRemote "https://cloud.lexodexo.de/css/sb-admin.css"
-                     <> addScriptRemote "https://cloud.lexodexo.de/vendor/jquery/jquery.min.js"
-                     <> addScriptRemote "https://cloud.lexodexo.de/vendor/bootstrap/js/bootstrap.bundle.min.js"
-                     <> addScriptRemote "https://cloud.lexodexo.de/vendor/jquery-easing/jquery.easing.min.js"
-                     <> addScriptRemote "https://cloud.lexodexo.de/js/sb-admin.min.js"
-                     <> css
-                     <> contents
-                     <> toWidget $(juliusFile "templates/defaultLayout.julius")
-        PageContent title headTags bodyTags <- widgetToPageContent widget
-        withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
-
+        let staticDir = appStaticDir $ appSettings app
+        addStaticContentExternal
+            minifym
+            genFileName
+            staticDir
+            (StaticR . flip StaticRoute [])
+            ext
+            mime
+            content
+        where
+            genFileName l = "autogen-" ++ base64md5 l
     makeSessionBackend _ = fmap Just $
 #ifdef DEVELOPMENT
         defaultClientSessionBackend 5 "client_session_key.aes"
@@ -77,6 +76,26 @@ instance Yesod App where -- TODO: SSL
     isAuthorized DashboardR _ = isAuthenticated
 #endif
     isAuthorized _ _ = return Authorized
+
+    defaultLayout contents = do
+        maid <- maybeAuthId
+        app <- getYesod
+        let css =
+                if (appReload . appSettings $ app)
+                    then toWidget $(luciusFileReload "templates/defaultLayout.lucius")
+                    else toWidget $(luciusFile "templates/defaultLayout.lucius")
+            widget = addStylesheet (StaticR css_bootstrap_min_css)
+                     <> addStylesheet (StaticR css_bootstrap_min_css)
+                     <> addStylesheet (StaticR css_sb_admin_css)
+                     <> addScript (StaticR js_jquery_min_js)
+                     <> addScript (StaticR js_bootstrap_bundle_min_js)
+                     <> addScript (StaticR js_jquery_easing_min_js)
+                     <> addScript (StaticR js_sb_admin_min_js)
+                     <> css
+                     <> contents
+                     <> toWidget $(juliusFile "templates/defaultLayout.julius")
+        PageContent title headTags bodyTags <- widgetToPageContent widget
+        withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
 
 instance RenderMessage App FormMessage where
     renderMessage _ _ = defaultFormMessage -- No Translation TODO: Maybe add translation
