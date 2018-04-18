@@ -94,9 +94,9 @@ postApiVoteActR = do
                 then
                     if isAllowed u v
                         then updateVote u v inp
-                        else return . toJSON $ Impossible [("vid", actVoteId inp)]
-                else return . toJSON $ PermissionDenied ("You already voted" :: Text)
-        (_,_) -> return . toJSON . WrongFieldValue $
+                        else return . toJSON $ AlreadyDone "You already voted" [("vid", actVoteId inp)]
+                else return . toJSON $ TimedOut "You already voted" [("vid", actVoteId inp)]
+        (_,_) -> return . toJSON . Unknown "This vote is unknown" $
             catMaybes [ const ("userId", toJSON $ auth) <$> user
                       , const ("vid", toJSON $ actVoteId inp) <$> vote]
 
@@ -156,4 +156,4 @@ postApiVoteRemoveR = do
     result <- runDB $ selectFirst [VoteId ==. delId inp] []
     case result of
         Just ent -> runDB $ delete (entityKey ent) >>= (\_ -> return Null)
-        Nothing  -> return . toJSON $ WrongFieldValue [("vid", delId inp)]
+        Nothing  -> return . toJSON $ Unknown "This vote is unknown" [("vid", delId inp)]

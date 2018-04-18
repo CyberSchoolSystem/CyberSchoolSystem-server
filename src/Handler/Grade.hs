@@ -40,7 +40,7 @@ postApiGradeAddR = do
     res <- runDB $ selectFirst [GradeName ==. addGradeName req] []
     case res of
         Nothing -> runDB $ insert Grade{gradeName = addGradeName req} >>= return . toJSON
-        Just _ -> return . toJSON . Impossible $ [("grade", addGradeName req)]
+        Just _ -> return . toJSON . NotUnique "Grade already exists" $ [("grade", addGradeName req)]
 
 {-| Return all gradeNames and gradeIds -}
 getApiGradeInfoR :: Handler Value
@@ -55,4 +55,4 @@ postApiGradeRemoveR = do
     res <- runDB $ selectFirst [GradeId ==. rmGradeId req] []
     case res of
         Just g -> runDB $ delete (entityKey g) >> return Null
-        Nothing -> return . toJSON . WrongFieldValue $ [("gradeId", rmGradeId req)]
+        Nothing -> return . toJSON . Unknown "Grade does not exist" $ [("gradeId", rmGradeId req)]

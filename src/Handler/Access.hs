@@ -56,9 +56,10 @@ addToDB direction req user =
                           access <- liftIO $ newAccess direction
                           runDB $ update (entityKey u) [push UserAccess access]
                           return Null
-                      else return . toJSON $ Impossible [("username", toJSON $ idUser req)
+                      else return . toJSON $ AlreadyDone "You already are on this side"
+                                                        [("username", toJSON $ idUser req)
                                                         ,("inside", toJSON $ direction)]
-        Nothing -> return . toJSON $ WrongFieldValue [("username", idUser req)]
+        Nothing -> return . toJSON $ Unknown "Username not found" [("username", idUser req)]
 
 {-| Leave -}
 postApiAccessOutR :: Handler Value

@@ -148,7 +148,7 @@ postApiUserRemoveR = do
     del <- runDB $ selectFirst (rmToFilter req) []
     case del of
         Just e -> runDB $ delete (entityKey e) >> return Null
-        Nothing -> return . toJSON . WrongFieldValue $ rmInvalidArgs req
+        Nothing -> return . toJSON . Unknown "User not known" $ rmInvalidArgs req
 
 {-| Construct invalid args error message, according to a RmUserReq -}
 rmInvalidArgs :: RmUserReq -> [(Text,Text)]
@@ -164,7 +164,7 @@ postApiUserUpdateR = do
     user <- runDB $ selectFirst (updateToFilter req) []
     case user of
         Just e -> runDB $ update (entityKey e) (updateToUpdate req) >> return Null
-        Nothing -> return . toJSON . WrongFieldValue  $ updateInvalidArgs req
+        Nothing -> return . toJSON . Unknown "User not known"  $ updateInvalidArgs req
 
 {-| Create Database updates from a update request -}
 updateToFilter :: UpdateUserReq -> [Filter User]
@@ -204,7 +204,7 @@ getApiUserSelfInfoR = do
     user <- runDB $ selectFirst [UserId ==. auth] []
     case user of
         Just u -> return . toJSON . UserResp . entityVal $ u
-        Nothing -> return . toJSON . WrongFieldValue $ [("username", user)]
+        Nothing -> return . toJSON . Unknown "User was deleted" $ [("username", user)]
 
 {-| Set the password of the current user -}
 postApiUserSelfSetPwR :: Handler Value
@@ -214,4 +214,4 @@ postApiUserSelfSetPwR = do
     user <- runDB $ selectFirst [UserId ==. auth] []
     case user of
         Just _ -> runDB $ update auth [UserPassword =. (Just $ newPw req)] >> return Null
-        Nothing -> return . toJSON . WrongFieldValue $ [("username", user)]
+        Nothing -> return . toJSON . Unknown "User was Deleted" $ [("username", user)]

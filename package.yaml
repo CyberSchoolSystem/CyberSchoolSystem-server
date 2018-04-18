@@ -83,6 +83,7 @@ library:
     - text-show
     - unordered-containers
     - yesod-auth-hashdb
+    - xlsx
     - yesod-form
     - yesod-persistent
     - yesod-static
