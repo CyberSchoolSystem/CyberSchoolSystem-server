@@ -1,5 +1,6 @@
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleInstances #-}
 module Handler.User
     ( postApiUserAddR
     , postApiUserRemoveR
@@ -22,6 +23,10 @@ import           Model
 import           Yesod.Auth             (requireAuthId)
 import           Yesod.Core.Json        (requireJsonBody)
 import           Yesod.Persist.Core
+
+{- Represent requests by users/admins. Used to tune the toJSON instance -}
+newtype AdminResp a = AdminResp { admGetUsr :: a }
+newtype UserResp a = UserResp { usrGetUsr :: a }
 
 data AddUserReq = AddUserReq
     { addFirstName :: Text
@@ -97,6 +102,27 @@ instance FromJSON UpdatePwReq where
     parseJSON (Object v) = UpdatePwReq <$> v .: "password"
     parseJSON invalid = typeMismatch "UpdateUserReq" invalid
 
+instance ToJSON (AdminResp User) where
+    toJSON AdminResp{admGetUsr = u} = object
+        [ "firstName" .= userFirstName u
+        , "lastName" .= userLastName u
+        , "gradeId" .= userGrade u
+        , "username" .= userUsername u
+        , "roles" .= userRoles u
+        ]
+
+instance ToJSON (UserResp User) where
+    toJSON UserResp{usrGetUsr = u} = object
+        [ "firstName" .= userFirstName u
+        , "lastName" .= userLastName u
+        , "gradeId" .= userGrade u
+        , "username" .= userUsername u
+        , "fails" .= userFails u
+        , "access" .= userAccess u
+        , "roles" .= userRoles u
+        ]
+
+
 postApiUserAddR :: Handler Value
 postApiUserAddR = do
     user <- addToUser <$> requireJsonBody
@@ -137,7 +163,7 @@ postApiUserUpdateR = do
     req <- requireJsonBody :: Handler UpdateUserReq
     user <- runDB $ selectFirst (updateToFilter req) []
     case user of
-        Just e -> runDB $ update (entityKey e) (updateToUpdate req) >>= (\_ -> return Null)
+        Just e -> runDB $ update (entityKey e) (updateToUpdate req) >> return Null
         Nothing -> return . toJSON . WrongFieldValue  $ updateInvalidArgs req
 
 {-| Create Database updates from a update request -}
@@ -161,7 +187,7 @@ postApiUserInfoR :: Handler Value
 postApiUserInfoR = do
     req <- requireJsonBody :: Handler InfoUserReq
     users <- runDB $ selectList (infoToFilter req) []
-    return $ toJSON users
+    return . toJSON $ map (AdminResp . entityVal) users
 
 {-| Create a database filter from a info request -}
 infoToFilter :: InfoUserReq -> [Filter User]
@@ -177,7 +203,7 @@ getApiUserSelfInfoR = do
     auth <- requireAuthId
     user <- runDB $ selectFirst [UserId ==. auth] []
     case user of
-        Just u -> return . toJSON $ u
+        Just u -> return . toJSON . UserResp . entityVal $ u
         Nothing -> return . toJSON . WrongFieldValue $ [("username", user)]
 
 {-| Set the password of the current user -}
