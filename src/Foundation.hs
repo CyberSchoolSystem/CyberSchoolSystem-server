@@ -91,6 +91,9 @@ instance Yesod App where -- TODO: SSL
                      <> addScript (StaticR js_bootstrap_bundle_min_js)
                      <> addScript (StaticR js_jquery_easing_min_js)
                      <> addScript (StaticR js_sb_admin_min_js)
+                     <> addScript (StaticR js_jquery_dataTables_js)
+                     <> addScript (StaticR js_dataTables_bootstrap4_js)
+                     <> addScript (StaticR js_sb_admin_datatables_min_js)
                      <> css
                      <> contents
                      <> toWidget $(juliusFile "templates/defaultLayout.julius")
