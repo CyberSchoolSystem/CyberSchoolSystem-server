@@ -87,6 +87,7 @@ instance Yesod App where -- TODO: SSL
             widget = addStylesheet (StaticR css_bootstrap_min_css)
                      <> addStylesheet (StaticR css_font_awesome_min_css)
                      <> addStylesheet (StaticR css_sb_admin_css)
+                     <> addStylesheet (StaticR css_dataTables_bootstrap4_css)
                      <> addScript (StaticR js_jquery_min_js)
                      <> addScript (StaticR js_bootstrap_bundle_min_js)
                      <> addScript (StaticR js_jquery_easing_min_js)
