@@ -16,6 +16,6 @@ getJokeR = do
     _ <- runDB . insert $ User "Fabian" "Geiselhart" g "JESUS"
               (Just "sha256|17|pZUkwz0cnbtcVxSJBD3qeQ==|D3KVx2A/tAhcy44z2QjcG/FvoV2jEyvKm1nH+dgv0bw=")
               0 [] Role{roleCitizen = True, roleRepresentative = True,
-                        roleTeacher = Nothing, roleAdmin = False,
+                        roleTeacher = Nothing, roleAdmin = True,
                         roleCustoms = True, roleTech = True}
     redirect RootR

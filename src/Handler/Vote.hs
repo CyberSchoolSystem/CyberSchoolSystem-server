@@ -20,8 +20,9 @@ import           Data.Time.LocalTime      (ZonedTime, zonedTimeToUTC)
 import           Error
 import           Foundation
 import           Model
-import           Yesod.Persist.Core       (runDB)
+import           Yesod.Auth               (requireAuthId)
 import           Yesod.Core.Json          (FromJSON, requireJsonBody)
+import           Yesod.Persist.Core       (runDB)
 
 data VoteReq = VoteReq
     { reqVoteId   :: Maybe (Key Vote)
@@ -29,8 +30,7 @@ data VoteReq = VoteReq
     } deriving (Show)
 
 data ApiVoteAct = ApiVoteAct
-    { idUser      :: Text
-    , actVoteId   :: Key Vote
+    { actVoteId   :: Key Vote
     , actChoiceId :: Int
     } deriving (Show)
 
@@ -50,8 +50,7 @@ instance FromJSON VoteReq where
 
 instance FromJSON ApiVoteAct where
     parseJSON (Object v) = ApiVoteAct
-        <$> v .: "username" -- TODO: Transform to uid field
-        <*> v .: "vid"
+        <$> v .: "vid"
         <*> v .: "choice"
     parseJSON invalid = typeMismatch "ApiVoteAct" invalid
 
@@ -80,24 +79,26 @@ reqToDBFilter req = catMaybes go
     where go = [(VoteId ==.) <$> reqVoteId req,
                 (nestEq $ VoteChoices ->. ChoiceIdentity) <$> reqChoiceId req] -- TODO: Obsolete?
 
-{-| Handle POST on /api/vote/vote -}
+{-| Let users vote -}
 postApiVoteActR :: Handler Value
 postApiVoteActR = do
     inp <- requireJsonBody :: Handler ApiVoteAct
-    user <- runDB $ selectFirst [UserUsername ==. idUser inp] []
+    auth <- requireAuthId
     vote <- runDB $ selectFirst [VoteId ==. actVoteId inp,
                                  VoteChoices ->. ChoiceIdentity `nestEq` actChoiceId inp] []
+    user <- runDB $ selectFirst [UserId ==. auth] []
     case (user, vote) of
-        (Just u, Just v) -> if isAllowed u v
-                                then do
-                                        a <- liftIO $ isActive (entityVal v)
-                                        if a
-                                            then updateVote u v inp
-                                            else return . toJSON $ Impossible [("vid", actVoteId inp)]
-                                else return . toJSON $ PermissionDenied ("You already voted" :: Text)
+        (Just u, Just v) -> do
+            a <- liftIO $ isActive (entityVal v)
+            if a
+                then
+                    if isAllowed u v
+                        then updateVote u v inp
+                        else return . toJSON $ Impossible [("vid", actVoteId inp)]
+                else return . toJSON $ PermissionDenied ("You already voted" :: Text)
         (_,_) -> return . toJSON . WrongFieldValue $
-                   catMaybes [ const ("username", toJSON $ idUser inp) <$> user
-                             , const ("vid", toJSON $ actVoteId inp) <$> vote ]
+            catMaybes [ const ("userId", toJSON $ auth) <$> user
+                      , const ("vid", toJSON $ actVoteId inp) <$> vote]
 
 {-| Vote. Update all neccessary records -}
 updateVote :: Entity User -> Entity Vote -> ApiVoteAct -> Handler Value

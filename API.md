@@ -4,7 +4,7 @@
 | URI | Request Method | Request Body Type | Request Body Keys | Return |
 |-----|----------------|-------------------|---------------------|------|
 |`/api/vote/info` | POST | `application/json` | Optional: "vid", "choice" | `[ vote ]` |
-|`/api/vote/act` | POST | `application/json` | "username", "vid", "choice" | "error" |
+|`/api/vote/vote` | POST | `application/json` | "vid", "choice" | "error" |
 |`/api/vote/add` | POST | `application/json` | "description", "choices", "endOfLife" | `null` |
 |`/api/vote/remove` | POST | `application/json` | "vid" | "error" | "error" |
 
@@ -49,7 +49,7 @@
 
 `user`: Object. (`firstName`: String, `lastName`: String, `grade`: Text, `username`: Text, `fails`: Int, `roles`: roles,)
 
-`roles`: Object (`citizen`: Bool, `representative`: Bool, `admin`: Bool, `teacher`: null or Text)
+`roles`: Object (`citizen`: Bool, `representative`: Bool, `admin`: Bool, `teacher`: null or Text, `tech`: Bool, `customs`: Bool)
 
 `choice`: Integer
 
