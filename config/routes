@@ -16,6 +16,8 @@
 /api/user/grade/add ApiGradeAddR POST
 /api/user/grade/info ApiGradeInfoR GET
 /api/user/grade/remove ApiGradeRemoveR POST
+/api/user/self/info ApiUserSelfInfoR GET
+/api/user/self/setpw ApiUserSelfSetPwR POST
 
 /user/add UiUserAddR GET
 /user/info UiUserInfoR GET

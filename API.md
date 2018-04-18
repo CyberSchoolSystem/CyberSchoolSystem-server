@@ -24,6 +24,8 @@
 |`/api/user/grade/add` | POST | `application/json` | "grade" | "gradeId" |
 |`/api/user/grade/info` | GET | | | `[ { "id": gradeId, "name": grade } ] ` |
 |`/api/user/grade/remove` | POST | `application/json` | "gradeId" | "error" |
+|`/api/user/self/setpw` | POST | `application/json` | "password" | "error" |
+|`/api/user/self/info` | GET | | | "user" |
 
 
 ## Keys
@@ -47,7 +49,7 @@
 
 `error`: Either `null` or Object (`missingField`: List o. strings, `wrongFieldValue`: List o. String value tuples, `impossible`: S. `wrongFieldValue`, `permissionDenied`: Value)
 
-`user`: Object. (`firstName`: String, `lastName`: String, `grade`: Text, `username`: Text, `fails`: Int, `roles`: roles,)
+`user`: Object. (`firstName`: String, `lastName`: String, `gradeId`: Text, `username`: Text, `fails`: Int, `roles`: roles,)
 
 `roles`: Object (`citizen`: Bool, `representative`: Bool, `admin`: Bool, `teacher`: null or Text, `tech`: Bool, `customs`: Bool)
 

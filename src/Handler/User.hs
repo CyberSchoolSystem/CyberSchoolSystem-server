@@ -5,6 +5,8 @@ module Handler.User
     , postApiUserRemoveR
     , postApiUserInfoR
     , postApiUserUpdateR
+    , getApiUserSelfInfoR
+    , postApiUserSelfSetPwR
     ) where
 
 import           Data.Aeson
@@ -17,6 +19,7 @@ import           Database.Persist.Types (Filter, Entity(..), Update)
 import           Error
 import           Foundation
 import           Model
+import           Yesod.Auth             (requireAuthId)
 import           Yesod.Core.Json        (requireJsonBody)
 import           Yesod.Persist.Core
 
@@ -49,6 +52,10 @@ data UpdateUserReq = UpdateUserReq
     , updateUsername :: Maybe Text
     , updatePassword :: Maybe Text
     , updateRole :: Maybe Role
+    }
+
+data UpdatePwReq = UpdatePwReq
+    { newPw :: Text
     }
 
 instance FromJSON AddUserReq where
@@ -84,6 +91,10 @@ instance FromJSON UpdateUserReq where
         <*> v .:? "username"
         <*> v .:? "password"
         <*> v .:? "role"
+    parseJSON invalid = typeMismatch "UpdateUserReq" invalid
+
+instance FromJSON UpdatePwReq where
+    parseJSON (Object v) = UpdatePwReq <$> v .: "password"
     parseJSON invalid = typeMismatch "UpdateUserReq" invalid
 
 postApiUserAddR :: Handler Value
@@ -159,3 +170,22 @@ infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName ==.) <$> infoFirstName
                                          , (UserGrade ==.) <$> infoGrade
                                          , (UserUsername ==.) <$> infoUsername
                                          , (UserRoles ==.) <$> infoRole ]
+
+{-| Get information about the current user -}
+getApiUserSelfInfoR :: Handler Value
+getApiUserSelfInfoR = do
+    auth <- requireAuthId
+    user <- runDB $ selectFirst [UserId ==. auth] []
+    case user of
+        Just u -> return . toJSON $ u
+        Nothing -> return . toJSON . WrongFieldValue $ [("username", user)]
+
+{-| Set the password of the current user -}
+postApiUserSelfSetPwR :: Handler Value
+postApiUserSelfSetPwR = do
+    req <- requireJsonBody :: Handler UpdatePwReq
+    auth <- requireAuthId
+    user <- runDB $ selectFirst [UserId ==. auth] []
+    case user of
+        Just _ -> runDB $ update auth [UserPassword =. (Just $ newPw req)] >> return Null
+        Nothing -> return . toJSON . WrongFieldValue $ [("username", user)]
