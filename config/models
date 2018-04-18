@@ -20,6 +20,8 @@ Role json
     representative Bool
     admin Bool
     teacher GradeId Maybe
+    customs Bool
+    tech Bool
     deriving Show Eq
 Choice json
     identity Int -- TODO: Unique

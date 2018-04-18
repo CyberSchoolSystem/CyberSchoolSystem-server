@@ -2,6 +2,7 @@
 module Handler.Access 
     ( postApiAccessInR
     , postApiAccessOutR
+    , postApiAccessExportR
     ) where
 
 import           Control.Monad.IO.Class   (liftIO)
@@ -65,3 +66,6 @@ postApiAccessOutR = do
     req <- requireJsonBody :: Handler AccessUser
     user <- runDB $ selectFirst [UserUsername ==. idUser req] []
     addToDB False req user
+
+postApiAccessExportR :: Handler Value
+postApiAccessExportR = undefined
