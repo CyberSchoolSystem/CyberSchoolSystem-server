@@ -27,11 +27,23 @@ $doctype 5
                         <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#bürger" data-parent="#exampleAccordion">
                             <i class="fa fa-fw fa-users"></i>
                             <span class="nav-link-text">Bürger</span>
-                        <ul class="sidenav-second-level collapse" id="bürger">
+                        <ul class="sidenav-second-level collapse selected" id="bürger">
                             <li>
                                 <a class="nav-link" href=#>
                                     <i class="fa fa-fw fa-check"></i>
                                     <span class="nav-link-text">Abstimmen</span>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Zoll">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#zoll" data-parent="#exampleAccordion">
+                            <i class="fa fa-fw fa-exchange"></i>
+                            <span class="nav-link-text">Zoll</span>
+                        <ul class="sidenav-second-level collapse" id="zoll">
+                            <li>
+                                <a class="nav-link" href=#>
+                                    <i class="fa fa-fw fa-sign-in"></i>
+                                    <span class="nav-link-text">Eingang</span>
+                                <a class="nav-link" href=#>
+                                    <i class="fa fa-fw fa-sign-out"></i>
+                                    <span class="nav-link-text">Ausgang</span>
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Lehrer">
                         <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#lehrer" data-parent="#exampleAccordion">
                             <i class="fa fa-fw fa-user"></i>
@@ -43,12 +55,8 @@ $doctype 5
                                     <span class="nav-link-text">Klasse</span>
                             <li>
                                 <a class="nav-link" href=#>
-                                    <i class="fa fa-fw fa-sign-in"></i>
-                                    <span class="nav-link-text">Eingang</span>
-                            <li>
-                                <a class="nav-link" href=#>
-                                    <i class="fa fa-fw fa-sign-out"></i>
-                                    <span class="nav-link-text">Ausgang</span>
+                                    <i class="fa fa-fw fa-file-text"></i>
+                                    <span class="nav-link-text">Daten exportieren</span>
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Verwaltung">
                         <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#verwaltung" data-parent="#exampleAccordion">
                             <i class="fa fa-fw fa-id-card">
@@ -58,10 +66,6 @@ $doctype 5
                                 <a class="nav-link" href=@{UiVoteAddR}>
                                     <i class="fa fa-fw fa-plus"></i>
                                     <span class="nav-link-text">Abstimmung erstellen</span>
-                            <li>
-                                <a class="nav-link" href=@{UiVoteInfoR}>
-                                    <i class="fa fa-fw fa-pie-chart"></i>
-                                    <span class="nav-link-text">Live Ergebnisse</span>
                             <li>
                                 <a class="nav-link" href=@{UiUserAddR}>
                                     <i class="fa fa-fw fa-user-plus"></i>

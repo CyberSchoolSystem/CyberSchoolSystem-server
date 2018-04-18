@@ -1,44 +1,48 @@
-<div class="col-lg-6">
-    <form name="form" id="infoForm">
-        <div class="form-group row">
-            <label for="vorname" class="col-sm-2 col-form-label">Vorname</label>
-            <div class="col-sm-10">
-                <input type="text" name="firstName" class="form-control" id="vorname" placeholder="Henning">
-        <div class="form-group row">
-            <label for="nachname" class="col-sm-2 col-form-label">Nachname</label>
-            <div class="col-sm-10">
-                <input type="text" name="lastName" class="form-control" id="nachname" placeholder="Klatt">
-        <div class="form-group row">
-            <label for="benutzername" class="col-sm-2 col-form-label">Benutzername</label>
-            <div class="col-sm-10">
-                <input type="text" name="username" class="form-control" id="benutzername" placeholder="henning.klatt">
-        <div class="form-group">
-            <label for="klasse">Klasse</label>
-            <select name="grade" id="klasse" class="form-control">
-                <option>5a</option>
-                <option>5b</option>
-                <option>5c</option>
-                <option>5d</option>
-                <option>6a</option>
-                <option>6b</option>
-                <option>6c</option>
-                <option>6d</option>
-                <option>7a</option>
-                <option selected>10c</option>
-        <div class="form-group row">
-            <div class="col-sm-10">
-                <button type="submit" value="Submit" id="submit" class="btn btn-primary">Suchen</button>
-<table id="result">
-    <thead>
-        <tr>
-            <th>Firstname
-            <th>Lastname
-            <th>usename
-            <th>Grade
-            <th>admin
-            <th>cit
-            <th>teach
-            <th>rep
-            <th>del
-            <th>update
-    <tbody>
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fa fa-table"></i> Benutzersuche</div>
+    <div class="card-body">
+        <form name="form" id="infoForm">
+            <div class="form-group row">
+                <label for="vorname" class="col-sm-2 col-form-label">Vorname</label>
+                <div class="col-sm-10">
+                    <input type="text" name="firstName" class="form-control" id="vorname" placeholder="Henning">
+            <div class="form-group row">
+                <label for="nachname" class="col-sm-2 col-form-label">Nachname</label>
+                <div class="col-sm-10">
+                    <input type="text" name="lastName" class="form-control" id="nachname" placeholder="Klatt">
+            <div class="form-group row">
+                <label for="benutzername" class="col-sm-2 col-form-label">Benutzername</label>
+                <div class="col-sm-10">
+                    <input type="text" name="username" class="form-control" id="benutzername" placeholder="henning.klatt">
+            <div class="form-group">
+                <label for="klasse">Klasse</label>
+                <select name="grade" id="klasse" class="form-control">
+                    <option>5a</option>
+                    <option>5b</option>
+                    <option>5c</option>
+                    <option>5d</option>
+                    <option>6a</option>
+                    <option>6b</option>
+                    <option>6c</option>
+                    <option>6d</option>
+                    <option>7a</option>
+                    <option selected></option>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="button" value="Submit" id="submit" class="btn btn-primary">Suchen</button>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="result" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Vorname
+                        <th>Nachname
+                        <th>Benutzername
+                        <th>Klasse
+                        <th>Administrator
+                        <th>Bürger
+                        <th>Lehrer
+                        <th>Verwalter
+                        <th>Löschen
+                        <th>Bearbeiten
+              <tbody>

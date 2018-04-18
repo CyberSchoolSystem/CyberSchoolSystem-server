@@ -5,3 +5,12 @@ function setmsg(d) {
 function seterror(d) {
     document.getElementById("error").innerHTML = "Error: " + d;
 }
+
+var path = window.location.pathname;
+
+
+var isIE = false;
+if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > 0) {
+    isIE = true;
+}
+alert(isIE);
