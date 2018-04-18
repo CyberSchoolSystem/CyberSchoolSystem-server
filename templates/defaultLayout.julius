@@ -9,8 +9,6 @@ function seterror(d) {
 var path = window.location.pathname;
 
 
-var isIE = false;
 if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > 0) {
-    isIE = true;
+    document.getElementById('IEAlert').style.display = 'inline';
 }
-alert(isIE);
