@@ -91,12 +91,15 @@ instance Yesod App where -- TODO: SSL
                      <> addStylesheet (StaticR css_ionicons_min_css)
                      <> addStylesheet (StaticR css_all_skins_min_css)
                      <> addStylesheet (StaticR css_AdminLTE_min_css)
+                     <> addStylesheet (StaticR css_morris_css) --Pie Chart
                      <> addScript (StaticR js_jquery_min_js)
                      <> addScript (StaticR js_bootstrap_min_js)
                      <> addScript (StaticR js_jquery_slimscroll_min_js)
                      <> addScript (StaticR js_fastclick_js)
                      <> addScript (StaticR js_adminlte_min_js)
                      <> addScript (StaticR js_demo_js)
+                     <> addScript (StaticR js_morris_min_js) --Pie Chart
+                     <> addScript (StaticR js_raphael_min_js) --Pie Chart
                      <> css
                      <> contents
                      <> toWidget $(juliusFile "templates/defaultLayout.julius")

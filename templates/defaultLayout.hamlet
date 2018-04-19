@@ -36,15 +36,15 @@ $doctype 5
                 <section class="sidebar">
                     <ul class="sidebar-menu" data-widget="tree">
                         <li class="header">Menü
-                        <li>
+                        <li id="menu-Startseite">
                             <a href="@{RootR}">
                                 <i class="fa fa-graduation-cap">
                                 <span>Startseite
-                        <li>
+                        <li id="menu-Dashboard">
                             <a href="@{DashboardR}">
                                 <i class="fa fa-dashboard">
                                 <span>Dashboard
-                      <li class="treeview">
+                      <li id="menu-Bürger" class="treeview">
                           <a href="#">
                               <i class="fa fa-users">
                               <span>Bürger
@@ -52,7 +52,7 @@ $doctype 5
                                   <i class="fa fa-angle-left pull-right">
                           <ul class="treeview-menu">
                               <li><a href="#"><i class="fa fa-check"></i> Abstimmen</a>
-                      <li class="treeview">
+                      <li id="menu-Zoll" class="treeview">
                           <a href="#">
                               <i class="fa fa-exchange">
                               <span>Zoll
@@ -61,25 +61,25 @@ $doctype 5
                           <ul class="treeview-menu">
                               <li><a href="#"><i class="fa fa-sign-in"></i> Eingang</a>
                               <li><a href="#"><i class="fa fa-sign-out"></i> Ausgang</a>
-                      <li class="treeview">
+                      <li id="menu-Lehrer" class="treeview">
                           <a href="#">
                               <i class="fa fa-user">
                               <span>Lehrer
                               <span class="pull-right-container">
                                   <i class="fa fa-angle-left pull-right">
                           <ul class="treeview-menu">
-                              <li><a href="@{UiUserInfoR}"><i class="fa fa-users"></i> Klasse</a>
+                              <li id="menu-/user/info"><a href="@{UiUserInfoR}"><i class="fa fa-users"></i> Klasse</a>
                               <li><a href="#"><i class="fa fa-file-text"></i> Daten exportieren</a>
-                      <li class="treeview">
+                      <li id="menu-Verwaltung" class="treeview">
                           <a href="#">
                               <i class="fa fa-id-card">
                               <span>Verwaltung
                               <span class="pull-right-container">
                                   <i class="fa fa-angle-left pull-right">
                           <ul class="treeview-menu">
-                              <li><a href="@{UiVoteAddR}"><i class="fa fa-plus"></i> Abstimmung erstellen</a>
-                              <li><a href="@{UiUserAddR}"><i class="fa fa-user-plus"></i> Benutzer hinzufügen</a>
-                        <li>
+                              <li id="menu-/vote/add"><a href="@{UiVoteAddR}"><i class="fa fa-plus"></i> Abstimmung erstellen</a>
+                              <li id="menu-/user/add"><a href="@{UiUserAddR}"><i class="fa fa-user-plus"></i> Benutzer hinzufügen</a>
+                        <li id="menu-Wahlergebnisse">
                             <a href="@{UiVoteInfoR}">
                                 <i class="fa fa-pie-chart">
                                 <span>Wahlergebnisse

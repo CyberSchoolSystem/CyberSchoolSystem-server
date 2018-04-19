@@ -6,9 +6,31 @@ function seterror(d) {
     document.getElementById("error").innerHTML = "Error: " + d;
 }
 
-var path = window.location.pathname;
 
+var path = window.location.pathname;
+if(path == "/"){
+  document.getElementById("menu-Startseite").className += " active";
+}
+if(path == "/dashboard"){
+  document.getElementById("menu-Dashboard").className += " active";
+}
+if(path == "/vote/add"){
+  document.getElementById("menu-Verwaltung").className += " active";
+  document.getElementById("menu-/vote/add").className += " active";
+}
+if(path == "/user/add"){
+  document.getElementById("menu-Verwaltung").className += " active";
+  document.getElementById("menu-/user/add").className += " active";
+}
+if(path == "/user/info"){
+  document.getElementById("menu-Lehrer").className += " active";
+  document.getElementById("menu-/user/info").className += " active";
+}
+if(path == "/vote/info"){
+  document.getElementById("menu-Wahlergebnisse").className += " active";
+}
 
 if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > 0) {
     document.getElementById('IEAlert').style.display = 'inline';
+    alert("IE entdeckt!");
 }

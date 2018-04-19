@@ -1,0 +1,37 @@
+$(function () {
+    "use strict";
+    //DONUT CHART
+    var donut = new Morris.Donut({
+      element: 'vote-1',
+      resize: true,
+      colors: ["#3c8dbc", "#f56954", "#00a65a"],
+      data: [
+        {label: "Ja", value: 437},
+        {label: "Nein", value: 245},
+        {label: "Enthalten", value: 138}
+      ],
+      hideHover: 'always'
+    });
+    var donut = new Morris.Donut({
+      element: 'vote-2',
+      resize: true,
+      colors: ["#3c8dbc", "#f56954", "#00a65a"],
+      data: [
+        {label: "Ja", value: 674},
+        {label: "Nein", value: 264},
+        {label: "Enthalten", value: 743}
+      ],
+      hideHover: 'always'
+    });
+    var donut = new Morris.Donut({
+      element: 'vote-3',
+      resize: true,
+      colors: ["#3c8dbc", "#f56954", "#00a65a"],
+      data: [
+        {label: "Ja", value: 234},
+        {label: "Nein", value: 453},
+        {label: "Enthalten", value: 425}
+      ],
+      hideHover: 'always'
+    });
+  });
