@@ -7,112 +7,89 @@ $doctype 5
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>#{title}
         ^{headTags}
-    <body class="fixed-nav sticky-footer bg-dark" id="page-top">
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-            <a class="navbar-brand" href=@{RootR}>CyberSchoolSystem
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon">
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Startseite">
-                        <a class="nav-link" href=@{RootR}>
-                            <i class="fa fa-fw fa-graduation-cap">
-                            <span class="nav-link-text">Startseite
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                        <a class="nav-link" href=@{DashboardR}>
-                            <i class="fa fa-fw fa-dashboard">
-                            <span class="nav-link-text">Dashboard
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Bürger">
-                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#bürger" data-parent="#exampleAccordion">
-                            <i class="fa fa-fw fa-users"></i>
-                            <span class="nav-link-text">Bürger</span>
-                        <ul class="sidenav-second-level collapse selected" id="bürger">
+    <body class="hold-transition skin-blue sidebar-mini">
+        <!-- Site wrapper -->
+        <div class="wrapper">
+            <header class="main-header">
+                <a href="../../index2.html" class="logo">
+                    <span class="logo-mini"><b>CSS</b>
+                    <span class="logo-lg"><b>C</b>yber<b>S</b>chool<b>S</b>ystem
+                <nav class="navbar navbar-static-top">
+                    <!-- Sidebar toggle button-->
+                    <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                        <span class="sr-only">Toggle navigation
+                        <span class="icon-bar">
+                        <span class="icon-bar">
+                        <span class="icon-bar">
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
                             <li>
-                                <a class="nav-link" href=#>
-                                    <i class="fa fa-fw fa-check"></i>
-                                    <span class="nav-link-text">Abstimmen</span>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Zoll">
-                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#zoll" data-parent="#exampleAccordion">
-                            <i class="fa fa-fw fa-exchange"></i>
-                            <span class="nav-link-text">Zoll</span>
-                        <ul class="sidenav-second-level collapse" id="zoll">
-                            <li>
-                                <a class="nav-link" href=#>
-                                    <i class="fa fa-fw fa-sign-in"></i>
-                                    <span class="nav-link-text">Eingang</span>
-                                <a class="nav-link" href=#>
-                                    <i class="fa fa-fw fa-sign-out"></i>
-                                    <span class="nav-link-text">Ausgang</span>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Lehrer">
-                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#lehrer" data-parent="#exampleAccordion">
-                            <i class="fa fa-fw fa-user"></i>
-                            <span class="nav-link-text">Lehrer</span>
-                        <ul class="sidenav-second-level collapse" id="lehrer">
-                            <li>
-                                <a class="nav-link" href=@{UiUserInfoR}>
-                                    <i class="fa fa-fw fa-users"></i>
-                                    <span class="nav-link-text">Klasse</span>
-                            <li>
-                                <a class="nav-link" href=#>
-                                    <i class="fa fa-fw fa-file-text"></i>
-                                    <span class="nav-link-text">Daten exportieren</span>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Verwaltung">
-                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#verwaltung" data-parent="#exampleAccordion">
-                            <i class="fa fa-fw fa-id-card">
-                            <span class="nav-link-text">Verwaltung
-                        <ul class="sidenav-second-level collapse" id="verwaltung">
-                            <li>
-                                <a class="nav-link" href=@{UiVoteAddR}>
-                                    <i class="fa fa-fw fa-plus"></i>
-                                    <span class="nav-link-text">Abstimmung erstellen</span>
-                            <li>
-                                <a class="nav-link" href=@{UiUserAddR}>
-                                    <i class="fa fa-fw fa-user-plus"></i>
-                                    <span class="nav-link-text">Benutzer hinzufügen</span>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Wahlergebnisse">
-                        <a class="nav-link" href=@{UiVoteInfoR}>
-                            <i class="fa fa-fw fa-pie-chart">
-                            <span class="nav-link-text">Wahlergebnisse
-                <ul class="navbar-nav sidenav-toggler">
-                    <li class="nav-item">
-                        <a class="nav-link text-center" id="sidenavToggler">
-                            <i class="fa fa-fw fa-angle-left">
-                <ul class="navbar-nav ml-auto">
-                    $#<li class="nav-item dropdown">
-                        $#<a class="nav-link dropdown-toggle mr-lg-2" id="messagesDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          $#<i class="fa fa-fw fa-envelope">
-                          $#<span class="d-lg-none">Nachrichten
-                              $#<span class="badge badge-pill badge-primary">12 neue
-                          $#<span class="indicator text-primary d-none d-lg-block">
-                              $#<i class="fa fa-fw fa-circle">
-                    <li class="nav-item">
-                      <a href=# class="nav-link">
-                          <i class="fa fa-fw fa-user">
-                    <li class="nav-item">
-                        $maybe _ <- maid
-                            <a href=@{AuthR LogoutR} class="nav-link">Logout
-                                <i class="fa fa-fw fa-sign-out">
-                        $nothing
-                            <a href=@{AuthR LoginR} class="nav-link">Login
-                                <i class="fa fa-fw fa-sign-out">
-
-        <div class="content-wrapper">
-            <div class="container-fluid">
-                <div id="IEAlert" style="display:none;" class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <h4 class="alert-heading">Internet Explorer erkannt!
-                    <p>Einige Funktionen dieser Seite sind nicht mit Internet Explorer kompatibel.
-                    <hr>
-                    <p>Wir empfehlen die Verwendung von Mozilla Firefox.
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                <div class="row">
-                    $#<div class="col-12">
+                                $maybe _ <- maid
+                                    <a href="@{AuthR LogoutR}">
+                                        <span class="hidden-xs">Logout
+                                $nothing
+                                    <a href="@{AuthR LoginR}">
+                                        <span class="hidden-xs">Login
+            <aside class="main-sidebar">
+                <section class="sidebar">
+                    <ul class="sidebar-menu" data-widget="tree">
+                        <li class="header">Menü
+                        <li>
+                            <a href="@{RootR}">
+                                <i class="fa fa-graduation-cap">
+                                <span>Startseite
+                        <li>
+                            <a href="@{DashboardR}">
+                                <i class="fa fa-dashboard">
+                                <span>Dashboard
+                      <li class="treeview">
+                          <a href="#">
+                              <i class="fa fa-users">
+                              <span>Bürger
+                              <span class="pull-right-container">
+                                  <i class="fa fa-angle-left pull-right">
+                          <ul class="treeview-menu">
+                              <li><a href="#"><i class="fa fa-check"></i> Abstimmen</a>
+                      <li class="treeview">
+                          <a href="#">
+                              <i class="fa fa-exchange">
+                              <span>Zoll
+                              <span class="pull-right-container">
+                                  <i class="fa fa-angle-left pull-right">
+                          <ul class="treeview-menu">
+                              <li><a href="#"><i class="fa fa-sign-in"></i> Eingang</a>
+                              <li><a href="#"><i class="fa fa-sign-out"></i> Ausgang</a>
+                      <li class="treeview">
+                          <a href="#">
+                              <i class="fa fa-user">
+                              <span>Lehrer
+                              <span class="pull-right-container">
+                                  <i class="fa fa-angle-left pull-right">
+                          <ul class="treeview-menu">
+                              <li><a href="@{UiUserInfoR}"><i class="fa fa-users"></i> Klasse</a>
+                              <li><a href="#"><i class="fa fa-file-text"></i> Daten exportieren</a>
+                      <li class="treeview">
+                          <a href="#">
+                              <i class="fa fa-id-card">
+                              <span>Verwaltung
+                              <span class="pull-right-container">
+                                  <i class="fa fa-angle-left pull-right">
+                          <ul class="treeview-menu">
+                              <li><a href="@{UiVoteAddR}"><i class="fa fa-plus"></i> Abstimmung erstellen</a>
+                              <li><a href="@{UiUserAddR}"><i class="fa fa-user-plus"></i> Benutzer hinzufügen</a>
+                        <li>
+                            <a href="@{UiVoteInfoR}">
+                                <i class="fa fa-pie-chart">
+                                <span>Wahlergebnisse
+            <div class="content-wrapper">
+                <section class="content-header">
                     <h1>#{title}
+                <section class="content">
                     <div id="msg">
                     <div id="error">
-                ^{bodyTags}
-                <footer class="sticky-footer">
-                    <div class="container">
-                        <div class="text-center">
-                            <small>© CyberSchoolSystem 2018</small>
+                    ^{bodyTags}
+            <footer class="main-footer">
+                <div class="pull-right hidden-xs">
+                    <b>Version
+                    0.0.0.1
+                <strong>&copy; CyberSchoolSystem <a href="https://github.com/CyberSchoolSystem">GitHub</a>
