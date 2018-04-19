@@ -68,7 +68,6 @@ $doctype 5
                               <span class="pull-right-container">
                                   <i class="fa fa-angle-left pull-right">
                           <ul class="treeview-menu">
-                              <li id="menu-/user/info"><a href="@{UiUserInfoR}"><i class="fa fa-users"></i> Klasse</a>
                               <li><a href="#"><i class="fa fa-file-text"></i> Daten exportieren</a>
                       <li id="menu-Verwaltung" class="treeview">
                           <a href="#">
@@ -79,6 +78,7 @@ $doctype 5
                           <ul class="treeview-menu">
                               <li id="menu-/vote/add"><a href="@{UiVoteAddR}"><i class="fa fa-plus"></i> Abstimmung erstellen</a>
                               <li id="menu-/user/add"><a href="@{UiUserAddR}"><i class="fa fa-user-plus"></i> Benutzer hinzufügen</a>
+                              <li id="menu-/user/info"><a href="@{UiUserInfoR}"><i class="fa fa-user-plus"></i> Benutzer suchen</a>
                         <li id="menu-Wahlergebnisse">
                             <a href="@{UiVoteInfoR}">
                                 <i class="fa fa-pie-chart">

@@ -23,7 +23,7 @@ if(path == "/user/add"){
   document.getElementById("menu-/user/add").className += " active";
 }
 if(path == "/user/info"){
-  document.getElementById("menu-Lehrer").className += " active";
+  document.getElementById("menu-Verwaltung").className += " active";
   document.getElementById("menu-/user/info").className += " active";
 }
 if(path == "/vote/info"){

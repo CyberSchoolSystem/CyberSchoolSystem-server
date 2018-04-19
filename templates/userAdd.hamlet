@@ -42,7 +42,7 @@
                 <label class="form-check-label" for="rolle">Bürger</label>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" name="teacher" id="teacher" value="teacher">
-                <label class="form-check-label" for="rolle">Lehrer</label>
+                <label class="form-check-label" for="rolle">Klassenlehrer</label>
         <div class="form-group">
             <label for="klasse">Lehrerklasse</label>
             <select name="teachGrade" id="teachGrade" class="form-control" disabled="disabled">
