@@ -7,11 +7,13 @@ module Foundation where
 
 import           Data.Text                 (Text)
 import           Data.Monoid               ((<>))
+import           Data.Version       (showVersion)
 import           Database.Persist          ((==.))
 import           Database.Persist.Class    (selectFirst)
 import           Database.Persist.MongoDB
 import           Database.Persist.Types    (Entity(..))
 import           Model                     (UserId, EntityField (..), Unique(..), User(..), Role(..))
+import           Paths_CyberSchoolSystem_Server (version)
 import           Settings
 import           Settings.Static
 import           Text.Shakespeare.I18N     ()

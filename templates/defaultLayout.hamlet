@@ -93,5 +93,5 @@ $doctype 5
             <footer class="main-footer">
                 <div class="pull-right hidden-xs">
                     <b>Version
-                    0.0.0.1
+                    #{showVersion version}
                 <strong>&copy; CyberSchoolSystem <a href="https://github.com/CyberSchoolSystem">GitHub</a>
