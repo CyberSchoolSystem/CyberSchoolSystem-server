@@ -24,6 +24,12 @@ import           Yesod.Auth               (requireAuthId)
 import           Yesod.Core.Json          (FromJSON, requireJsonBody)
 import           Yesod.Persist.Core       (runDB)
 
+{-| Differenciate between running and terminated votes -}
+newtype VoteTerminated = VoteTerminated { voteTerminated :: Entity Vote }
+newtype VoteRunning = VoteRunning { voteRunning :: Entity Vote }
+newtype ChoiceTerminated = ChoiceTerminated { choiceTerminated :: Choice }
+newtype ChoiceRunning = ChoiceRunning { choiceRunning :: Choice }
+
 data VoteReq = VoteReq
     { reqVoteId   :: Maybe (Key Vote)
     , reqChoiceId :: Maybe Int
@@ -66,18 +72,59 @@ instance FromJSON VoteDel where
         <$> v .: "vid"
     parseJSON invalid = typeMismatch "VoteDel" invalid
 
+instance ToJSON VoteTerminated where
+    toJSON VoteTerminated{voteTerminated = Entity{entityKey = k, entityVal = u}} = object
+        [ "description" .= voteDescription u
+        , "id" .= k
+        , "choices" .= (ChoiceTerminated <$> voteChoices u)
+        , "voted" .= (length $ voteVoted u)
+        , "terminated" .= True
+        , "endOfLife" .= voteEndOfLife u
+        ]
+
+instance ToJSON VoteRunning where
+    toJSON VoteRunning{voteRunning = Entity{entityKey = k, entityVal = u}} = object
+        [ "description" .= voteDescription u
+        , "id" .= k
+        , "choices" .= (ChoiceRunning <$> voteChoices u)
+        , "terminated" .= False
+        , "endOfLife" .= voteEndOfLife u
+        ]
+
+instance ToJSON ChoiceTerminated where
+    toJSON ChoiceTerminated{choiceTerminated = u} = object
+        [ "description" .= choiceDescription u
+        , "votes" .= choiceVotes u
+        ]
+
+instance ToJSON ChoiceRunning where
+    toJSON ChoiceRunning{choiceRunning = u} = object
+        [ "description" .= choiceDescription u ]
+
 {-| Handle Post on /api/vote/info -}
 postApiVoteInfoR :: Handler Value
 postApiVoteInfoR = do
     inp  <- requireJsonBody :: Handler VoteReq -- TODO: Check Application Type?
     rec <- runDB $ selectList (reqToDBFilter inp) []
-    return $ toJSON rec
+    fmap (toJSON) . liftIO . sequence $ (toValue <$> rec)
 
 {-| Create a list of Mongo filters based on a VoteReq -}
 reqToDBFilter :: VoteReq -> [Filter Vote]
 reqToDBFilter req = catMaybes go
     where go = [(VoteId ==.) <$> reqVoteId req,
                 (nestEq $ VoteChoices ->. ChoiceIdentity) <$> reqChoiceId req] -- TODO: Obsolete?
+
+{-| Create the correct JSON value of a vote -}
+toValue :: Entity Vote -> IO Value
+toValue v = do
+    a <- active
+    if a
+        then return . toJSON . VoteRunning $ v
+        else return . toJSON . VoteTerminated $ v
+    where
+        active = do
+            t <- getCurrentTime
+            return $ t < (voteEndOfLife $ entityVal v)
 
 {-| Let users vote -}
 postApiVoteActR :: Handler Value
@@ -133,7 +180,6 @@ postApiVoteAddR = do
     inp <- requireJsonBody :: Handler ApiVoteAdd
     _ <- runDB $ insert (addToVote inp)
     return Null
-
 
 {-| Transform ApiVoteAdd request to database entity -}
 addToVote :: ApiVoteAdd -> Vote
