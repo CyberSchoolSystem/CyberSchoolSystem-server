@@ -26,9 +26,11 @@ $doctype 5
                             <li>
                                 $maybe _ <- maid
                                     <a href="@{AuthR LogoutR}">
+                                        <i class="fa fa-fw fa-sign-out">
                                         <span class="hidden-xs">Logout
                                 $nothing
                                     <a href="@{AuthR LoginR}">
+                                        <i class="fa fa-fw fa-sign-in">
                                         <span class="hidden-xs">Login
             <aside class="main-sidebar">
                 <section class="sidebar">
