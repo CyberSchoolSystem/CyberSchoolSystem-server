@@ -86,14 +86,10 @@ $doctype 5
                               <li id="menu-/user/info">
                                   <a href="@{UiUserInfoR}">
                                       <i class="fa fa-user-plus"></i> Benutzer suchen</a>
-                        <li id="menu-Wahlergebnisse">
-                            <a href="@{UiVoteInfoR}">
-                                <i class="fa fa-pie-chart">
-                                <span>Wahlergebnisse
-                      <li id="menu-Tech" class="treeview">
+                      <li id="menu-Techniker" class="treeview">
                           <a href="#">
-                              <i class="fa fa-id-card">
-                              <span>Tech
+                              <i class="fa fa-database">
+                              <span>Techniker
                               <span class="pull-right-container">
                                   <i class="fa fa-angle-left pull-right">
                           <ul class="treeview-menu">
@@ -102,11 +98,11 @@ $doctype 5
                                       <i class="fa fa-plus"></i> Klasse erstellen</a>
                               <li id="menu-/user/grade/info">
                                   <a href="@{UiGradeInfoR}">
-                                      <i class="fa fa-user-plus"></i> Klasse suchen</a>
-                        <li id="menu-Wahlergebnisse">
-                            <a href="@{UiVoteInfoR}">
-                                <i class="fa fa-pie-chart">
-                                <span>Wahlergebnisse
+                                      <i class="fa fa-search"></i> Klasse suchen</a>
+                      <li id="menu-Wahlergebnisse">
+                          <a href="@{UiVoteInfoR}">
+                              <i class="fa fa-pie-chart">
+                              <span>Wahlergebnisse
             <div class="content-wrapper">
                 <section class="content-header">
                     <h1>#{title}

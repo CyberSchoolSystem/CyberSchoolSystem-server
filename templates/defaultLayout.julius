@@ -54,6 +54,14 @@ if(path == "/user/info"){
 if(path == "/vote/info"){
   document.getElementById("menu-Wahlergebnisse").className += " active";
 }
+if(path == "/user/grade/add"){
+  document.getElementById("menu-Techniker").className += " active";
+  document.getElementById("menu-/user/grade/add").className += " active";
+}
+if(path == "/user/grade/info"){
+  document.getElementById("menu-Techniker").className += " active";
+  document.getElementById("menu-/user/grade/info").className += " active";
+}
 
 if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > 0) {
     document.getElementById('IEAlert').style.display = 'inline';
