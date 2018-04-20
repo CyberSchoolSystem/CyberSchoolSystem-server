@@ -6,6 +6,7 @@ module Handler.Vote
     , postApiVoteRemoveR
     ) where
 
+import           Control.Monad.IO.Class   (liftIO)
 import           Database.Persist         ((==.), (=.))
 import           Database.Persist.Types   (Filter, Entity(..), entityKey)
 import           Database.Persist.Class   (selectFirst, selectList, insert, update, delete)
@@ -14,11 +15,20 @@ import           Data.Aeson
 import           Data.Aeson.Types         (typeMismatch)
 import           Data.Maybe               (catMaybes)
 import           Data.Text                (Text)
+import           Data.Time.Clock          (getCurrentTime)
+import           Data.Time.LocalTime      (ZonedTime, zonedTimeToUTC)
 import           Error
 import           Foundation
 import           Model
-import           Yesod.Persist.Core       (runDB)
+import           Yesod.Auth               (requireAuthId)
 import           Yesod.Core.Json          (FromJSON, requireJsonBody)
+import           Yesod.Persist.Core       (runDB)
+
+{-| Differenciate between running and terminated votes -}
+newtype VoteTerminated = VoteTerminated { voteTerminated :: Entity Vote }
+newtype VoteRunning = VoteRunning { voteRunning :: Entity Vote }
+newtype ChoiceTerminated = ChoiceTerminated { choiceTerminated :: Choice }
+newtype ChoiceRunning = ChoiceRunning { choiceRunning :: Choice }
 
 data VoteReq = VoteReq
     { reqVoteId   :: Maybe (Key Vote)
@@ -26,14 +36,14 @@ data VoteReq = VoteReq
     } deriving (Show)
 
 data ApiVoteAct = ApiVoteAct
-    { idUser      :: Text
-    , actVoteId   :: Key Vote
+    { actVoteId   :: Key Vote
     , actChoiceId :: Int
     } deriving (Show)
 
 data ApiVoteAdd = ApiVoteAdd
     { addDesc     :: Text
     , addChoices  :: [Text]
+    , addEOL      :: ZonedTime
     }
 
 data VoteDel = VoteDel { delId :: Key Vote }
@@ -46,8 +56,7 @@ instance FromJSON VoteReq where
 
 instance FromJSON ApiVoteAct where
     parseJSON (Object v) = ApiVoteAct
-        <$> v .: "username" -- TODO: Transform to uid field
-        <*> v .: "vid"
+        <$> v .: "vid"
         <*> v .: "choice"
     parseJSON invalid = typeMismatch "ApiVoteAct" invalid
 
@@ -55,6 +64,7 @@ instance FromJSON ApiVoteAdd where
     parseJSON (Object v) = ApiVoteAdd
         <$> v .: "description"
         <*> v .: "choices"
+        <*> v .: "endOfLife"
     parseJSON invalid = typeMismatch "ApiVoteAdd" invalid
 
 instance FromJSON VoteDel where
@@ -62,12 +72,41 @@ instance FromJSON VoteDel where
         <$> v .: "vid"
     parseJSON invalid = typeMismatch "VoteDel" invalid
 
+instance ToJSON VoteTerminated where
+    toJSON VoteTerminated{voteTerminated = Entity{entityKey = k, entityVal = u}} = object
+        [ "description" .= voteDescription u
+        , "id" .= k
+        , "choices" .= (ChoiceTerminated <$> voteChoices u)
+        , "voted" .= (length $ voteVoted u)
+        , "terminated" .= True
+        , "endOfLife" .= voteEndOfLife u
+        ]
+
+instance ToJSON VoteRunning where
+    toJSON VoteRunning{voteRunning = Entity{entityKey = k, entityVal = u}} = object
+        [ "description" .= voteDescription u
+        , "id" .= k
+        , "choices" .= (ChoiceRunning <$> voteChoices u)
+        , "terminated" .= False
+        , "endOfLife" .= voteEndOfLife u
+        ]
+
+instance ToJSON ChoiceTerminated where
+    toJSON ChoiceTerminated{choiceTerminated = u} = object
+        [ "description" .= choiceDescription u
+        , "votes" .= choiceVotes u
+        ]
+
+instance ToJSON ChoiceRunning where
+    toJSON ChoiceRunning{choiceRunning = u} = object
+        [ "description" .= choiceDescription u ]
+
 {-| Handle Post on /api/vote/info -}
 postApiVoteInfoR :: Handler Value
 postApiVoteInfoR = do
     inp  <- requireJsonBody :: Handler VoteReq -- TODO: Check Application Type?
     rec <- runDB $ selectList (reqToDBFilter inp) []
-    return $ toJSON rec
+    fmap (toJSON) . liftIO . sequence $ (toValue <$> rec)
 
 {-| Create a list of Mongo filters based on a VoteReq -}
 reqToDBFilter :: VoteReq -> [Filter Vote]
@@ -75,20 +114,38 @@ reqToDBFilter req = catMaybes go
     where go = [(VoteId ==.) <$> reqVoteId req,
                 (nestEq $ VoteChoices ->. ChoiceIdentity) <$> reqChoiceId req] -- TODO: Obsolete?
 
-{-| Handle POST on /api/vote/vote -}
+{-| Create the correct JSON value of a vote -}
+toValue :: Entity Vote -> IO Value
+toValue v = do
+    a <- active
+    if a
+        then return . toJSON . VoteRunning $ v
+        else return . toJSON . VoteTerminated $ v
+    where
+        active = do
+            t <- getCurrentTime
+            return $ t < (voteEndOfLife $ entityVal v)
+
+{-| Let users vote -}
 postApiVoteActR :: Handler Value
 postApiVoteActR = do
     inp <- requireJsonBody :: Handler ApiVoteAct
-    user <- runDB $ selectFirst [UserUsername ==. idUser inp] []
+    auth <- requireAuthId
     vote <- runDB $ selectFirst [VoteId ==. actVoteId inp,
-                                VoteChoices ->. ChoiceIdentity `nestEq` actChoiceId inp] []
+                                 VoteChoices ->. ChoiceIdentity `nestEq` actChoiceId inp] []
+    user <- runDB $ selectFirst [UserId ==. auth] []
     case (user, vote) of
-        (Just u, Just v) -> if isAllowed u v
-                                then updateVote u v inp
-                                else return . toJSON $ PermissionDenied ("You already voted" :: Text)
-        (_,_) -> return . toJSON . WrongFieldValue $
-                   catMaybes [ const ("username", toJSON $ idUser inp) <$> user
-                             , const ("vid", toJSON $ actVoteId inp) <$> vote ]
+        (Just u, Just v) -> do
+            a <- liftIO $ isActive (entityVal v)
+            if a
+                then
+                    if isAllowed u v
+                        then updateVote u v inp
+                        else return . toJSON $ AlreadyDone "You already voted" [("vid", actVoteId inp)]
+                else return . toJSON $ TimedOut "You already voted" [("vid", actVoteId inp)]
+        (_,_) -> return . toJSON . Unknown "This vote is unknown" $
+            catMaybes [ const ("userId", toJSON $ auth) <$> user
+                      , const ("vid", toJSON $ actVoteId inp) <$> vote]
 
 {-| Vote. Update all neccessary records -}
 updateVote :: Entity User -> Entity Vote -> ApiVoteAct -> Handler Value
@@ -109,6 +166,14 @@ updateChoices ApiVoteAct{actChoiceId = cid} = map inc
 isAllowed :: Entity User -> Entity Vote -> Bool
 isAllowed user vote = not $ elem (entityKey user) (voteVoted . entityVal $ vote)
 
+{-| Check whether the vote's eol is reached -}
+isActive :: Vote -> IO Bool
+isActive Vote{voteEndOfLife = v} = do
+    t <- getCurrentTime
+    if t > v
+        then return False
+        else return True
+
 {-| Add a vote to the database -}
 postApiVoteAddR :: Handler Value
 postApiVoteAddR = do
@@ -116,12 +181,12 @@ postApiVoteAddR = do
     _ <- runDB $ insert (addToVote inp)
     return Null
 
-
 {-| Transform ApiVoteAdd request to database entity -}
 addToVote :: ApiVoteAdd -> Vote
 addToVote v = Vote {
     voteDescription = addDesc v,
     voteVoted = [],
+    voteEndOfLife = zonedTimeToUTC $ addEOL v,
     voteChoices = addToChoices v }
 
 {-| Transform ApiVoteAdd request to Choice entity -}
@@ -137,4 +202,4 @@ postApiVoteRemoveR = do
     result <- runDB $ selectFirst [VoteId ==. delId inp] []
     case result of
         Just ent -> runDB $ delete (entityKey ent) >>= (\_ -> return Null)
-        Nothing  -> return . toJSON $ WrongFieldValue [("vid", delId inp)]
+        Nothing  -> return . toJSON $ Unknown "This vote is unknown" [("vid", delId inp)]

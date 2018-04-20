@@ -88,6 +88,7 @@ library:
     - utf8-string
     - yaml
     - yesod-auth-hashdb
+    - xlsx
     - yesod-form
     - yesod-persistent
     - yesod-static

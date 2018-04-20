@@ -5,6 +5,7 @@
 
 /api/access/in ApiAccessInR POST
 /api/access/out ApiAccessOutR POST
+/api/access/export ApiAccessExportR POST
 
 /api/joke/random JokeR GET
 
@@ -12,12 +13,23 @@
 /api/user/remove ApiUserRemoveR POST
 /api/user/info ApiUserInfoR POST
 /api/user/test ApiUserUpdateR POST
+/api/user/grade/add ApiGradeAddR POST
+/api/user/grade/info ApiGradeInfoR GET
+/api/user/grade/remove ApiGradeRemoveR POST
+/api/user/self/info ApiUserSelfInfoR GET
+/api/user/self/setpw ApiUserSelfSetPwR POST
 
 /user/add UiUserAddR GET
 /user/info UiUserInfoR GET
+/user/grade/add UiGradeAddR GET
+/user/grade/info UiGradeInfoR GET
 
 /vote/add UiVoteAddR GET
 /vote/info UiVoteInfoR GET
+
+/access/in UiAccessInR GET
+/access/out UiAccessOutR GET
+/access/export UiAccessExportR GET
 
 /dashboard DashboardR GET
 

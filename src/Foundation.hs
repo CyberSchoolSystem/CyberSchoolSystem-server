@@ -70,11 +70,23 @@ instance Yesod App where -- TODO: SSL
     isAuthorized ApiVoteActR _ = isCitizen
     isAuthorized ApiVoteAddR _ = isRepresentative
     isAuthorized ApiVoteRemoveR _ = isRepresentative
+
     isAuthorized ApiUserAddR _ = isAdmin
     isAuthorized ApiUserRemoveR _ = isAdmin
     isAuthorized ApiUserInfoR _ = isAdmin
     isAuthorized ApiUserUpdateR _ = isAdmin
     isAuthorized UiUserAddR _ = isAdmin
+
+    isAuthorized ApiGradeAddR _ = isTech
+    isAuthorized ApiGradeRemoveR _ = isTech
+    isAuthorized UiGradeAddR _ = isTech
+    isAuthorized UiGradeInfoR _ = isTech
+
+    isAuthorized UiAccessInR _ = isCustoms
+    isAuthorized UiAccessOutR _ = isCustoms
+    isAuthorized ApiAccessInR _ = isCustoms
+    isAuthorized ApiAccessOutR _ = isCustoms
+
     isAuthorized DashboardR _ = isAuthenticated
 #endif
     isAuthorized _ _ = return Authorized
@@ -145,6 +157,12 @@ isRepresentative = maybeAuthId >>= checkAuth roleRepresentative "You are not a r
 
 isAdmin :: Handler AuthResult
 isAdmin = maybeAuthId >>= checkAuth roleAdmin "You are not an admin"
+
+isTech :: Handler AuthResult
+isTech = maybeAuthId >>= checkAuth roleTech "You are not a tech"
+
+isCustoms :: Handler AuthResult
+isCustoms = maybeAuthId >>= checkAuth roleCustoms "You are not a customs"
 
 isAuthenticated :: Handler AuthResult
 isAuthenticated = do

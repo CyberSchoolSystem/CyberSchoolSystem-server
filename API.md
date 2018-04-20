@@ -4,8 +4,8 @@
 | URI | Request Method | Request Body Type | Request Body Keys | Return |
 |-----|----------------|-------------------|---------------------|------|
 |`/api/vote/info` | POST | `application/json` | Optional: "vid", "choice" | `[ vote ]` |
-|`/api/vote/act` | POST | `application/json` | "username", "vid", "choice" | "error" |
-|`/api/vote/add` | POST | `application/json` | "description", "choices" | `null` |
+|`/api/vote/vote` | POST | `application/json` | "vid", "choice" | "error" |
+|`/api/vote/add` | POST | `application/json` | "description", "choices", "endOfLife" | `null` |
 |`/api/vote/remove` | POST | `application/json` | "vid" | "error" | "error" |
 
 ## Access
@@ -17,10 +17,15 @@
 ## Users
 | URI | Request Method | Request Body Type | Request Body Keys | Return |
 |-----|----------------|-------------------|---------------------|------|
-|`/api/user/add`| POST | `application/json` | "firstname", "lastname", "grade" <br> Optional: "username", "password" | "error" |
+|`/api/user/add`| POST | `application/json` | "firstname", "lastname", "gradeId" <br> Optional: "username", "password" | "error" |
 |`/api/user/remove` | POST | `application/json` | "username" | "error" |
-|`/api/user/update` | POST | `application/json` | "idUsername" <br> Optional: "firstName", "lastName", "grade", "username", "password" | "error" |
-|`/api/user/info` | POST | `application/json` | Optional: "firstName", "lastName", "grade", "username" | `[ user ]` |
+|`/api/user/update` | POST | `application/json` | "idUsername" <br> Optional: "firstName", "lastName", "gradeId", "username", "password" | "error" |
+|`/api/user/info` | POST | `application/json` | Optional: "firstName", "lastName", "gradeId", "username" | `[ user ]` |
+|`/api/user/grade/add` | POST | `application/json` | "grade" | "gradeId" |
+|`/api/user/grade/info` | GET | | | `[ { "id": gradeId, "name": grade } ] ` |
+|`/api/user/grade/remove` | POST | `application/json` | "gradeId" | "error" |
+|`/api/user/self/setpw` | POST | `application/json` | "password" | "error" |
+|`/api/user/self/info` | GET | | | "userPriv" |
 
 
 ## Keys
@@ -30,6 +35,8 @@
 
 `grade`: String
 
+`gradeId`: String
+
 `username`: String
 
 `idUsername`: String
@@ -38,16 +45,20 @@
 
 `vid`: String
 
-`vote`: Object( `id`: String, `description`: String, `choices`: List of Objects (`votes`: Integer, `identity`: Integer, `description`: String))
+`vote`: Object( `id`: String, `endOfLife`: String (Format: `2018-08-08T19:20:20Z`) `description`: String, (If EOL reached: `voted`: Int) `choices`: List of Objects, ((`votes`: Integer, if eol reached), `identity`: Integer, `description`: String))
 
-`error`: Either `null` or Object (`missingField`: List o. strings, `wrongFieldValue`: List o. String value tuples, `impossible`: S. `wrongFieldValue`, `permissionDenied`: Value)
+`error`: Either `null` or Object (`missingField`, `timedOut`, `alreadyDone`, `unknown`, `notUnique` all a object (`msg`: String, `field`: List of fields (+values) that raised the error)
 
-`user`: Object. (`firstName`: String, `lastName`: String, `grade`: Text, `username`: Text, `fails`: Int, `roles`: roles,)
+`user`: Object. (`firstName`: String, `lastName`: String, `gradeId`: Text, `username`: Text, `roles`: roles,)
 
-`roles`: Object (`citizen`: Bool, `representative`: Bool, `admin`: Bool, `teacher`: null or Text)
+`userPriv`: Object. (`firstName`: String, `lastName`: String, `gradeId`: Text, `username`: Text, `fails`: Int, `roles`: roles, `fails`: Int, `access`: `[ (Bool, Time)]`)
+
+`roles`: Object (`citizen`: Bool, `representative`: Bool, `admin`: Bool, `teacher`: null or Text, `tech`: Bool, `customs`: Bool)
 
 `choice`: Integer
 
 `choices`: Array of Strings
 
 `description`: String
+
+`endOfLife`: String. Time format "YYYY-MM-DD HH:MM:SS Z" (Z: Timezone. e.g `Z` (UTC) `(+1)` UTC +1)

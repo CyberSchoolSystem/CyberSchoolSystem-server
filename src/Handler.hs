@@ -5,6 +5,7 @@ module Handler
     , module Handler.Joke
     , module Handler.Root
     , module Handler.User
+    , module Handler.Grade
     ) where
 
 import Handler.Access
@@ -13,3 +14,4 @@ import Handler.Vote
 import Handler.Joke
 import Handler.Root
 import Handler.User
+import Handler.Grade
