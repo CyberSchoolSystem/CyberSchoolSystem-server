@@ -62,6 +62,18 @@ if(path == "/user/grade/info"){
   document.getElementById("menu-Techniker").className += " active";
   document.getElementById("menu-/user/grade/info").className += " active";
 }
+if(path == "/access/export"){
+  document.getElementById("menu-Lehrer").className += " active";
+  document.getElementById("menu-/access/export").className += " active";
+}
+if(path == "/access/in"){
+  document.getElementById("menu-Zoll").className += " active";
+  document.getElementById("menu-/access/in").className += " active";
+}
+if(path == "/access/out"){
+  document.getElementById("menu-Zoll").className += " active";
+  document.getElementById("menu-/access/out").className += " active";
+}
 
 if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > 0) {
     document.getElementById('IEAlert').style.display = 'inline';
