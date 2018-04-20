@@ -126,8 +126,10 @@ instance ToJSON (UserResp User) where
 postApiUserAddR :: Handler Value
 postApiUserAddR = do
     user <- addToUser <$> requireJsonBody
-    runDB $ insert_ user
-    return Null
+    res <- runDB $ selectFirst [UserUsername ==. userUsername user] []
+    case res of
+        Just _ -> return . toJSON $ (NotUnique "Username not Unique" [("username", userUsername user)])
+        Nothing -> runDB $ insert_ user >> return Null
 
 {-| Transform a request to a User -}
 addToUser :: AddUserReq -> User
