@@ -1,0 +1,3 @@
+<form name="form" id="addForm">
+    Name der klasse: <input name="name"> <br>
+    <input type="button" id="submit" value="Submit">

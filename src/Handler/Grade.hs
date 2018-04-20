@@ -39,7 +39,7 @@ postApiGradeAddR = do
     req <- requireJsonBody :: Handler AddGradeReq
     res <- runDB $ selectFirst [GradeName ==. addGradeName req] []
     case res of
-        Nothing -> runDB $ insert Grade{gradeName = addGradeName req} >>= return . toJSON
+        Nothing -> runDB $ insert Grade{gradeName = addGradeName req} >>= (\x -> return . toJSON $ object ["gradeId" .= x])
         Just _ -> return . toJSON . NotUnique "Grade already exists" $ [("grade", addGradeName req)]
 
 {-| Return all gradeNames and gradeIds -}

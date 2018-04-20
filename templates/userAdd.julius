@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    clrmsg();
+    clrerror();
+    loadGrades();
     $("#teacher").change( function() {
         if(this.checked) {
             $("#teachGrade").prop('disabled', false);
@@ -11,17 +14,20 @@ $(document).ready(function() {
         if (doc["teacher"].checked == false) {
             var teach = null;
         } else {
-            var teach = doc["teachGrade"].value;
+            var teach = nameToGradeId(doc["teachGrade"].value);
         }
         var data = { firstName: doc["firstName"].value,
                      lastName: doc["lastName"].value,
                      username: doc["username"].value,
-                     grade: doc["grade"].value,
+                     gradeId: nameToGradeId(doc["grade"].value),
                      password: doc["password"].value,
                      role: { admin: doc["admin"].checked,
                              citizen: doc["citizen"].checked,
                              teacher: teach,
+                             customs: doc["customs"].checked,
+                             tech: doc["tech"].checked,
                              representative: doc["rep"].checked }};
+        console.log(data);
         $.ajax({ url: "@{ApiUserAddR}",
                  type: "POST",
                  data: JSON.stringify(data),
@@ -44,3 +50,18 @@ $(document).ready(function() {
     });
 });
 
+function loadGrades() {
+    $.ajax({ url: "@{ApiGradeInfoR}",
+             type: "GET",
+             dataType: "json",
+             success: function (d) {
+                 classes = d;
+                 console.log(d);
+                 for (var obj in d) {
+                    var newVal = "<option>" + d[obj]["name"] + "</option>";
+                    $("#teachGrade")[0].innerHTML += newVal;
+                    $("#klasse")[0].innerHTML += newVal;
+                 }
+             }
+    });
+}

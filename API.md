@@ -17,11 +17,11 @@
 ## Users
 | URI | Request Method | Request Body Type | Request Body Keys | Return |
 |-----|----------------|-------------------|---------------------|------|
-|`/api/user/add`| POST | `application/json` | "firstname", "lastname", "gradeId" <br> Optional: "username", "password" | "error" |
+|`/api/user/add`| POST | `application/json` | "firstname", "lastname", "gradeId", "Username","role" <br> Optional: "password" | "error" |
 |`/api/user/remove` | POST | `application/json` | "username" | "error" |
 |`/api/user/update` | POST | `application/json` | "idUsername" <br> Optional: "firstName", "lastName", "gradeId", "username", "password" | "error" |
 |`/api/user/info` | POST | `application/json` | Optional: "firstName", "lastName", "gradeId", "username" | `[ user ]` |
-|`/api/user/grade/add` | POST | `application/json` | "grade" | "gradeId" |
+|`/api/user/grade/add` | POST | `application/json` | "grade" | "gradeId" or error |
 |`/api/user/grade/info` | GET | | | `[ { "id": gradeId, "name": grade } ] ` |
 |`/api/user/grade/remove` | POST | `application/json` | "gradeId" | "error" |
 |`/api/user/self/setpw` | POST | `application/json` | "password" | "error" |
@@ -53,7 +53,7 @@
 
 `userPriv`: Object. (`firstName`: String, `lastName`: String, `gradeId`: Text, `username`: Text, `fails`: Int, `roles`: roles, `fails`: Int, `access`: `[ (Bool, Time)]`)
 
-`roles`: Object (`citizen`: Bool, `representative`: Bool, `admin`: Bool, `teacher`: null or Text, `tech`: Bool, `customs`: Bool)
+`role`: Object (`citizen`: Bool, `representative`: Bool, `admin`: Bool, `teacher`: null or Text, `tech`: Bool, `customs`: Bool)
 
 `choice`: Integer
 

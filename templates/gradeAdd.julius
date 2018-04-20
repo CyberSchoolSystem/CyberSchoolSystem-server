@@ -1,0 +1,36 @@
+$(document).ready(function() {
+    $("#submit").click( function() {
+        clrerror();
+        clrmsg();
+        var doc = document.getElementById("addForm");
+        var data = { grade: doc["name"].value };
+        $.ajax({ url: "@{ApiGradeAddR}",
+                 type: "POST",
+                 data: JSON.stringify(data),
+                 contentType: "application/json",
+                 dataType: "json",
+                 statusCode: {
+                    400: function () {
+                        alert("Malformed json. Please report bug");
+                    }
+                 },
+                 success: function (d) {
+                    if ('gradeId' in d) {
+                        $("#addForm")[0].reset();
+                        setmsg("Okay");
+                    } else {
+                        seterror(JSON.stringify(d));
+                    }
+                 }
+        });
+    });
+});
+
+function isJSON(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}

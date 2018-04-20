@@ -1,12 +1,13 @@
 //$(document).ready(function(){$("#result").DataTable()});
 
 $(document).ready(function() {
+    loadGrades();
     $("#submit").click( function() {
         var doc = document.getElementById("infoForm");
         var data = { firstName: doc["firstName"].value,
                      lastName: doc["lastName"].value,
                      username: doc["username"].value,
-                     grade: doc["grade"].value};
+                     grade: nameToGradeId(doc["grade"].value)};
         filter(data);
         $.ajax({ url: "@{ApiUserInfoR}",
                  type: "POST",
@@ -35,11 +36,13 @@ function addRow(d) {
     var mk = "<tr><td>" + u["firstName"] +
             "</td><td>" + u["lastName"] +
             "</td><td>" + u["username"] +
-            "</td><td>" + u["grade"] +
+            "</td><td>" + gradeIdToName(u["gradeId"]) +
             "</td><td>" + u["admin"] +
             "</td><td>" + u["citizen"] +
-            "</td><td>" + u["teacher"] +
+            "</td><td>" + gradeIdToName(u["teacher"]) +
             "</td><td>" + u["representative"] +
+            "</td><td>" + u["customs"] +
+            "</td><td>" + u["tech"] +
             "</td><td>deleteme</td><td>changeme</td></tr>";
     $("#result tbody").append(mk);
 }
@@ -53,5 +56,20 @@ function filter(obj) {
         } else if ($.isArray(value)) {
             $.each(value, function (k,v) { filter(v); });
         }
+    });
+}
+
+function loadGrades() {
+    $.ajax({ url: "@{ApiGradeInfoR}",
+             type: "GET",
+             dataType: "json",
+             success: function (d) {
+                 classes = d;
+                 console.log(d);
+                 for (var obj in d) {
+                    var newVal = "<option>" + d[obj]["name"] + "</option>";
+                    $("#klasse")[0].innerHTML += newVal;
+                 }
+             }
     });
 }

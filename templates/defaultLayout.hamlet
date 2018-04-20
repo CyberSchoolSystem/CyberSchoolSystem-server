@@ -51,7 +51,7 @@ $doctype 5
                               <span class="pull-right-container">
                                   <i class="fa fa-angle-left pull-right">
                           <ul class="treeview-menu">
-                              <li><a href="#"><i class="fa fa-check"></i> Abstimmen</a>
+                              <li><a href="@{UiVoteInfoR}"><i class="fa fa-check"></i> Abstimmen</a>
                       <li id="menu-Zoll" class="treeview">
                           <a href="#">
                               <i class="fa fa-exchange">
@@ -59,8 +59,8 @@ $doctype 5
                               <span class="pull-right-container">
                                   <i class="fa fa-angle-left pull-right">
                           <ul class="treeview-menu">
-                              <li><a href="#"><i class="fa fa-sign-in"></i> Eingang</a>
-                              <li><a href="#"><i class="fa fa-sign-out"></i> Ausgang</a>
+                              <li><a href="@{UiAccessInR}"><i class="fa fa-sign-in"></i> Eingang</a>
+                              <li><a href="@{UiAccessOutR}"><i class="fa fa-sign-out"></i> Ausgang</a>
                       <li id="menu-Lehrer" class="treeview">
                           <a href="#">
                               <i class="fa fa-user">
@@ -68,7 +68,8 @@ $doctype 5
                               <span class="pull-right-container">
                                   <i class="fa fa-angle-left pull-right">
                           <ul class="treeview-menu">
-                              <li><a href="#"><i class="fa fa-file-text"></i> Daten exportieren</a>
+                              <li><a href="@{UiAccessExportR}">
+                                  <i class="fa fa-file-text"></i> Daten exportieren</a>
                       <li id="menu-Verwaltung" class="treeview">
                           <a href="#">
                               <i class="fa fa-id-card">
@@ -76,9 +77,32 @@ $doctype 5
                               <span class="pull-right-container">
                                   <i class="fa fa-angle-left pull-right">
                           <ul class="treeview-menu">
-                              <li id="menu-/vote/add"><a href="@{UiVoteAddR}"><i class="fa fa-plus"></i> Abstimmung erstellen</a>
-                              <li id="menu-/user/add"><a href="@{UiUserAddR}"><i class="fa fa-user-plus"></i> Benutzer hinzufügen</a>
-                              <li id="menu-/user/info"><a href="@{UiUserInfoR}"><i class="fa fa-user-plus"></i> Benutzer suchen</a>
+                              <li id="menu-/vote/add">
+                                  <a href="@{UiVoteAddR}">
+                                      <i class="fa fa-plus"></i> Abstimmung erstellen</a>
+                              <li id="menu-/user/add">
+                                  <a href="@{UiUserAddR}">
+                                      <i class="fa fa-user-plus"></i> Benutzer hinzufügen</a>
+                              <li id="menu-/user/info">
+                                  <a href="@{UiUserInfoR}">
+                                      <i class="fa fa-user-plus"></i> Benutzer suchen</a>
+                        <li id="menu-Wahlergebnisse">
+                            <a href="@{UiVoteInfoR}">
+                                <i class="fa fa-pie-chart">
+                                <span>Wahlergebnisse
+                      <li id="menu-Tech" class="treeview">
+                          <a href="#">
+                              <i class="fa fa-id-card">
+                              <span>Tech
+                              <span class="pull-right-container">
+                                  <i class="fa fa-angle-left pull-right">
+                          <ul class="treeview-menu">
+                              <li id="menu-/user/grade/add">
+                                  <a href="@{UiGradeAddR}">
+                                      <i class="fa fa-plus"></i> Klasse erstellen</a>
+                              <li id="menu-/user/grade/info">
+                                  <a href="@{UiGradeInfoR}">
+                                      <i class="fa fa-user-plus"></i> Klasse suchen</a>
                         <li id="menu-Wahlergebnisse">
                             <a href="@{UiVoteInfoR}">
                                 <i class="fa fa-pie-chart">

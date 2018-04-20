@@ -1,0 +1,17 @@
+$(document).ready(function() {
+    loadGrades();
+});
+
+function loadGrades() {
+    $.ajax({ url: "@{ApiGradeInfoR}",
+             type: "GET",
+             dataType: "json",
+             success: function (d) {
+                 classes = d;
+                 for (var obj in d) {
+                    var newVal = "<tr><td>" + d[obj]["name"] + "</td><td>deleteme</td></tr>"
+                    $("#result")[0].innerHTML += newVal;
+                 }
+             }
+    });
+}
