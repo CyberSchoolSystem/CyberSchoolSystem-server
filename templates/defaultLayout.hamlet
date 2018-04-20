@@ -61,10 +61,12 @@ $doctype 5
                           <ul class="treeview-menu">
                               <li id="menu-/access/in">
                                   <a href="@{UiAccessInR}">
-                                      <i class="fa fa-sign-in"></i> Eingang</a>
+                                      <i class="fa fa-sign-in">
+                                      Eingang
                               <li id="menu-/access/out">
                                   <a href="@{UiAccessOutR}">
-                                      <i class="fa fa-sign-out"></i> Ausgang</a>
+                                      <i class="fa fa-sign-out">
+                                      Ausgang
                       <li id="menu-Lehrer" class="treeview">
                           <a href="#">
                               <i class="fa fa-user">
@@ -74,7 +76,8 @@ $doctype 5
                           <ul class="treeview-menu">
                               <li id="menu-/access/export">
                                   <a href="@{UiAccessExportR}">
-                                      <i class="fa fa-file-text"></i> Daten exportieren</a>
+                                      <i class="fa fa-file-text">
+                                      Daten exportieren
                       <li id="menu-Verwaltung" class="treeview">
                           <a href="#">
                               <i class="fa fa-id-card">
@@ -84,13 +87,16 @@ $doctype 5
                           <ul class="treeview-menu">
                               <li id="menu-/vote/add">
                                   <a href="@{UiVoteAddR}">
-                                      <i class="fa fa-plus"></i> Abstimmung erstellen</a>
+                                      <i class="fa fa-plus">
+                                      Abstimmung erstellen
                               <li id="menu-/user/add">
                                   <a href="@{UiUserAddR}">
-                                      <i class="fa fa-user-plus"></i> Benutzer hinzufügen</a>
+                                      <i class="fa fa-user-plus">
+                                      Benutzer hinzufügen
                               <li id="menu-/user/info">
                                   <a href="@{UiUserInfoR}">
-                                      <i class="fa fa-search"></i> Benutzer suchen</a>
+                                      <i class="fa fa-search">
+                                      Benutzer suchen
                       <li id="menu-Techniker" class="treeview">
                           <a href="#">
                               <i class="fa fa-database">
@@ -100,10 +106,12 @@ $doctype 5
                           <ul class="treeview-menu">
                               <li id="menu-/user/grade/add">
                                   <a href="@{UiGradeAddR}">
-                                      <i class="fa fa-plus"></i> Klasse erstellen</a>
+                                      <i class="fa fa-plus">
+                                      Klasse erstellen
                               <li id="menu-/user/grade/info">
                                   <a href="@{UiGradeInfoR}">
-                                      <i class="fa fa-search"></i> Klasse suchen</a>
+                                      <i class="fa fa-list">
+                                      Klassenliste
                       <li id="menu-Wahlergebnisse">
                           <a href="@{UiVoteInfoR}">
                               <i class="fa fa-pie-chart">

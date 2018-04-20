@@ -1,3 +1,12 @@
-<form name="form" id="addForm">
-    Name der klasse: <input name="name"> <br>
-    <input type="button" id="submit" value="Submit">
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Klasse erstellen
+    <div class="box-body">
+        <form name="form" id="addForm">
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Name der Klasse:
+                <div class="col-sm-10">
+                    <input type="text" name="name" class="form-control" id="name" placeholder="10c">
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="button" value="Submit" id="submit" class="btn btn-primary">Erstellen

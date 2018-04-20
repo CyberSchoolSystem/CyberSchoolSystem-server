@@ -1,6 +1,10 @@
-<table class="table table-bordered" id="result">
-    <thead>
-        <tr>
-            <th>Klasse
-            <th>Löschen
-        <tbody>
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Klassenliste
+    <div class="box-body">
+        <table class="table table-bordered" id="result">
+            <thead>
+                <tr>
+                    <th>Klasse
+                    <th>Löschen
+            <tbody>
