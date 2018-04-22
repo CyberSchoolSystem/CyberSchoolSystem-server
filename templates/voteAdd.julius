@@ -1,0 +1,8 @@
+function addChoice(){
+  var number = 2;
+  var container = document.getElementById("choices")
+}
+
+function addChoice(){
+    
+}

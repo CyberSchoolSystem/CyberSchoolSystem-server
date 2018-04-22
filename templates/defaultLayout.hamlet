@@ -120,8 +120,10 @@ $doctype 5
                 <section class="content-header">
                     <h1>#{title}
                 <section class="content">
-                    <div id="msg">
-                    <div id="error">
+                    <div class="callout callout-info">
+                        <div id="msg">
+                    <div class="callout callout-danger">
+                        <div id="error">
                     ^{bodyTags}
             <footer class="main-footer">
                 <div class="pull-right hidden-xs">
