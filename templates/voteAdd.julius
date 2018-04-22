@@ -10,9 +10,10 @@ $(document).ready(function() {
     if(x < max_fields){
       x++;
       $(wrapper).append('<div class="form-group row removeable"><div class="col-sm-2"></div><div class="col-sm-6"><input type="text" class="input form-control" required/></div><div class="col-sm-4 row"><button id="delete_choice" type="button" class="btn btn-danger"><i class="fa fa-minus"></i></button></div></div>');
+      clrerror();
     }
     else{
-      alert('Es können nur maximal 10 Auswahlmöglichkeiten erstellt werden.');
+      seterror("Sie können maximal 10 Entscheidungsmöglichkeiten hinzufügen.");
     }
   });
 
@@ -20,5 +21,6 @@ $(document).ready(function() {
     e.preventDefault();
     $(this).closest('div.removeable').remove();
     x--;
+    clrerror();
   })
  });
