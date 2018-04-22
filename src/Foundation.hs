@@ -20,7 +20,7 @@ import           Settings.Static
 import           Text.Shakespeare.I18N     ()
 import           Text.Hamlet               (hamletFile)
 import           Text.Jasmine              (minifym)
-import           Text.Julius               (juliusFile, juliusFileReload)
+import           Text.Julius               (juliusFile)
 import           Text.Lucius               (luciusFileReload, luciusFile)
 import           Yesod
 import           Yesod.Auth
@@ -69,6 +69,7 @@ instance Yesod App where -- TODO: SSL
 
 #ifndef NO_AUTH
     isAuthorized (StaticR _) _ = return Authorized
+    isAuthorized (AuthR _) _ = return Authorized
 
     isAuthorized ApiVoteActR _ = isCitizen
     isAuthorized ApiVoteAddR _ = isRepresentative
@@ -104,10 +105,6 @@ instance Yesod App where -- TODO: SSL
                 if (appReload . appSettings $ app)
                     then toWidget $(luciusFileReload "templates/defaultLayout.lucius")
                     else toWidget $(luciusFile "templates/defaultLayout.lucius")
-            js =
-                if (appReload . appSettings $ app)
-                    then toWidget $(juliusFileReload "templates/defaultLayout.julius")
-                    else toWidget $(juliusFile "templates/defaultLayout.julius")
             widget = do
                         addStylesheet (StaticR css_bootstrap_min_css)
                         addStylesheet (StaticR css_font_awesome_min_css)
@@ -124,9 +121,9 @@ instance Yesod App where -- TODO: SSL
                         addScript (StaticR js_morris_min_js) --Pie Chart
                         addScript (StaticR js_raphael_min_js) --Pie Chart
                         css
-                        js
-        PageContent _ headWidgets bodyWidgets <- widgetToPageContent widget
-        PageContent title headTags bodyTags <- widgetToPageContent contents
+                        toWidget $(juliusFile "templates/defaultLayout.julius")
+                        contents
+        PageContent title headTags bodyTags <- widgetToPageContent widget
         withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
 
 instance RenderMessage App FormMessage where
