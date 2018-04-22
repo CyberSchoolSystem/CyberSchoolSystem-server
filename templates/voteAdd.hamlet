@@ -2,26 +2,27 @@
     <div class="box-header with-border">
         <h3 class="box-title">Abstimmung erstellen
     <div class="box-body">
-        <form>
+        <form autocomplete="off">
+            <input type="hidden" name="count" value="1" />
             <div class="form-group row">
                 <label for="titel" class="col-sm-2 col-form-label">Titel
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="titel" placeholder="Steuererhöhung um 2,3%" required>
+                    <input autocomplete="off" type="text" class="form-control" id="titel" placeholder="Steuererhöhung um 2,3%" required>
             <div class="form-group row">
                 <label for="beschreibung" class="col-sm-2 col-form-label">Beschreibung
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="beschreibung" placeholder="Diese zusätzlichen einnahmen werden für eine intensivere Toilettenreinigung invesitert.">
-            <div class="form-group row" id="choices">
+                    <input autocomplete="off" type="text" class="form-control" id="beschreibung" placeholder="Diese zusätzlichen einnahmen werden für eine intensivere Toilettenreinigung invesitert.">
+            <div class="form-group row">
                 <label for="auswahl" class="col-sm-2 col-form-label">Auswahl
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="titel" value="Ja" required>
-                <div class="col-sm-4 row">
-                    <button type="button" class="btn btn-danger"><i class="fa fa-minus"></i>
-                <div class="col-sm-2 col-form-label">
+                    <input autocomplete="off" type="text" class="input form-control" value="Ja" required/>
+                <div class="col-sm-4">
+            <div class="form-group row">
+                <div class="col-sm-2">
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="titel" value="Nein" required>
+                    <input autocomplete="off" type="text" class="input form-control" value="Nein" required/>
                 <div class="col-sm-4 row">
-                    <button type="button" class="btn btn-danger"><i class="fa fa-minus"></i>
-                    <button type="button" class="btn btn-success" id="add_choice"><i class="fa fa-plus"></i>
+                    <button id="add_choice" type="button" class="btn btn-success"><i class="fa fa-plus"></i>
+            <div id="container1" class="container1">
             <div class="form-group">
                 <button type="submit" value="Submit" id="submit" class="btn btn-primary">Veröffentlichen

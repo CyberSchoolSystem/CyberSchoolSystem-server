@@ -1,22 +1,24 @@
 $(document).ready(function() {
-  var max_fields = 10;
+  var max_fields      = 10;
   var wrapper         = $(".container1");
-  var add_button      = $(".add_form_field");
+  var add_button      = $("#add_choice");
+  var div             = document.getElementById("container1");
 
-        var x = 1;
-        $(add_button).click(function(e){
-            e.preventDefault();
-            if(x < max_fields){
-                x++;
-                $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="delete">Delete</a></div>'); //add input box
-            }
-      else
-      {
-      alert('You Reached the limits')
-      }
-        });
+  var x = 2;
+  $(add_button).click(function(e){
+    e.preventDefault();
+    if(x < max_fields){
+      x++;
+      $(wrapper).append('<div class="form-group row removeable"><div class="col-sm-2"></div><div class="col-sm-6"><input type="text" class="input form-control" required/></div><div class="col-sm-4 row"><button id="delete_choice" type="button" class="btn btn-danger"><i class="fa fa-minus"></i></button></div></div>');
+    }
+    else{
+      alert('Es können nur maximal 10 Auswahlmöglichkeiten erstellt werden.');
+    }
+  });
 
-        $(wrapper).on("click",".delete", function(e){
-            e.preventDefault(); $(this).parent('div').remove(); x--;
-        })
-    });
+  $(wrapper).on("click","#delete_choice", function(e){
+    e.preventDefault();
+    $(this).closest('div.removeable').remove();
+    x--;
+  })
+ });
