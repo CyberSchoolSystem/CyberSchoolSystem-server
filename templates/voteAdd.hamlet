@@ -22,6 +22,6 @@
                     <input type="text" class="form-control" id="titel" value="Nein" required>
                 <div class="col-sm-4 row">
                     <button type="button" class="btn btn-danger"><i class="fa fa-minus"></i>
-                    <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>
+                    <button type="button" class="btn btn-success" id="add_choice"><i class="fa fa-plus"></i>
             <div class="form-group">
                 <button type="submit" value="Submit" id="submit" class="btn btn-primary">Veröffentlichen

@@ -9,7 +9,7 @@ function loadGrades() {
              success: function (d) {
                  classes = d;
                  for (var obj in d) {
-                    var button = "<button onclick=delGrade('" + d[obj]["id"] + "')>Löschen</button>"
+                    var button = "<button class='btn btn-danger' onclick=delGrade('" + d[obj]["id"] + "')><i class='fa fa-minus'></i></button>"
                         newVal = "<tr><td>" + d[obj]["name"] + "</td><td>" + button + "</td></tr>"
                     $("#result")[0].innerHTML += newVal;
                  }
