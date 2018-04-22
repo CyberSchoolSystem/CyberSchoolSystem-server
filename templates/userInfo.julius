@@ -29,11 +29,37 @@ $(document).ready(function() {
     });
 });
 
+function delUser(u) {
+    clrmsg();
+    clrerror();
+    var data = { idUsername: u };
+    $.ajax({ url: "@{ApiUserRemoveR}",
+             type: "POST",
+             data: JSON.stringify(data),
+             contentType: "application/json",
+             dataType: "json",
+             statusCode: {
+                400: function (jqXHR) {
+                    alert("malformed json. Please report bug");
+                    seterror(jqXHR.responseText);
+                }
+             },
+             success: function (d) {
+                if (d["error"] != null) {
+                    seterror(JSON.stringify(d));
+                } else {
+                    setmsg("okay");
+                }
+             }
+    });
+}
+
 function addRow(d) {
     var roles = d["roles"];
     delete d["roles"]
-    var u = Object.assign(d, roles);
-    var mk = "<tr><td>" + u["firstName"] +
+    var u = Object.assign(d, roles),
+        button = "<button onclick=delUser('" + d["username"] + "')>Löschen</button>",
+        mk = "<tr><td>" + u["firstName"] +
             "</td><td>" + u["lastName"] +
             "</td><td>" + u["username"] +
             "</td><td>" + gradeIdToName(u["gradeId"]) +
@@ -43,7 +69,8 @@ function addRow(d) {
             "</td><td>" + u["representative"] +
             "</td><td>" + u["customs"] +
             "</td><td>" + u["tech"] +
-            "</td><td>deleteme</td><td>changeme</td></tr>";
+            "</td><td>" + button +
+            "</td><td>changeme</td></tr>";
     $("#result tbody").append(mk);
 }
 
@@ -65,7 +92,6 @@ function loadGrades() {
              dataType: "json",
              success: function (d) {
                  classes = d;
-                 console.log(d);
                  for (var obj in d) {
                     var newVal = "<option>" + d[obj]["name"] + "</option>";
                     $("#klasse")[0].innerHTML += newVal;
@@ -73,3 +99,4 @@ function loadGrades() {
              }
     });
 }
+
