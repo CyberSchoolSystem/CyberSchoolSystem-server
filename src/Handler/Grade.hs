@@ -39,7 +39,9 @@ postApiGradeAddR = do
     req <- requireJsonBody :: Handler AddGradeReq
     res <- runDB $ selectFirst [GradeName ==. addGradeName req] []
     case res of
-        Nothing -> runDB $ insert Grade{gradeName = addGradeName req} >>= (\x -> return . toJSON $ object ["gradeId" .= x])
+        Nothing -> do
+            x <- runDB $ insert Grade{gradeName = addGradeName req}
+            return . toJSON $ object ["gradeId" .= x]
         Just _ -> return . toJSON . NotUnique "Grade already exists" $ [("grade", addGradeName req)]
 
 {-| Return all gradeNames and gradeIds -}
@@ -54,5 +56,5 @@ postApiGradeRemoveR = do
     req <- requireJsonBody :: Handler RmGradeReq
     res <- runDB $ selectFirst [GradeId ==. rmGradeId req] []
     case res of
-        Just g -> runDB $ delete (entityKey g) >> return Null
+        Just g -> runDB $ delete (entityKey g) >> (return . toJSON $ (ENull :: Error Value))
         Nothing -> return . toJSON . Unknown "Grade does not exist" $ [("gradeId", rmGradeId req)]

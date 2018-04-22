@@ -153,7 +153,7 @@ updateVote user vote inp = do
     let choices = voteChoices . entityVal $ vote
     runDB $ update (entityKey vote) [push VoteVoted (entityKey user)]
     runDB $ update (entityKey vote) [VoteChoices =. updateChoices inp choices]
-    return Null
+    return . toJSON $ (ENull :: Error Value)
 
 {-| Insert Description -}
 updateChoices :: ApiVoteAct -> [Choice] -> [Choice]
@@ -179,7 +179,7 @@ postApiVoteAddR :: Handler Value
 postApiVoteAddR = do
     inp <- requireJsonBody :: Handler ApiVoteAdd
     _ <- runDB $ insert (addToVote inp)
-    return Null
+    return $ toJSON (ENull :: Error Value)
 
 {-| Transform ApiVoteAdd request to database entity -}
 addToVote :: ApiVoteAdd -> Vote
@@ -201,5 +201,5 @@ postApiVoteRemoveR = do
     inp <- requireJsonBody :: Handler VoteDel
     result <- runDB $ selectFirst [VoteId ==. delId inp] []
     case result of
-        Just ent -> runDB $ delete (entityKey ent) >>= (\_ -> return Null)
+        Just ent -> runDB $ delete (entityKey ent) >> (return . toJSON $ (ENull :: Error Value))
         Nothing  -> return . toJSON $ Unknown "This vote is unknown" [("vid", delId inp)]

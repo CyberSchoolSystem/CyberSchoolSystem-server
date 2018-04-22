@@ -55,7 +55,7 @@ addToDB direction req user =
                       then do
                           access <- liftIO $ newAccess direction
                           runDB $ update (entityKey u) [push UserAccess access]
-                          return Null
+                          return . toJSON $ (ENull :: Error Value)
                       else return . toJSON $ AlreadyDone "You already are on this side"
                                                         [("username", toJSON $ idUser req)
                                                         ,("inside", toJSON $ direction)]

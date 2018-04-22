@@ -129,7 +129,7 @@ postApiUserAddR = do
     res <- runDB $ selectFirst [UserUsername ==. userUsername user] []
     case res of
         Just _ -> return . toJSON $ (NotUnique "Username not Unique" [("username", userUsername user)])
-        Nothing -> runDB $ insert_ user >> return Null
+        Nothing -> runDB $ insert_ user >> (return . toJSON $ (ENull :: Error Value))
 
 {-| Transform a request to a User -}
 addToUser :: AddUserReq -> User
@@ -149,7 +149,7 @@ postApiUserRemoveR = do
     req <- requireJsonBody :: Handler RmUserReq
     del <- runDB $ selectFirst (rmToFilter req) []
     case del of
-        Just e -> runDB $ delete (entityKey e) >> return Null
+        Just e -> runDB $ delete (entityKey e) >> (return . toJSON $ (ENull :: Error Value))
         Nothing -> return . toJSON . Unknown "User not known" $ rmInvalidArgs req
 
 {-| Construct invalid args error message, according to a RmUserReq -}
@@ -165,7 +165,9 @@ postApiUserUpdateR = do
     req <- requireJsonBody :: Handler UpdateUserReq
     user <- runDB $ selectFirst (updateToFilter req) []
     case user of
-        Just e -> runDB $ update (entityKey e) (updateToUpdate req) >> return Null
+        Just e -> do
+            runDB $ update (entityKey e) (updateToUpdate req)
+            (return . toJSON $ (ENull :: Error Value))
         Nothing -> return . toJSON . Unknown "User not known"  $ updateInvalidArgs req
 
 {-| Create Database updates from a update request -}
@@ -215,5 +217,7 @@ postApiUserSelfSetPwR = do
     auth <- requireAuthId
     user <- runDB $ selectFirst [UserId ==. auth] []
     case user of
-        Just _ -> runDB $ update auth [UserPassword =. (Just $ newPw req)] >> return Null
+        Just _ -> do
+            runDB $ update auth [UserPassword =. (Just $ newPw req)]
+            return . toJSON $ (ENull :: Error Value)
         Nothing -> return . toJSON . Unknown "User was Deleted" $ [("username", user)]
