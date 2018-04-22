@@ -1,18 +1,22 @@
 var classes;
 function setmsg(d) {
-    document.getElementById("msg").innerHTML = "Message: " + d;
+    document.getElementById('msg-div').style.display = 'block';
+    document.getElementById("msg").innerHTML = d;
 }
 
 function seterror(d) {
-    document.getElementById("error").innerHTML = "Error: " + d;
+    document.getElementById('error-div').style.display = 'block';
+    document.getElementById("error").innerHTML = d;
 }
 
 function clrmsg() {
-    document.getElementById("msg").innerHTML = '';
+    //document.getElementById("msg").innerHTML = '';
+    document.getElementById('msg-div').style.display = 'none';
 }
 
 function clrerror() {
-    document.getElementById("error").innerHTML = '';
+    //document.getElementById("error").innerHTML = '';
+    document.getElementById('error-div').style.display = 'none';
 }
 
 

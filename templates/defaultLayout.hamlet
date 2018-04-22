@@ -120,9 +120,11 @@ $doctype 5
                 <section class="content-header">
                     <h1>#{title}
                 <section class="content">
-                    <div class="callout callout-info">
+                    <div id="msg-div" style="display:none" class="callout callout-info">
+                        <h4>Info:
                         <div id="msg">
-                    <div class="callout callout-danger">
+                    <div id="error-div" style="display:none" class="callout callout-danger">
+                        <h4>Fehler:
                         <div id="error">
                     ^{bodyTags}
             <footer class="main-footer">
