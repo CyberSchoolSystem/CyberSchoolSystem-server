@@ -41,7 +41,7 @@ getUiUserInfoR = defaultLayout $ do
         then toWidget $(juliusFileReload "templates/userInfo.julius")
              <> toWidget $(hamletFileReload "templates/userInfo.hamlet")
         else toWidget $(juliusFile "templates/userInfo.hamlet")
-             <> toWidget $(hamletFileReload "templates/userInfo.hamlet")
+             <> toWidget $(hamletFile "templates/userInfo.hamlet")
 
 getUiVoteAddR :: Handler Html
 getUiVoteAddR = defaultLayout $ do
@@ -51,7 +51,7 @@ getUiVoteAddR = defaultLayout $ do
         then toWidget $(juliusFileReload "templates/voteAdd.julius")
              <> toWidget $(hamletFileReload "templates/voteAdd.hamlet")
         else toWidget $(juliusFile "templates/voteAdd.hamlet")
-             <> toWidget $(hamletFileReload "templates/voteAdd.hamlet")
+             <> toWidget $(hamletFile "templates/voteAdd.hamlet")
 
 getUiVoteInfoR :: Handler Html
 getUiVoteInfoR = defaultLayout $ do
@@ -61,8 +61,7 @@ getUiVoteInfoR = defaultLayout $ do
         then toWidget $(juliusFileReload "templates/voteInfo.julius")
              <> toWidget $(hamletFileReload "templates/voteInfo.hamlet")
         else toWidget $(juliusFile "templates/voteInfo.hamlet")
-             <> toWidget $(hamletFileReload "templates/voteInfo.hamlet")
-
+             <> toWidget $(hamletFile "templates/voteInfo.hamlet")
 
 getUiAccessInR :: Handler Html
 getUiAccessInR = defaultLayout $ do
@@ -72,7 +71,7 @@ getUiAccessInR = defaultLayout $ do
         then toWidget $(juliusFileReload "templates/accessIn.julius")
              <> toWidget $(hamletFileReload "templates/accessIn.hamlet")
         else toWidget $(juliusFile "templates/accessIn.hamlet")
-             <> toWidget $(hamletFileReload "templates/accessIn.hamlet")
+             <> toWidget $(hamletFile "templates/accessIn.hamlet")
 
 getUiAccessOutR :: Handler Html
 getUiAccessOutR = defaultLayout $ do
@@ -82,8 +81,7 @@ getUiAccessOutR = defaultLayout $ do
         then toWidget $(juliusFileReload "templates/accessOut.julius")
              <> toWidget $(hamletFileReload "templates/accessOut.hamlet")
         else toWidget $(juliusFile "templates/accessOut.hamlet")
-             <> toWidget $(hamletFileReload "templates/accessOut.hamlet")
-
+             <> toWidget $(hamletFile "templates/accessOut.hamlet")
 
 getUiAccessExportR :: Handler Html
 getUiAccessExportR = defaultLayout $ do
@@ -93,8 +91,7 @@ getUiAccessExportR = defaultLayout $ do
         then toWidget $(juliusFileReload "templates/accessExport.julius")
              <> toWidget $(hamletFileReload "templates/accessExport.hamlet")
         else toWidget $(juliusFile "templates/accessExport.hamlet")
-             <> toWidget $(hamletFileReload "templates/accessExport.hamlet")
-
+             <> toWidget $(hamletFile "templates/accessExport.hamlet")
 
 getUiGradeAddR :: Handler Html
 getUiGradeAddR = defaultLayout $ do
@@ -104,8 +101,7 @@ getUiGradeAddR = defaultLayout $ do
         then toWidget $(juliusFileReload "templates/gradeAdd.julius")
              <> toWidget $(hamletFileReload "templates/gradeAdd.hamlet")
         else toWidget $(juliusFile "templates/gradeAdd.hamlet")
-             <> toWidget $(hamletFileReload "templates/gradeAdd.hamlet")
-
+             <> toWidget $(hamletFile "templates/gradeAdd.hamlet")
 
 getUiGradeInfoR :: Handler Html
 getUiGradeInfoR = defaultLayout $ do
@@ -115,7 +111,7 @@ getUiGradeInfoR = defaultLayout $ do
         then toWidget $(juliusFileReload "templates/gradeInfo.julius")
              <> toWidget $(hamletFileReload "templates/gradeInfo.hamlet")
         else toWidget $(juliusFile "templates/gradeInfo.hamlet")
-             <> toWidget $(hamletFileReload "templates/gradeInfo.hamlet")
+             <> toWidget $(hamletFile "templates/gradeInfo.hamlet")
 
 getDashboardR :: Handler Html
 getDashboardR = defaultLayout $ do
@@ -125,5 +121,5 @@ getDashboardR = defaultLayout $ do
         then toWidget $(juliusFileReload "templates/dashboard.julius")
              <> toWidget $(hamletFileReload "templates/dashboard.hamlet")
         else toWidget $(juliusFile "templates/dashboard.hamlet")
-             <> toWidget $(hamletFileReload "templates/dashboard.hamlet")
+             <> toWidget $(hamletFile "templates/dashboard.hamlet")
 

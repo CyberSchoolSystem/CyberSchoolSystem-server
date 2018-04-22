@@ -19,7 +19,7 @@ import           Settings.Static
 import           Text.Shakespeare.I18N     ()
 import           Text.Hamlet               (hamletFile)
 import           Text.Jasmine              (minifym)
-import           Text.Julius               (juliusFile)
+import           Text.Julius               (juliusFile, juliusFileReload)
 import           Text.Lucius               (luciusFileReload, luciusFile)
 import           Yesod
 import           Yesod.Auth
@@ -98,6 +98,10 @@ instance Yesod App where -- TODO: SSL
                 if (appReload . appSettings $ app)
                     then toWidget $(luciusFileReload "templates/defaultLayout.lucius")
                     else toWidget $(luciusFile "templates/defaultLayout.lucius")
+            js =
+                if (appReload . appSettings $ app)
+                    then toWidget $(juliusFileReload "templates/defaultLayout.julius")
+                    else toWidget $(juliusFile "templates/defaultLayout.julius")
             widget = addStylesheet (StaticR css_bootstrap_min_css)
                      <> addStylesheet (StaticR css_font_awesome_min_css)
                      <> addStylesheet (StaticR css_ionicons_min_css)
@@ -114,7 +118,7 @@ instance Yesod App where -- TODO: SSL
                      <> addScript (StaticR js_raphael_min_js) --Pie Chart
                      <> css
                      <> contents
-                     <> toWidget $(juliusFile "templates/defaultLayout.julius")
+                     <> js
         PageContent title headTags bodyTags <- widgetToPageContent widget
         withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
 
