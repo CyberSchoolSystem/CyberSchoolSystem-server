@@ -3,10 +3,11 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE CPP                   #-}
+{-# OPTIONS_GHC -Wno-overlapping-patterns #-}
 module Foundation where
 
 import           Data.Text                 (Text)
-import           Data.Monoid               ((<>))
+-- import           Data.Monoid               ((<>))
 import           Data.Version       (showVersion)
 import           Database.Persist          ((==.))
 import           Database.Persist.Class    (selectFirst)
@@ -67,9 +68,13 @@ instance Yesod App where -- TODO: SSL
 #endif
 
 #ifndef NO_AUTH
+    isAuthorized (StaticR _) _ = return Authorized
+
     isAuthorized ApiVoteActR _ = isCitizen
     isAuthorized ApiVoteAddR _ = isRepresentative
     isAuthorized ApiVoteRemoveR _ = isRepresentative
+    isAuthorized UiVoteAddR _ = isRepresentative
+    isAuthorized UiVoteInfoR _ = isRepresentative
 
     isAuthorized ApiUserAddR _ = isAdmin
     isAuthorized ApiUserRemoveR _ = isAdmin
@@ -87,9 +92,10 @@ instance Yesod App where -- TODO: SSL
     isAuthorized ApiAccessInR _ = isCustoms
     isAuthorized ApiAccessOutR _ = isCustoms
 
-    isAuthorized DashboardR _ = isAuthenticated
-#endif
+    isAuthorized _ _ = isAuthenticated
+#elif
     isAuthorized _ _ = return Authorized
+#endif
 
     defaultLayout contents = do
         maid <- maybeAuthId
@@ -102,24 +108,25 @@ instance Yesod App where -- TODO: SSL
                 if (appReload . appSettings $ app)
                     then toWidget $(juliusFileReload "templates/defaultLayout.julius")
                     else toWidget $(juliusFile "templates/defaultLayout.julius")
-            widget = addStylesheet (StaticR css_bootstrap_min_css)
-                     <> addStylesheet (StaticR css_font_awesome_min_css)
-                     <> addStylesheet (StaticR css_ionicons_min_css)
-                     <> addStylesheet (StaticR css_all_skins_min_css)
-                     <> addStylesheet (StaticR css_AdminLTE_min_css)
-                     <> addStylesheet (StaticR css_morris_css) --Pie Chart
-                     <> addScript (StaticR js_jquery_min_js)
-                     <> addScript (StaticR js_bootstrap_min_js)
-                     <> addScript (StaticR js_jquery_slimscroll_min_js)
-                     <> addScript (StaticR js_fastclick_js)
-                     <> addScript (StaticR js_adminlte_min_js)
-                     <> addScript (StaticR js_demo_js)
-                     <> addScript (StaticR js_morris_min_js) --Pie Chart
-                     <> addScript (StaticR js_raphael_min_js) --Pie Chart
-                     <> css
-                     <> contents
-                     <> js
-        PageContent title headTags bodyTags <- widgetToPageContent widget
+            widget = do
+                        addStylesheet (StaticR css_bootstrap_min_css)
+                        addStylesheet (StaticR css_font_awesome_min_css)
+                        addStylesheet (StaticR css_ionicons_min_css)
+                        addStylesheet (StaticR css_all_skins_min_css)
+                        addStylesheet (StaticR css_AdminLTE_min_css)
+                        addStylesheet (StaticR css_morris_css) --Pie Chart
+                        addScript (StaticR js_jquery_min_js)
+                        addScript (StaticR js_bootstrap_min_js)
+                        addScript (StaticR js_jquery_slimscroll_min_js)
+                        addScript (StaticR js_fastclick_js)
+                        addScript (StaticR js_adminlte_min_js)
+                        addScript (StaticR js_demo_js)
+                        addScript (StaticR js_morris_min_js) --Pie Chart
+                        addScript (StaticR js_raphael_min_js) --Pie Chart
+                        css
+                        js
+        PageContent _ headWidgets bodyWidgets <- widgetToPageContent widget
+        PageContent title headTags bodyTags <- widgetToPageContent contents
         withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
 
 instance RenderMessage App FormMessage where

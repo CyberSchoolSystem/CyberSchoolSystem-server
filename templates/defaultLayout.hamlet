@@ -6,6 +6,7 @@ $doctype 5
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>#{title}
+        ^{headWidgets}
         ^{headTags}
     <body class="hold-transition skin-blue sidebar-mini">
         <!-- Site wrapper -->
@@ -125,6 +126,7 @@ $doctype 5
                     <div class="callout callout-danger">
                         <div id="error">
                     ^{bodyTags}
+                    ^{bodyWidgets}
             <footer class="main-footer">
                 <div class="pull-right hidden-xs">
                     <b>Version
