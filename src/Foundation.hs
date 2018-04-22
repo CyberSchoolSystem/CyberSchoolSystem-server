@@ -7,12 +7,13 @@
 module Foundation where
 
 import           Data.Text                 (Text)
--- import           Data.Monoid               ((<>))
-import           Data.Version       (showVersion)
+import qualified Data.Text.Encoding        as TE
+import           Data.Version              (showVersion)
 import           Database.Persist          ((==.))
 import           Database.Persist.Class    (selectFirst)
 import           Database.Persist.MongoDB
 import           Database.Persist.Types    (Entity(..))
+import qualified Error                     as E
 import           Model                     (UserId, EntityField (..), Unique(..), User(..), Role(..))
 import           Paths_CyberSchoolSystem_Server (version)
 import           Settings
@@ -47,6 +48,7 @@ instance Yesod App where -- TODO: SSL
     -- approot = ApprootStatic
     -- yesodMiddleware = (sslOnleMiddleware 20) . defaultYesodMiddleware
     -- makeSessionBackend _ = sslOnlySessions $ fmap Just $
+    errorHandler = customErrorHandler
     addStaticContent ext mime content = do
         app <- getYesod
         let staticDir = appStaticDir $ appSettings app
@@ -82,6 +84,7 @@ instance Yesod App where -- TODO: SSL
     isAuthorized ApiUserInfoR _ = isAdmin
     isAuthorized ApiUserUpdateR _ = isAdmin
     isAuthorized UiUserAddR _ = isAdmin
+    isAuthorized UiUserInfoR _ = isAdmin
 
     isAuthorized ApiGradeAddR _ = isTech
     isAuthorized ApiGradeRemoveR _ = isTech
@@ -199,3 +202,39 @@ checkAuth  role failText (Just u) = do
         then return Authorized
         else return $ Unauthorized failText
 checkAuth _ _ Nothing = return AuthenticationRequired
+
+customErrorHandler :: ErrorResponse -> Handler TypedContent
+customErrorHandler NotFound = selectRep $ do
+    provideRep $ errorLayout $ do
+        toWidget $(hamletFile "templates/404.hamlet")
+    provideRep . return . toJSON $ (E.NotFound "NotFound" :: E.Error Value)
+
+customErrorHandler (InternalError e) = selectRep $ do
+    provideRep $ errorLayout $ do
+        toWidget $(hamletFile "templates/500.hamlet")
+    provideRep . return . toJSON $ (E.InternalError "Internal Error" e :: E.Error Value)
+
+customErrorHandler (InvalidArgs e) = selectRep $ do
+    provideRep $ errorLayout $ do
+        toWidget $(hamletFile "templates/400.hamlet")
+    provideRep . return . toJSON $ (E.InvalidArgs "InvalidArgs" e :: E.Error Value)
+
+customErrorHandler NotAuthenticated = selectRep $ do
+    provideRep $ errorLayout $ do
+        toWidget $(hamletFile "templates/401.hamlet")
+    provideRep . return . toJSON $ (E.NotAuthenticated "Not Authenticated" :: E.Error Value)
+
+customErrorHandler (PermissionDenied e) = selectRep $ do
+    provideRep $ errorLayout $ do
+        toWidget $(hamletFile "templates/403.hamlet")
+    provideRep . return . toJSON $ (E.PermissionDenied "Permission Denied" e :: E.Error Value)
+
+customErrorHandler (BadMethod m) = selectRep $ do
+    provideRep $ errorLayout $ do
+        toWidget $(hamletFile "templates/405.hamlet")
+    provideRep . return . toJSON $ (E.BadMethod "Bad Method" (TE.decodeUtf8 m) :: E.Error Value)
+
+errorLayout :: Widget -> Handler Html
+errorLayout contents = do
+    PageContent title headTags bodyTags <- widgetToPageContent contents
+    withUrlRenderer $(hamletFile "templates/errorLayout.hamlet")

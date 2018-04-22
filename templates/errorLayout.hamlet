@@ -1,0 +1,7 @@
+<html>
+    <head>
+        ^{headTags}
+        <title>#{title}
+
+    <body>
+        ^{bodyTags}

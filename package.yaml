@@ -80,12 +80,14 @@ library:
     - file-embed
     - hjsmin
     - http-conduit
+    - http-types
     - persistent-template
     - shakespeare
     - template-haskell
     - text-show
     - unordered-containers
     - utf8-string
+    - wai
     - yaml
     - yesod-auth-hashdb
     - xlsx
