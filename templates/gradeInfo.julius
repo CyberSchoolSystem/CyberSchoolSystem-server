@@ -9,9 +9,34 @@ function loadGrades() {
              success: function (d) {
                  classes = d;
                  for (var obj in d) {
-                    var newVal = "<tr><td>" + d[obj]["name"] + "</td><td>deleteme</td></tr>"
+                    var button = "<button onclick=delGrade('" + d[obj]["id"] + "')>Löschen</button>"
+                        newVal = "<tr><td>" + d[obj]["name"] + "</td><td>" + button + "</td></tr>"
                     $("#result")[0].innerHTML += newVal;
                  }
+             }
+    });
+}
+
+function delGrade(g) {
+    clrmsg();
+    clrerror();
+    var d = { gradeId: g};
+    $.ajax({ url: "@{ApiGradeRemoveR}",
+             type: "POST",
+             contentType: "application/json",
+             data: JSON.stringify(d),
+             dataType: "json",
+             statusCode: {
+                400: function (jqXHR) {
+                    alert("malformed json, please report bug");
+                }
+             },
+             success: function (d) {
+                if (d["error"] != null) {
+                    seterror(JSON.stringify(d));
+                } else {
+                    setmsg("okay");
+                }
              }
     });
 }
