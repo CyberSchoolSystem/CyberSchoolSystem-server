@@ -139,7 +139,16 @@ instance YesodAuth App where
     logoutDest _ = RootR
 
     authLayout widget = do
-        PageContent title headTags bodyTags <- widgetToPageContent widget
+        let cont = do
+                addStylesheet (StaticR css_bootstrap_min_css)
+                addStylesheet (StaticR css_font_awesome_min_css)
+                addStylesheet (StaticR css_ionicons_min_css)
+                addStylesheet (StaticR css_AdminLTE_min_css)
+                addScript (StaticR js_jquery_min_js)
+                addScript (StaticR js_bootstrap_min_js)
+                addScript (StaticR js_adminlte_min_js)
+                widget
+        PageContent title headTags bodyTags <- widgetToPageContent cont
         withUrlRenderer $(hamletFile "templates/loginLayout.hamlet")
 
     authPlugins app = [ authHashDB (Just . UniqueUser)] ++ extra
@@ -236,5 +245,15 @@ customErrorHandler (BadMethod m) = selectRep $ do
 
 errorLayout :: Widget -> Handler Html
 errorLayout contents = do
-    PageContent title headTags bodyTags <- widgetToPageContent contents
+    let widget = do
+            addStylesheet (StaticR css_bootstrap_min_css)
+            addStylesheet (StaticR css_font_awesome_min_css)
+            addStylesheet (StaticR css_ionicons_min_css)
+            addStylesheet (StaticR css_AdminLTE_min_css)
+            addScript (StaticR js_jquery_min_js)
+            addScript (StaticR js_bootstrap_min_js)
+            addScript (StaticR js_adminlte_min_js)
+            contents
+
+    PageContent title headTags bodyTags <- widgetToPageContent widget
     withUrlRenderer $(hamletFile "templates/errorLayout.hamlet")
