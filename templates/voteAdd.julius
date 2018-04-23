@@ -25,7 +25,7 @@ $(document).ready(function() {
     e.preventDefault();
     if(x < max_fields){
       x++;
-      $(wrapper).append('<div class="form-group row removeable"><div class="col-sm-2"></div><div class="col-sm-6"><input type="text" class="input form-control" required/></div><div class="col-sm-4 row"><button id="delete_choice" type="button" class="btn btn-danger"><i class="fa fa-minus"></i></button></div></div>');
+      $(wrapper).append('<div class="form-group row removeable"><div class="col-sm-2"></div><div class="col-sm-6"><input id="choice_' + x +'" type="text" class="input form-control" required/></div><div class="col-sm-4 row"><button id="delete_choice" type="button" class="btn btn-danger"><i class="fa fa-minus"></i></button></div></div>');
       clrerror();
     }
     else{
@@ -46,6 +46,18 @@ $(document).ready(function() {
     var choices = [];
     choices.push(doc["choice_1"].value)
     choices.push(doc["choice_2"].value)
+    var choice_3 = document.getElementById("choice_3");
+    if(choice_3){
+      choices.push(doc["choice_3"].value)
+    }
+    var choice_4 = document.getElementById("choice_4");
+    if(choice_4){
+      choices.push(doc["choice_4"].value)
+    }
+    var choice_5 = document.getElementById("choice_5");
+    if(choice_5){
+      choices.push(doc["choice_5"].value)
+    }
     var data = {  description: doc["beschreibung"].value,
                   choices: choices,
                   endOfLife: endOfLife,
