@@ -26,7 +26,7 @@
             <div id="container1" class="container1">
             <div class="form-group row">
                 <label for="titel" class="col-sm-2 col-form-label">Ende der Abstimmung
-                <div class="col-md-6">
+                <div class="col-sm-6">
                     <div id="datetimepicker1">
             <div class="form-group">
                 <button type="button" value="Submit" id="submit" class="btn btn-primary">Veröffentlichen

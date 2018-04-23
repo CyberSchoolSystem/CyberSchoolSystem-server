@@ -61,7 +61,9 @@ $(function() {
   $('#datetimepicker1').datetimepicker({
     inline: true,
     sideBySide: true,
-    dayViewHeaderFormat: 'YYYY-MM-DD HH:MM:SS Z',
-    collapse: false
+    format: 'YYYY-MM-DD HH:MM:SS Z',
+    dayViewHeaderFormat: 'DD.MM.YYYY HH:MM',
+    collapse: false,
+    locale: 'de'
   });
 });
