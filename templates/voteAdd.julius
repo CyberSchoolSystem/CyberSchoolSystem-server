@@ -66,12 +66,11 @@ $(document).ready(function() {
                 }
              },
               success: function (d) {
-                if (d == null) {
-                  $("#addForm")[0].reset();
-                  setmsg("Abstimmung wurde veröffentlicht");
-                }
-                else{
-                    seterror(JSON.stringify(d));
+                if (d.error == null) {
+                  $("#voteAdd")[0].reset();
+                  setmsg("Abstimmung wurde veröffentlicht!");
+                }else{
+                  seterror(JSON.stringify(d));
                 }
              }
     });
