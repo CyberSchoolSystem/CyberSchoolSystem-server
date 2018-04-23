@@ -28,5 +28,6 @@
                 <label for="titel" class="col-sm-2 col-form-label">Ende der Abstimmung
                 <div class="col-sm-6">
                     <div id="datetimepicker1">
+                    <input type="hidden" id="timestamp" value="" readonly />
             <div class="form-group">
                 <button type="button" value="Submit" id="submit" class="btn btn-primary">Veröffentlichen

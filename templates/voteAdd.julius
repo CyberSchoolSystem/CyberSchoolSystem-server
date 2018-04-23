@@ -1,3 +1,13 @@
+$(function() {
+  $('#datetimepicker1').datetimepicker({
+    inline: true,
+    sideBySide: true,
+    dayViewHeaderFormat: 'DD.MM.YYYY',
+    locale: 'de',
+    stepping: 1
+  });
+});
+
 $(document).ready(function() {
   var max_fields      = 5;
   var wrapper         = $(".container1");
@@ -25,13 +35,15 @@ $(document).ready(function() {
   })
 
   $("#submit").click(function(){
+    clrerror();
     var doc = document.getElementById("voteAdd");
     var choices = [];
     choices.push(doc["choice_1"].value)
     choices.push(doc["choice_2"].value)
-    var data = {  title: doc["titel"].value,
-                  description: doc["beschreibung"].value,
-                  choices: choices
+    var data = {  description: doc["beschreibung"].value,
+                  choices: choices,
+                  endOfLife: doc["timestamp"].value,
+                  title: doc["title"].value
                 };
     console.log(data);
     $.ajax({  url: "/",
@@ -41,7 +53,10 @@ $(document).ready(function() {
               dataType: "json",
               statusCode: {
                 400: function () {
-                  alert("Malformed json. Please report bug");
+                  seterror("400 Bad Request");
+                },
+                405: function () {
+                  seterror("405 Method Not Allowed");
                 }
              },
               success: function (d) {
@@ -54,16 +69,5 @@ $(document).ready(function() {
                 }
              }
     });
-  });
-});
-
-$(function() {
-  $('#datetimepicker1').datetimepicker({
-    inline: true,
-    sideBySide: true,
-    format: 'YYYY-MM-DD HH:MM:SS Z',
-    dayViewHeaderFormat: 'DD.MM.YYYY HH:MM',
-    collapse: false,
-    locale: 'de'
   });
 });
