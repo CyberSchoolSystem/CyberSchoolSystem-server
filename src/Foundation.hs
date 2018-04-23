@@ -96,6 +96,8 @@ instance Yesod App where -- TODO: SSL
     isAuthorized UiAccessOutR _ = isCustoms
     isAuthorized ApiAccessInR _ = isCustoms
     isAuthorized ApiAccessOutR _ = isCustoms
+    isAuthorized ApiAccessExportR _ = isTeacher
+    isAuthorized UiAccessExportR _ = isTeacher
 
     isAuthorized _ _ = isAuthenticated
 #elif
@@ -195,7 +197,13 @@ isAuthenticated = do
         Nothing -> return AuthenticationRequired
 
 isTeacher :: Handler AuthResult
-isTeacher = undefined
+isTeacher = maybeAuthId >>= checkAuth isTeach "You are not a teach"
+    where
+        isTeach Role{roleTeacher = t} =
+            case t of
+                Nothing -> False
+                Just _ -> True
+          
 
 {-| Get the roles of a user -}
 getRole :: UserId -> Handler Role
