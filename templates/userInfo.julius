@@ -58,7 +58,7 @@ function addRow(d) {
     var roles = d["roles"];
     delete d["roles"]
     var u = Object.assign(d, roles),
-        button = "<button onclick=delUser('" + d["username"] + "')>Löschen</button>",
+        button = "<button class='btn btn-danger' onclick=delUser('" + d["username"] + "')><i class='fa fa-trash'></i></button>",
         mk = "<tr><td>" + u["firstName"] +
             "</td><td>" + u["lastName"] +
             "</td><td>" + u["username"] +
@@ -99,4 +99,3 @@ function loadGrades() {
              }
     });
 }
-

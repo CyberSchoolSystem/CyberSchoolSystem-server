@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var max_fields      = 10;
+  var max_fields      = 5;
   var wrapper         = $(".container1");
   var add_button      = $("#add_choice");
   var div             = document.getElementById("container1");
@@ -13,7 +13,7 @@ $(document).ready(function() {
       clrerror();
     }
     else{
-      seterror("Sie können maximal 10 Entscheidungsmöglichkeiten hinzufügen.");
+      seterror("Sie können maximal 5 Entscheidungsmöglichkeiten erstellen.");
     }
   });
 
