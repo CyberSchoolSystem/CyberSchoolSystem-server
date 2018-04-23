@@ -1,3 +1,5 @@
+var endOfLife = null
+
 $(function() {
   $('#datetimepicker1').datetimepicker({
     inline: true,
@@ -6,6 +8,10 @@ $(function() {
     locale: 'de',
     stepping: 1
   });
+});
+
+$('#datetimepicker1').on("dp.change",function (e) {
+    endOfLife = moment(e.date._d, "ddd MMM MM YYYY HH:mm:ss ZZ").format('YYYY-MM-DD HH:mm:ss Z');
 });
 
 $(document).ready(function() {
@@ -42,11 +48,11 @@ $(document).ready(function() {
     choices.push(doc["choice_2"].value)
     var data = {  description: doc["beschreibung"].value,
                   choices: choices,
-                  endOfLife: doc["timestamp"].value,
-                  title: doc["title"].value
+                  endOfLife: endOfLife,
+                  title: doc["titel"].value
                 };
     console.log(data);
-    $.ajax({  url: "/",
+    $.ajax({  url: "@{ApiVoteAddR}",
               type: "POST",
               data: JSON.stringify(data),
               contentType: "application/json",
