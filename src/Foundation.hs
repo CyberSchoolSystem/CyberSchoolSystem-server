@@ -216,46 +216,31 @@ checkAuth _ _ Nothing = return AuthenticationRequired
 
 customErrorHandler :: ErrorResponse -> Handler TypedContent
 customErrorHandler NotFound = selectRep $ do
-    provideRep $ errorLayout $ do
+    provideRep $ defaultLayout $ do
         toWidget $(hamletFile "templates/404.hamlet")
     provideRep . return . toJSON $ (E.NotFound "NotFound" :: E.Error Value)
 
 customErrorHandler (InternalError e) = selectRep $ do
-    provideRep $ errorLayout $ do
+    provideRep $ defaultLayout $ do
         toWidget $(hamletFile "templates/500.hamlet")
     provideRep . return . toJSON $ (E.InternalError "Internal Error" e :: E.Error Value)
 
 customErrorHandler (InvalidArgs e) = selectRep $ do
-    provideRep $ errorLayout $ do
+    provideRep $ defaultLayout $ do
         toWidget $(hamletFile "templates/400.hamlet")
     provideRep . return . toJSON $ (E.InvalidArgs "InvalidArgs" e :: E.Error Value)
 
 customErrorHandler NotAuthenticated = selectRep $ do
-    provideRep $ errorLayout $ do
+    provideRep $ defaultLayout $ do
         toWidget $(hamletFile "templates/401.hamlet")
     provideRep . return . toJSON $ (E.NotAuthenticated "Not Authenticated" :: E.Error Value)
 
 customErrorHandler (PermissionDenied e) = selectRep $ do
-    provideRep $ errorLayout $ do
+    provideRep $ defaultLayout $ do
         toWidget $(hamletFile "templates/403.hamlet")
     provideRep . return . toJSON $ (E.PermissionDenied "Permission Denied" e :: E.Error Value)
 
 customErrorHandler (BadMethod m) = selectRep $ do
-    provideRep $ errorLayout $ do
+    provideRep $ defaultLayout $ do
         toWidget $(hamletFile "templates/405.hamlet")
     provideRep . return . toJSON $ (E.BadMethod "Bad Method" (TE.decodeUtf8 m) :: E.Error Value)
-
-errorLayout :: Widget -> Handler Html
-errorLayout contents = do
-    let widget = do
-            addStylesheet (StaticR css_bootstrap_min_css)
-            addStylesheet (StaticR css_font_awesome_min_css)
-            addStylesheet (StaticR css_ionicons_min_css)
-            addStylesheet (StaticR css_AdminLTE_min_css)
-            addScript (StaticR js_jquery_min_js)
-            addScript (StaticR js_bootstrap_min_js)
-            addScript (StaticR js_adminlte_min_js)
-            contents
-
-    PageContent title headTags bodyTags <- widgetToPageContent widget
-    withUrlRenderer $(hamletFile "templates/errorLayout.hamlet")
