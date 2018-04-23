@@ -2,6 +2,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE CPP                   #-}
 {-# OPTIONS_GHC -Wno-overlapping-patterns #-}
 module Foundation where
@@ -25,11 +26,11 @@ import           Text.Julius               (juliusFile)
 import           Text.Lucius               (luciusFileReload, luciusFile)
 import           Yesod
 import           Yesod.Auth
-import           Yesod.Auth.HashDB         (authHashDB)
+import           Yesod.Auth.HashDB         (authHashDBWithForm)
 import           Yesod.Auth.Dummy          (authDummy)
 import           Yesod.Core                (defaultClientSessionBackend)
 import           Yesod.Core.Handler        (withUrlRenderer)
-import           Yesod.Core.Widget         (toWidget)
+import           Yesod.Core.Widget         (toWidget, whamletFile)
 import           Yesod.Default.Util        (addStaticContentExternal)
 import           Yesod.Form.Types          (FormMessage)
 import           Yesod.Persist.Core        (runDB)
@@ -151,8 +152,9 @@ instance YesodAuth App where
         PageContent title headTags bodyTags <- widgetToPageContent cont
         withUrlRenderer $(hamletFile "templates/loginLayout.hamlet")
 
-    authPlugins app = [ authHashDB (Just . UniqueUser)] ++ extra
+    authPlugins app = [ authHashDBWithForm loginForm (Just . UniqueUser)] ++ extra
         where extra = [authDummy | appDummyLogin $ appSettings app]
+              loginForm action = $(whamletFile "templates/loginForm.hamlet")
 
     getAuthId creds = runDB $ do
         req <- selectFirst [UserUsername ==. (credsIdent creds)] []
