@@ -2,7 +2,7 @@
     <div class="box-header with-border">
         <h3 class="box-title">Abstimmung erstellen
     <div class="box-body">
-        <form autocomplete="off">
+        <form id="voteAdd" autocomplete="off">
             <input type="hidden" name="count" value="1" />
             <div class="form-group row">
                 <label for="titel" class="col-sm-2 col-form-label">Titel
@@ -15,14 +15,14 @@
             <div class="form-group row">
                 <label for="auswahl" class="col-sm-2 col-form-label">Auswahl
                 <div class="col-sm-6">
-                    <input autocomplete="off" type="text" class="input form-control" value="Ja" required/>
+                    <input id="choice_1" type="text" class="input form-control" value="Ja" required/>
                 <div class="col-sm-4">
             <div class="form-group row">
                 <div class="col-sm-2">
                 <div class="col-sm-6">
-                    <input autocomplete="off" type="text" class="input form-control" value="Nein" required/>
+                    <input id="choice_2" type="text" class="input form-control" value="Nein" required/>
                 <div class="col-sm-4 row">
                     <button id="add_choice" type="button" class="btn btn-success"><i class="fa fa-plus"></i>
             <div id="container1" class="container1">
             <div class="form-group">
-                <button type="submit" value="Submit" id="submit" class="btn btn-primary">Veröffentlichen
+                <button type="button" value="Submit" id="submit" class="btn btn-primary">Veröffentlichen

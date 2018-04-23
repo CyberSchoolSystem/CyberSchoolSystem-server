@@ -120,6 +120,7 @@ instance Yesod App where -- TODO: SSL
                         addScript (StaticR js_demo_js)
                         addScript (StaticR js_morris_min_js) --Pie Chart
                         addScript (StaticR js_raphael_min_js) --Pie Chart
+                        addScript (StaticR js_moment_with_locales_js) --Locales in frontend
                         css
                         toWidget $(juliusFile "templates/defaultLayout.julius")
                         contents

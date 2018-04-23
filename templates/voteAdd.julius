@@ -23,4 +23,36 @@ $(document).ready(function() {
     x--;
     clrerror();
   })
- });
+
+  $("#submit").click(function(){
+    var doc = document.getElementById("voteAdd");
+    var choices = [];
+    choices.push(doc["choice_1"].value)
+    choices.push(doc["choice_2"].value)
+    var data = {  title: doc["titel"].value,
+                  description: doc["beschreibung"].value,
+                  choices: choices
+                };
+    console.log(data);
+    $.ajax({  url: "/",
+              type: "POST",
+              data: JSON.stringify(data),
+              contentType: "application/json",
+              dataType: "json",
+              statusCode: {
+                400: function () {
+                  alert("Malformed json. Please report bug");
+                }
+             },
+              success: function (d) {
+                if (d == null) {
+                  $("#addForm")[0].reset();
+                  setmsg("Abstimmung wurde veröffentlicht");
+                }
+                else{
+                    seterror(JSON.stringify(d));
+                }
+             }
+    });
+  });
+});
