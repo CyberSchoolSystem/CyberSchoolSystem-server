@@ -119,14 +119,15 @@ instance Yesod App where -- TODO: SSL
                         addStylesheet (StaticR css_AdminLTE_min_css)
                         addStylesheet (StaticR css_morris_css) --Pie Chart
                         addScript (StaticR js_jquery_min_js)
+                        addScript (StaticR js_moment_js) --required for DateTimePicker
                         addScript (StaticR js_bootstrap_min_js)
+                        addScript (StaticR js_bootstrap_datetimepicker_js) --required for DateTimePicker
                         addScript (StaticR js_jquery_slimscroll_min_js)
                         addScript (StaticR js_fastclick_js)
                         addScript (StaticR js_adminlte_min_js)
                         addScript (StaticR js_demo_js)
                         addScript (StaticR js_morris_min_js) --Pie Chart
                         addScript (StaticR js_raphael_min_js) --Pie Chart
-                        addScript (StaticR js_moment_with_locales_js) --Locales in frontend
                         css
                         toWidget $(juliusFile "templates/defaultLayout.julius")
                         contents
@@ -203,7 +204,7 @@ isTeacher = maybeAuthId >>= checkAuth isTeach "You are not a teach"
             case t of
                 Nothing -> False
                 Just _ -> True
-          
+
 
 {-| Get the roles of a user -}
 getRole :: UserId -> Handler Role
