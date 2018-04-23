@@ -42,6 +42,7 @@ data ApiVoteAct = ApiVoteAct
 
 data ApiVoteAdd = ApiVoteAdd
     { addDesc     :: Text
+    , addTitle    :: Text
     , addChoices  :: [Text]
     , addEOL      :: ZonedTime
     }
@@ -63,6 +64,7 @@ instance FromJSON ApiVoteAct where
 instance FromJSON ApiVoteAdd where
     parseJSON (Object v) = ApiVoteAdd
         <$> v .: "description"
+        <*> v .: "title"
         <*> v .: "choices"
         <*> v .: "endOfLife"
     parseJSON invalid = typeMismatch "ApiVoteAdd" invalid
@@ -185,6 +187,7 @@ postApiVoteAddR = do
 addToVote :: ApiVoteAdd -> Vote
 addToVote v = Vote {
     voteDescription = addDesc v,
+    voteTitle = addTitle v,
     voteVoted = [],
     voteEndOfLife = zonedTimeToUTC $ addEOL v,
     voteChoices = addToChoices v }

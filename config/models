@@ -29,6 +29,7 @@ Choice json
     description Text
     deriving Show Eq
 Vote json
+    title Text
     description Text
     voted [UserId]
     choices [Choice]

@@ -5,7 +5,7 @@
 |-----|----------------|-------------------|---------------------|------|
 |`/api/vote/info` | POST | `application/json` | Optional: "vid", "choice" | `[ vote ]` |
 |`/api/vote/vote` | POST | `application/json` | "vid", "choice" | "error" |
-|`/api/vote/add` | POST | `application/json` | "description", "choices", "endOfLife" | `null` |
+|`/api/vote/add` | POST | `application/json` | "description", "choices", "endOfLife", "title"| `null` |
 |`/api/vote/remove` | POST | `application/json` | "vid" | "error" | "error" |
 
 ## Access
