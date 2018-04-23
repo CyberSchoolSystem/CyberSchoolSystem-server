@@ -118,6 +118,7 @@ instance Yesod App where -- TODO: SSL
                         addStylesheet (StaticR css_all_skins_min_css)
                         addStylesheet (StaticR css_AdminLTE_min_css)
                         addStylesheet (StaticR css_morris_css) --Pie Chart
+                        addStylesheet (StaticR css_bootstrap_datetimepicker_min_css) --required for DateTimePicker
                         addScript (StaticR js_jquery_min_js)
                         addScript (StaticR js_moment_js) --required for DateTimePicker
                         addScript (StaticR js_bootstrap_min_js)

@@ -58,5 +58,10 @@ $(document).ready(function() {
 });
 
 $(function() {
-  $('#datetimepicker1').datetimepicker();
+  $('#datetimepicker1').datetimepicker({
+    inline: true,
+    sideBySide: true,
+    dayViewHeaderFormat: 'YYYY-MM-DD HH:MM:SS Z',
+    collapse: false
+  });
 });
