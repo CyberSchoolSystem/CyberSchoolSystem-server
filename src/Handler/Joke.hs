@@ -7,15 +7,25 @@ module Handler.Joke
 
 import           Data.Text()
 import           Foundation
-import           Model
-import           Yesod
+import           Settings
+import           Text.Blaze.Html    (Html)
+import           Text.Hamlet        (hamletFile, hamletFileReload)
+import           Text.Julius        (juliusFile, juliusFileReload)
+import           Text.Lucius        (luciusFile, luciusFileReload)
+import           Yesod.Core         (defaultLayout)
+import           Yesod.Core.Handler (getYesod)
+import           Yesod.Core.Widget  (setTitle, toWidget)
 
-getJokeR :: Handler ()
-getJokeR = do
-    g <- runDB . insert $ Grade "master"
-    _ <- runDB . insert $ User "Fabian" "Geiselhart" g "JESUS"
-              (Just "sha256|17|pZUkwz0cnbtcVxSJBD3qeQ==|D3KVx2A/tAhcy44z2QjcG/FvoV2jEyvKm1nH+dgv0bw=")
-              0 [] Role{roleCitizen = True, roleRepresentative = True,
-                        roleTeacher = Nothing, roleAdmin = True,
-                        roleCustoms = True, roleTech = True}
-    redirect RootR
+getJokeR :: Handler Html
+getJokeR = defaultLayout $ do
+    setTitle "FLAPPYYYYYY"
+    app <- getYesod
+    if appReload . appSettings $ app
+        then do
+            toWidget $(juliusFileReload "templates/flappy.julius")
+            toWidget $(hamletFileReload "templates/flappy.hamlet")
+            toWidget $(luciusFileReload "templates/flappy.lucius")
+        else do
+            toWidget $(juliusFile "templates/flappy.julius")
+            toWidget $(luciusFile "templates/flappy.lucius")
+            toWidget $(hamletFile "templates/flappy.hamlet")
