@@ -29,7 +29,7 @@ import           Yesod.Auth
 import           Yesod.Auth.HashDB         (authHashDBWithForm)
 import           Yesod.Auth.Dummy          (authDummy)
 import           Yesod.Core                (defaultClientSessionBackend)
-import           Yesod.Core.Handler        (withUrlRenderer)
+import           Yesod.Core.Handler        (withUrlRenderer, setUltDestCurrent, redirect)
 import           Yesod.Core.Widget         (toWidget, whamletFile)
 import           Yesod.Default.Util        (addStaticContentExternal)
 import           Yesod.Form.Types          (FormMessage)
@@ -240,7 +240,8 @@ customErrorHandler (InvalidArgs e) = selectRep $ do
 
 customErrorHandler NotAuthenticated = selectRep $ do
     provideRep $ defaultLayout $ do
-        toWidget $(hamletFile "templates/401.hamlet")
+        setUltDestCurrent
+        redirect (AuthR LoginR)
     provideRep . return . toJSON $ (E.NotAuthenticated "Not Authenticated" :: E.Error Value)
 
 customErrorHandler (PermissionDenied e) = selectRep $ do
