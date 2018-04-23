@@ -1,2 +1,1 @@
-<h1>Not authenticated
-<p>401
+<meta http-equiv="refresh" content="0;url=/auth/login">

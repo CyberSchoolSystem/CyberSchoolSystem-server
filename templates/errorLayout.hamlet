@@ -3,5 +3,8 @@
         ^{headTags}
         <title>#{title}
 
-    <body>
-        ^{bodyTags}
+    <body class="hold-transition">
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="error-page">
+                ^{bodyTags}
