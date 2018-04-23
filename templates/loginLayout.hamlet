@@ -3,5 +3,10 @@
         ^{headTags}
         <title>#{title}
 
-    <body>
-        ^{bodyTags}
+    <body class="hold-transition login-page">
+        <div class="login-box">
+            <div class="login-logo">
+                <a href="/"><b>C</b>yber<b>S</b>chool<b>S</b>ystem</a>
+            <div class="login-box-body">
+                <p class="login-box-msg">Melde dich an um zu Wählen. Personenbezogene Wahlaten werden nicht gespeichert!</p>
+                ^{bodyTags}
