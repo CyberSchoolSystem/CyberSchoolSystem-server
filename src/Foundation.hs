@@ -100,7 +100,7 @@ instance Yesod App where -- TODO: SSL
     isAuthorized UiAccessExportR _ = isTeacher
 
     isAuthorized _ _ = isAuthenticated
-#elif
+#else
     isAuthorized _ _ = return Authorized
 #endif
 

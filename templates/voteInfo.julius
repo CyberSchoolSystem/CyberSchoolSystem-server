@@ -1,3 +1,7 @@
+$(document).ready(function () {
+    loadVotes();
+});
+
 $(function () {
     "use strict";
     //DONUT CHART
@@ -35,3 +39,48 @@ $(function () {
       hideHover: 'always'
     });
   });
+
+function loadVotes() {
+    $.ajax({ url: "@{ApiVoteInfoR}",
+             type: "POST",
+             data: JSON.stringify( { }),
+             contentType: "application/json",
+             dataType: "json",
+             success: function(d) {
+                showVotes(d);
+             }
+    });
+}
+
+function showVotes(d) {
+    var sorted = sortVotes(d),
+        running = sorted[0],
+        terminated = sorted[1];
+    for (var i in running) {
+        var buttons = function () {
+                var temp = "";
+                for (var j in running[i]["choices"]) {
+                    temp += "<button value='" + running[i]["choices"][j] + "' onclick='
+
+            html = "<b>Title:</b>" + running[i]["title"]
+                 + "<br><b>Desc:</b>" + running[i]["description"]
+                 + "<br><b>EOL:</b>" + running[i]["endOfLife"]
+                 + buttons
+                 + "<hr>"
+        $("#running")[0].innerHTML
+}
+
+function sortVotes(d) {
+    var running = [],
+        terminated = [];
+    for (var i in d) {
+        var time = Date.parse(d[i]["endOfLife"]),
+            now = new Date().getTime();
+        if (time >= now) {
+            running.push(d[i]);
+        } else {
+            terminated.push(d[i]);
+        }
+    }
+    return [running, terminated];
+}

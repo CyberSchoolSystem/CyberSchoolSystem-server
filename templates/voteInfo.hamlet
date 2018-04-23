@@ -1,4 +1,7 @@
-<div class="row">
+<h2>Running
+<div id="running">
+<h2>Finished
+<div class="row" id="terminated">
     <div class="col-md-5">
         <div class="box box-default">
             <div class="box-header with-border">
