@@ -1,2 +1,6 @@
-<h1>Invalid args
-<p>400
+<div class="error-page">
+    <h2 class="headline text-yellow"> 400</h2>
+    <div class="error-content">
+        <h3><i class="fa fa-warning text-yellow"></i> Bad Request</h3>
+        <p>
+            Bitte wende dich an einen Entwickler und schildere genau die Situation in welcher dieser Fehler kam.

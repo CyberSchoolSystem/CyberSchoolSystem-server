@@ -1,6 +1,6 @@
-<h2 class="headline text-yellow"> 404</h2>
-<div class="error-content">
-    <h3><i class="fa fa-warning text-yellow"></i> Oops! Seite nicht gefunden.</h3>
-    <p>
-        Wir konnten die aufgerufene Seite leider nicht finden.
-        <a href="/">Zur Startseite</a>
+<div class="error-page">
+    <h2 class="headline text-yellow"> 404</h2>
+    <div class="error-content">
+        <h3><i class="fa fa-warning text-yellow"></i> Oops! Seite nicht gefunden.</h3>
+        <p>
+            Wir konnten die aufgerufene Seite leider nicht finden.
