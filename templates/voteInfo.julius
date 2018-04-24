@@ -60,16 +60,25 @@ function showVotes(d) {
     for (var i in running) {
         var buttons = "";
         for (var j in running[i]["choices"]) {
-            buttons += "<button value='" + running[i]["choices"][j] + "' onclick=vote('"
+            buttons += "<button class='btn btn-primary btn-primary-spacing' value='" + running[i]["choices"][j] + "' onclick=vote('"
                     + running[i]["id"] + "'," + running[i]["choices"][j]["identity"] + ")>"
                     + running[i]["choices"][j]["description"] + "</button>"
         }
 
-        var html = "<b>Title:</b>" + running[i]["title"]
-                 + "<br><b>Desc:</b>" + running[i]["description"]
-                 + "<br><b>EOL:</b>" + running[i]["endOfLife"]
-                 + buttons
-                 + "<hr>"
+        var ended = moment(running[i]["endOfLife"]).format('DD.MM.YYYY HH:mm');
+
+        var html =  "<div class='col-md-4'>"
+                  + "<div class='box box-solid'>"
+                  + "<div class='box-header with-border'>"
+                  + "<h3 class='box-title'>" + running[i]["title"] + "</h3>"
+                  + "</div>"
+                  + "<div class='box-body'>"
+                  + running[i]["description"]
+                  + "<div>" + buttons + "</div>"
+                  + "<div>Ende: " + ended
+                  + "</div>"
+                  + "</div>"
+                  + "</div>"
         $("#running")[0].innerHTML += html;
     }
     for (var i in terminated) {
@@ -106,9 +115,15 @@ function vote(v, i) {
              },
              success: function (d) {
                 if (d["error"] == null) {
-                    setmsg("okay");
-                } else {
+                    setmsg("Du hast erfolgreich abgestimmt, Vielen Dank!");
+                }
+                else{
+                  if(d.error.alreadyDone.msg == "You already voted"){
+                    seterror("Du hast bereits an dieser Wahl deine Stimme abgegeben.")
+                  }
+                  else{
                     seterror(JSON.stringify(d));
+                  }
                 }
              }
     });

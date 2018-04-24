@@ -1,6 +1,10 @@
-<h2>Running
-<div id="running">
-<h2>Finished
+<h2 class="page-header">
+    Aktuell laufend
+<div>
+    <div id="running">
+
+<h2 class="page-header">
+    Abgeschlossen
 <div class="row" id="terminated">
     <div class="col-md-5" id="votes">
         <div class="box box-default">
