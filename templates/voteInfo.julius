@@ -22,7 +22,8 @@ function showVotes(d) {
         var buttons = "";
         for (var j in running[i]["choices"]) {
             buttons += "<button value='" + running[i]["choices"][j] + "' onclick=vote('"
-                    + running[i]["id"] + "'," + running[i]["choices"][j]["identity"] + ")>s</button>"
+                    + running[i]["id"] + "'," + running[i]["choices"][j]["identity"] + ")>"
+                    + running[i]["choices"][j]["description"] + "</button>"
         }
 
         var html = "<b>Title:</b>" + running[i]["title"]
@@ -30,7 +31,7 @@ function showVotes(d) {
                  + "<br><b>EOL:</b>" + running[i]["endOfLife"]
                  + buttons
                  + "<hr>"
-        $("#running")[0].innerHTML = html;
+        $("#running")[0].innerHTML += html;
     }
     for (var i in terminated) {
         $("#votes").innerHTML += "??"
