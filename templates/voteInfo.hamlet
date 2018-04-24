@@ -2,26 +2,10 @@
 <div id="running">
 <h2>Finished
 <div class="row" id="terminated">
-    <div class="col-md-5">
+    <div class="col-md-5" id="votes">
         <div class="box box-default">
             <div class="box-header with-border">
                 <i class="fa fa-pie-chart">
                 <h3 class="box-title"> Sollen die Toiletten öfters gereinigt werden für eine Steuererhöhung um 2,3%?
             <div class="box-body chart-responsive">
                 <div class="chart" id="vote-1" style="height: 300px; position: relative;">
-    <div class="col-md-5">
-        <div class="box box-default">
-            <div class="box-header with-border">
-                <i class="fa fa-pie-chart">
-                <h3 class="box-title"> Sollen die Toiletten öfters gereinigt werden für eine Steuererhöhung um 2,3%?
-            <div class="box-body chart-responsive">
-                <div class="chart" id="vote-2" style="height: 300px; position: relative;">
-
-<div class="row">
-    <div class="col-md-5">
-        <div class="box box-default">
-            <div class="box-header with-border">
-                <i class="fa fa-pie-chart">
-                <h3 class="box-title"> Sollen die Toiletten öfters gereinigt werden für eine Steuererhöhung um 2,3%?
-            <div class="box-body chart-responsive">
-                <div class="chart" id="vote-3" style="height: 300px; position: relative;">

@@ -2,44 +2,6 @@ $(document).ready(function () {
     loadVotes();
 });
 
-$(function () {
-    "use strict";
-    //DONUT CHART
-    var donut = new Morris.Donut({
-      element: 'vote-1',
-      resize: true,
-      colors: ["#3c8dbc", "#f56954", "#00a65a"],
-      data: [
-        {label: "Ja", value: 437},
-        {label: "Nein", value: 245},
-        {label: "Enthalten", value: 138}
-      ],
-      hideHover: 'always'
-    });
-    var donut = new Morris.Donut({
-      element: 'vote-2',
-      resize: true,
-      colors: ["#3c8dbc", "#f56954", "#00a65a"],
-      data: [
-        {label: "Ja", value: 674},
-        {label: "Nein", value: 264},
-        {label: "Enthalten", value: 743}
-      ],
-      hideHover: 'always'
-    });
-    var donut = new Morris.Donut({
-      element: 'vote-3',
-      resize: true,
-      colors: ["#3c8dbc", "#f56954", "#00a65a"],
-      data: [
-        {label: "Ja", value: 234},
-        {label: "Nein", value: 453},
-        {label: "Enthalten", value: 425}
-      ],
-      hideHover: 'always'
-    });
-  });
-
 function loadVotes() {
     $.ajax({ url: "@{ApiVoteInfoR}",
              type: "POST",
@@ -57,17 +19,59 @@ function showVotes(d) {
         running = sorted[0],
         terminated = sorted[1];
     for (var i in running) {
-        var buttons = function () {
-                var temp = "";
-                for (var j in running[i]["choices"]) {
-                    temp += "<button value='" + running[i]["choices"][j] + "' onclick='
+        var buttons = "";
+        for (var j in running[i]["choices"]) {
+            buttons += "<button value='" + running[i]["choices"][j] + "' onclick=vote('"
+                    + running[i]["id"] + "'," + running[i]["choices"][j]["identity"] + ")>s</button>"
+        }
 
-            html = "<b>Title:</b>" + running[i]["title"]
+        var html = "<b>Title:</b>" + running[i]["title"]
                  + "<br><b>Desc:</b>" + running[i]["description"]
                  + "<br><b>EOL:</b>" + running[i]["endOfLife"]
                  + buttons
                  + "<hr>"
-        $("#running")[0].innerHTML
+        $("#running")[0].innerHTML = html;
+    }
+    for (var i in terminated) {
+        $("#votes").innerHTML += "??"
+        var lables = [];
+        for (var j in terminated[i]["choices"]) {
+            lables.push({label: terminated[i]["choices"][j]["description"],
+                         value: terminated[i]["choices"][j]["votes"]});
+        }
+        console.log(lables);
+        var donut = new Morris.Donut({
+            element: terminated[i]["title"],
+            resize: true,
+            colors: ["#3c8dbc", "#f56954", "#00a65a"],
+            data: lables,
+            hideHover: 'always'
+        });
+    }
+}
+
+function vote(v, i) {
+    clrmsg();
+    clrerror();
+    $.ajax({ url: "@{ApiVoteActR}",
+             type: "POST",
+             contentType: "application/json",
+             data: JSON.stringify({ vid: v,
+                                   choice: i}),
+             dataType: "json",
+             statusCode: {
+                400: function (d) {
+                    console.log(d);
+                }
+             },
+             success: function (d) {
+                if (d["error"] == null) {
+                    setmsg("okay");
+                } else {
+                    seterror(JSON.stringify(d));
+                }
+             }
+    });
 }
 
 function sortVotes(d) {

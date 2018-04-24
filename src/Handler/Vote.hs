@@ -77,6 +77,7 @@ instance FromJSON VoteDel where
 instance ToJSON VoteTerminated where
     toJSON VoteTerminated{voteTerminated = Entity{entityKey = k, entityVal = u}} = object
         [ "description" .= voteDescription u
+        , "title" .= voteTitle u
         , "id" .= k
         , "choices" .= (ChoiceTerminated <$> voteChoices u)
         , "voted" .= (length $ voteVoted u)
@@ -87,6 +88,7 @@ instance ToJSON VoteTerminated where
 instance ToJSON VoteRunning where
     toJSON VoteRunning{voteRunning = Entity{entityKey = k, entityVal = u}} = object
         [ "description" .= voteDescription u
+        , "title" .= voteTitle u
         , "id" .= k
         , "choices" .= (ChoiceRunning <$> voteChoices u)
         , "terminated" .= False
@@ -97,11 +99,14 @@ instance ToJSON ChoiceTerminated where
     toJSON ChoiceTerminated{choiceTerminated = u} = object
         [ "description" .= choiceDescription u
         , "votes" .= choiceVotes u
+        , "identity" .= choiceIdentity u
         ]
 
 instance ToJSON ChoiceRunning where
     toJSON ChoiceRunning{choiceRunning = u} = object
-        [ "description" .= choiceDescription u ]
+        [ "description" .= choiceDescription u 
+        , "identity" .= choiceIdentity u
+        ]
 
 {-| Handle Post on /api/vote/info -}
 postApiVoteInfoR :: Handler Value
