@@ -1,5 +1,7 @@
+.DS_Store
 .stack-work/
 CyberSchoolSystem-Server.cabal
 client_session_key.aes
 *~
 static/tmp
+static/flappybird
