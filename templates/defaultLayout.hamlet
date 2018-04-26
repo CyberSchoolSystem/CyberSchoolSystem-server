@@ -44,74 +44,79 @@ $doctype 5
                             <a href="@{DashboardR}">
                                 <i class="fa fa-dashboard">
                                 <span>Dashboard
-                      <li id="menu-Bürger" class="treeview">
-                          <a href="#">
-                              <i class="fa fa-users">
-                              <span>Bürger
-                              <span class="pull-right-container">
-                                  <i class="fa fa-angle-left pull-right">
-                          <ul class="treeview-menu">
-                              <li><a href="@{UiVoteInfoR}"><i class="fa fa-check"></i> Abstimmen</a>
-                      <li id="menu-Zoll" class="treeview">
-                          <a href="#">
-                              <i class="fa fa-exchange">
-                              <span>Zoll
-                              <span class="pull-right-container">
-                                  <i class="fa fa-angle-left pull-right">
-                          <ul class="treeview-menu">
-                              <li id="menu-/access/in">
-                                  <a href="@{UiAccessInR}">
-                                      <i class="fa fa-sign-in">
-                                      Eingang
-                              <li id="menu-/access/out">
-                                  <a href="@{UiAccessOutR}">
-                                      <i class="fa fa-sign-out">
-                                      Ausgang
-                      <li id="menu-Lehrer" class="treeview">
-                          <a href="#">
-                              <i class="fa fa-user">
-                              <span>Lehrer
-                              <span class="pull-right-container">
-                                  <i class="fa fa-angle-left pull-right">
-                          <ul class="treeview-menu">
-                              <li id="menu-/access/export">
-                                  <a href="@{UiAccessExportR}">
-                                      <i class="fa fa-file-text">
-                                      Daten exportieren
-                      <li id="menu-Verwaltung" class="treeview">
-                          <a href="#">
-                              <i class="fa fa-id-card">
-                              <span>Verwaltung
-                              <span class="pull-right-container">
-                                  <i class="fa fa-angle-left pull-right">
-                          <ul class="treeview-menu">
-                              <li id="menu-/vote/add">
-                                  <a href="@{UiVoteAddR}">
-                                      <i class="fa fa-plus">
-                                      Abstimmung erstellen
-                              <li id="menu-/user/add">
-                                  <a href="@{UiUserAddR}">
-                                      <i class="fa fa-user-plus">
-                                      Benutzer hinzufügen
-                              <li id="menu-/user/info">
-                                  <a href="@{UiUserInfoR}">
-                                      <i class="fa fa-search">
-                                      Benutzer suchen
-                      <li id="menu-Techniker" class="treeview">
-                          <a href="#">
-                              <i class="fa fa-database">
-                              <span>Techniker
-                              <span class="pull-right-container">
-                                  <i class="fa fa-angle-left pull-right">
-                          <ul class="treeview-menu">
-                              <li id="menu-/user/grade/add">
-                                  <a href="@{UiGradeAddR}">
-                                      <i class="fa fa-plus">
-                                      Klasse erstellen
-                              <li id="menu-/user/grade/info">
-                                  <a href="@{UiGradeInfoR}">
-                                      <i class="fa fa-list">
-                                      Klassenliste
+                        $if citizen
+                            <li id="menu-Bürger" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-users">
+                                    <span>Bürger
+                                    <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right">
+                                <ul class="treeview-menu">
+                                    <li><a href="@{UiVoteInfoR}"><i class="fa fa-check"></i> Abstimmen</a>
+                        $if customs
+                            <li id="menu-Zoll" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-exchange">
+                                    <span>Zoll
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right">
+                                <ul class="treeview-menu">
+                                    <li id="menu-/access/in">
+                                        <a href="@{UiAccessInR}">
+                                            <i class="fa fa-sign-in">
+                                            Eingang
+                                    <li id="menu-/access/out">
+                                        <a href="@{UiAccessOutR}">
+                                            <i class="fa fa-sign-out">
+                                            Ausgang
+                        $if teach
+                            <li id="menu-Lehrer" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-user">
+                                    <span>Lehrer
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right">
+                                <ul class="treeview-menu">
+                                    <li id="menu-/access/export">
+                                        <a href="@{UiAccessExportR}">
+                                            <i class="fa fa-file-text">
+                                            Daten exportieren
+                        $if admin
+                            <li id="menu-Verwaltung" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-id-card">
+                                    <span>Verwaltung
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right">
+                                <ul class="treeview-menu">
+                                    <li id="menu-/vote/add">
+                                        <a href="@{UiVoteAddR}">
+                                            <i class="fa fa-plus">
+                                            Abstimmung erstellen
+                                    <li id="menu-/user/add">
+                                        <a href="@{UiUserAddR}">
+                                            <i class="fa fa-user-plus">
+                                            Benutzer hinzufügen
+                                    <li id="menu-/user/info">
+                                        <a href="@{UiUserInfoR}">
+                                            <i class="fa fa-search">
+                                            Benutzer suchen
+                        $if tech
+                            <li id="menu-Techniker" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-database">
+                                    <span>Techniker
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right">
+                                <ul class="treeview-menu">
+                                    <li id="menu-/user/grade/add">
+                                        <a href="@{UiGradeAddR}">
+                                            <i class="fa fa-plus">
+                                            Klasse erstellen
+                                    <li id="menu-/user/grade/info">
+                                        <a href="@{UiGradeInfoR}">
+                                            <i class="fa fa-list">
+                                            Klassenliste
                       <li id="menu-Wahlergebnisse">
                           <a href="@{UiVoteInfoR}">
                               <i class="fa fa-pie-chart">

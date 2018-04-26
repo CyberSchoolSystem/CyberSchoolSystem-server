@@ -107,6 +107,11 @@ instance Yesod App where -- TODO: SSL
     defaultLayout contents = do
         maid <- maybeAuthId
         app <- getYesod
+        tech <- authResultToBool <$> isTech
+        admin <- authResultToBool <$> isAdmin
+        teach <- authResultToBool <$> isTeacher
+        citizen <- authResultToBool <$> isCitizen
+        customs <- authResultToBool <$> isCustoms
         let css =
                 if (appReload . appSettings $ app)
                     then toWidget $(luciusFileReload "templates/defaultLayout.lucius")
@@ -207,7 +212,10 @@ isTeacher = maybeAuthId >>= checkAuth isTeach "You are not a teach"
                 Nothing -> False
                 Just _ -> True
 
-
+authResultToBool :: AuthResult -> Bool
+authResultToBool a = case a of
+                         Authorized -> True
+                         _          -> False
 {-| Get the roles of a user -}
 getRole :: UserId -> Handler Role
 getRole u = do
