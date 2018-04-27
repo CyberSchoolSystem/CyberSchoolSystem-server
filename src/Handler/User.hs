@@ -10,10 +10,12 @@ module Handler.User
     , postApiUserSelfSetPwR
     ) where
 
+import           Control.Monad.IO.Class (liftIO)
 import           Data.Aeson
 import           Data.Aeson.Types       (typeMismatch)
 import           Data.Maybe             (catMaybes)
 import           Data.Text              (Text)
+import           Data.Text.Encoding     (decodeUtf8, encodeUtf8)
 import           Database.Persist       ((==.), (=.))
 import           Database.Persist.Class (insert_, selectFirst, delete, update, selectList)
 import           Database.Persist.Types (Filter, Entity(..), Update)
@@ -21,6 +23,8 @@ import           Error
 import           Foundation
 import           Model
 import           Yesod.Auth             (requireAuthId)
+import           Yesod.Auth.HashDB      (setPassword)
+import           Yesod.Auth.Util.PasswordStore (makePassword)
 import           Yesod.Core.Json        (requireJsonBody)
 import           Yesod.Persist.Core
 
@@ -33,7 +37,7 @@ data AddUserReq = AddUserReq
     , addLastName :: Text
     , addGrade :: Key Grade
     , addUsername :: Text
-    , addPassword :: Maybe Text
+    , addPassword :: Text
     , addRoles :: Role
     }
 
@@ -69,7 +73,7 @@ instance FromJSON AddUserReq where
         <*> v .: "lastName"
         <*> v .: "gradeId"
         <*> v .: "username"
-        <*> v .:? "password"
+        <*> v .: "password"
         <*> v .: "role"
     parseJSON invalid = typeMismatch "AddUserReq" invalid
 
@@ -125,7 +129,9 @@ instance ToJSON (UserResp User) where
 
 postApiUserAddR :: Handler Value
 postApiUserAddR = do
-    user <- addToUser <$> requireJsonBody
+    -- u <- addToUser <$> requireJsonBody
+    req <- requireJsonBody
+    user <- setPassword (addPassword req) $ addToUser req
     res <- runDB $ selectFirst [UserUsername ==. userUsername user] []
     case res of
         Just _ -> return . toJSON $ (NotUnique "Username not Unique" [("username", userUsername user)])
@@ -138,7 +144,7 @@ addToUser AddUserReq{..} = User
     , userLastName = addLastName
     , userGrade = addGrade
     , userUsername = addUsername
-    , userPassword = addPassword -- TODO: Hash
+    , userPassword = Just $ addPassword -- TODO: Hash
     , userRoles = addRoles
     , userFails = 0
     , userAccess = []
@@ -166,7 +172,8 @@ postApiUserUpdateR = do
     user <- runDB $ selectFirst (updateToFilter req) []
     case user of
         Just e -> do
-            runDB $ update (entityKey e) (updateToUpdate req)
+            updates <- liftIO $ updateToUpdate req
+            runDB $ update (entityKey e) updates
             (return . toJSON $ (ENull :: Error Value))
         Nothing -> return . toJSON . Unknown "User not known"  $ updateInvalidArgs req
 
@@ -179,13 +186,23 @@ updateInvalidArgs :: UpdateUserReq -> [(Text,Text)]
 updateInvalidArgs u = [("username", idUsername u)]
 
 {-| Create a database update from a update request -}
-updateToUpdate :: UpdateUserReq -> [Update User]
-updateToUpdate UpdateUserReq{..} = catMaybes [ (UserFirstName =.) <$> updateFirstName
+updateToUpdate :: UpdateUserReq -> IO [Update User]
+updateToUpdate UpdateUserReq{..} = do
+    pw <- case updatePassword of
+                Just u -> Just <$> makePassword' u 14
+                Nothing -> return Nothing
+    return $ catMaybes [ (UserFirstName =.) <$> updateFirstName
                                              , (UserLastName =.) <$> updateLastName
                                              , (UserGrade =.) <$> updateGrade
                                              , (UserUsername =.) <$> updateUsername
-                                             , (UserPassword =.) <$> Just <$> updatePassword
+                                             , (UserPassword =.) <$> Just <$> pw
                                              , (UserRoles =.) <$> updateRole ] -- TODO: Make more flexible
+
+{-| Make a Text password -}
+makePassword' :: Text -> Int -> IO Text
+makePassword' p s = do
+    let pw = encodeUtf8 p
+    decodeUtf8 <$> makePassword pw s
 
 postApiUserInfoR :: Handler Value
 postApiUserInfoR = do
@@ -214,10 +231,11 @@ getApiUserSelfInfoR = do
 postApiUserSelfSetPwR :: Handler Value
 postApiUserSelfSetPwR = do
     req <- requireJsonBody :: Handler UpdatePwReq
+    password <- liftIO $ makePassword' (newPw req) 14
     auth <- requireAuthId
     user <- runDB $ selectFirst [UserId ==. auth] []
     case user of
         Just _ -> do
-            runDB $ update auth [UserPassword =. (Just $ newPw req)]
+            runDB $ update auth [UserPassword =. (Just $ password)]
             return . toJSON $ (ENull :: Error Value)
         Nothing -> return . toJSON . Unknown "User was Deleted" $ [("username", user)]
