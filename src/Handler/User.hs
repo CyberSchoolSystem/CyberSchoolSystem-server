@@ -22,6 +22,7 @@ import           Database.Persist.Types (Filter, Entity(..), Update)
 import           Error
 import           Foundation
 import           Model
+import           Text.HTML.SanitizeXSS  (sanitizeBalance)
 import           Yesod.Auth             (requireAuthId)
 import           Yesod.Auth.HashDB      (setPassword)
 import           Yesod.Auth.Util.PasswordStore (makePassword)
@@ -108,19 +109,19 @@ instance FromJSON UpdatePwReq where
 
 instance ToJSON (AdminResp User) where
     toJSON AdminResp{admGetUsr = u} = object
-        [ "firstName" .= userFirstName u
-        , "lastName" .= userLastName u
+        [ "firstName" .= (sanitizeBalance $ userFirstName u)
+        , "lastName" .= (sanitizeBalance $ userLastName u)
         , "gradeId" .= userGrade u
-        , "username" .= userUsername u
+        , "username" .= (sanitizeBalance $ userUsername u)
         , "roles" .= userRoles u
         ]
 
 instance ToJSON (UserResp User) where
     toJSON UserResp{usrGetUsr = u} = object
-        [ "firstName" .= userFirstName u
-        , "lastName" .= userLastName u
+        [ "firstName" .= ((sanitizeBalance $ userFirstName u))
+        , "lastName" .= (sanitizeBalance $ userLastName u)
         , "gradeId" .= userGrade u
-        , "username" .= userUsername u
+        , "username" .= (sanitizeBalance $ userUsername u)
         , "fails" .= userFails u
         , "access" .= userAccess u
         , "roles" .= userRoles u

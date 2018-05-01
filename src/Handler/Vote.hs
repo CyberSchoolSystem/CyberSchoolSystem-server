@@ -20,6 +20,7 @@ import           Data.Time.LocalTime      (ZonedTime, zonedTimeToUTC)
 import           Error
 import           Foundation
 import           Model
+import           Text.HTML.SanitizeXSS    (sanitizeBalance)
 import           Yesod.Auth               (requireAuthId)
 import           Yesod.Core.Json          (FromJSON, requireJsonBody)
 import           Yesod.Persist.Core       (runDB)
@@ -76,8 +77,8 @@ instance FromJSON VoteDel where
 
 instance ToJSON VoteTerminated where
     toJSON VoteTerminated{voteTerminated = Entity{entityKey = k, entityVal = u}} = object
-        [ "description" .= voteDescription u
-        , "title" .= voteTitle u
+        [ "description" .= (sanitizeBalance $ voteDescription u)
+        , "title" .= (sanitizeBalance $ voteTitle u)
         , "id" .= k
         , "choices" .= (ChoiceTerminated <$> voteChoices u)
         , "voted" .= (length $ voteVoted u)
@@ -87,8 +88,8 @@ instance ToJSON VoteTerminated where
 
 instance ToJSON VoteRunning where
     toJSON VoteRunning{voteRunning = Entity{entityKey = k, entityVal = u}} = object
-        [ "description" .= voteDescription u
-        , "title" .= voteTitle u
+        [ "description" .= (sanitizeBalance $ voteDescription u)
+        , "title" .= (sanitizeBalance $ voteTitle u)
         , "id" .= k
         , "choices" .= (ChoiceRunning <$> voteChoices u)
         , "terminated" .= False
@@ -97,14 +98,14 @@ instance ToJSON VoteRunning where
 
 instance ToJSON ChoiceTerminated where
     toJSON ChoiceTerminated{choiceTerminated = u} = object
-        [ "description" .= choiceDescription u
+        [ "description" .= (sanitizeBalance $ choiceDescription u)
         , "votes" .= choiceVotes u
         , "identity" .= choiceIdentity u
         ]
 
 instance ToJSON ChoiceRunning where
     toJSON ChoiceRunning{choiceRunning = u} = object
-        [ "description" .= choiceDescription u 
+        [ "description" .= (sanitizeBalance $ choiceDescription u) 
         , "identity" .= choiceIdentity u
         ]
 

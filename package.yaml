@@ -93,6 +93,7 @@ library:
     - yaml
     - yesod-auth-hashdb
     - xlsx
+    - xss-sanitize
     - yesod-form
     - yesod-persistent
     - yesod-static
