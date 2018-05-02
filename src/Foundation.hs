@@ -67,7 +67,7 @@ instance Yesod App where -- TODO: SSL
 #ifdef DEVELOPMENT
         defaultClientSessionBackend 5 "client_session_key.aes"
 #else
-        defaultClientSessionBackend 20 "client_session_key.aes" --TODO: Use Config file
+        defaultClientSessionBackend 20 "client_session_key.aes" -- TODO: Use Config file
 #endif
 
 #ifndef NO_AUTH
@@ -122,19 +122,19 @@ instance Yesod App where -- TODO: SSL
                         addStylesheet (StaticR css_ionicons_min_css)
                         addStylesheet (StaticR css_all_skins_min_css)
                         addStylesheet (StaticR css_AdminLTE_min_css)
-                        addStylesheet (StaticR css_morris_css) --Pie Chart
-                        addStylesheet (StaticR css_bootstrap_datetimepicker_min_css) --required for DateTimePicker
+                        addStylesheet (StaticR css_morris_css) -- Pie Chart
+                        addStylesheet (StaticR css_bootstrap_datetimepicker_min_css) -- required for DateTimePicker
                         addScript (StaticR js_jquery_min_js)
-                        addScript (StaticR js_moment_js) --required for DateTimePicker
-                        addScript (StaticR js_locale_de_js) --German format for DateTimePicker
+                        addScript (StaticR js_moment_js) -- required for DateTimePicker
+                        addScript (StaticR js_locale_de_js) -- German format for DateTimePicker
                         addScript (StaticR js_bootstrap_min_js)
-                        addScript (StaticR js_bootstrap_datetimepicker_js) --required for DateTimePicker
+                        addScript (StaticR js_bootstrap_datetimepicker_js) -- required for DateTimePicker
                         addScript (StaticR js_jquery_slimscroll_min_js)
                         addScript (StaticR js_fastclick_js)
                         addScript (StaticR js_adminlte_min_js)
                         addScript (StaticR js_demo_js)
-                        addScript (StaticR js_morris_min_js) --Pie Chart
-                        addScript (StaticR js_raphael_min_js) --Pie Chart
+                        addScript (StaticR js_morris_min_js) -- Pie Chart
+                        addScript (StaticR js_raphael_min_js) -- Pie Chart
                         css
                         toWidget $(juliusFile "templates/defaultLayout.julius")
                         contents
@@ -150,6 +150,7 @@ instance YesodAuth App where
     logoutDest _ = RootR
 
     authLayout widget = do
+        maid <- maybeAuthId
         let cont = do
                 addStylesheet (StaticR css_bootstrap_min_css)
                 addStylesheet (StaticR css_font_awesome_min_css)
@@ -160,7 +161,9 @@ instance YesodAuth App where
                 addScript (StaticR js_adminlte_min_js)
                 widget
         PageContent title headTags bodyTags <- widgetToPageContent cont
-        withUrlRenderer $(hamletFile "templates/loginLayout.hamlet")
+        case maid of
+            Just _ -> redirect RootR
+            Nothing -> withUrlRenderer $(hamletFile "templates/loginLayout.hamlet")
 
     authPlugins app = [ authHashDBWithForm loginForm (Just . UniqueUser)] ++ extra
         where extra = [authDummy | appDummyLogin $ appSettings app]
