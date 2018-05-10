@@ -33,9 +33,9 @@
                         <th>Administrator
                         <th>Bürger
                         <th>Lehrer
-                        <th>Verwalter
-                        <th>Customs
-                        <th>Tech
+                        <th>Abgeordneter
+                        <th>Zollbeamter
+                        <th>Techniker
                         <th>Löschen
                         <th>Bearbeiten
                 <tbody>

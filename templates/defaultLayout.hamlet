@@ -81,7 +81,7 @@ $doctype 5
                                         <a href="@{UiAccessExportR}">
                                             <i class="fa fa-file-text">
                                             Daten exportieren
-                        $if admin
+                        $if representative
                             <li id="menu-Abgeordnete" class="treeview">
                                 <a href="#">
                                     <i class="fa fa-bank">

@@ -112,6 +112,7 @@ instance Yesod App where -- TODO: SSL
         teach <- authResultToBool <$> isTeacher
         citizen <- authResultToBool <$> isCitizen
         customs <- authResultToBool <$> isCustoms
+        representative <- authResultToBool <$> isRepresentative
         let css =
                 if (appReload . appSettings $ app)
                     then toWidget $(luciusFileReload "templates/defaultLayout.lucius")
