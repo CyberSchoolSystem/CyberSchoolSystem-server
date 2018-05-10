@@ -17,7 +17,7 @@
 ## Users
 | URI | Request Method | Request Body Type | Request Body Keys | Return |
 |-----|----------------|-------------------|---------------------|------|
-|`/api/user/add`| POST | `application/json` | "firstname", "lastname", "gradeId", "Username","role" <br> Optional: "password" | "error" |
+|`/api/user/add`| POST | `application/json` | "firstName", "lastName", "gradeId", "username", "role" <br> Optional: "password" | "error" |
 |`/api/user/remove` | POST | `application/json` | "username" | "error" |
 |`/api/user/update` | POST | `application/json` | "idUsername" <br> Optional: "firstName", "lastName", "gradeId", "username", "password" | "error" |
 |`/api/user/info` | POST | `application/json` | Optional: "firstName", "lastName", "gradeId", "username" | `[ user ]` |
