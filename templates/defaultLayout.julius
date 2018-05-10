@@ -44,7 +44,7 @@ if(path == "/dashboard"){
   document.getElementById("menu-Dashboard").className += " active";
 }
 if(path == "/vote/add"){
-  document.getElementById("menu-Verwaltung").className += " active";
+  document.getElementById("menu-Abgeordnete").className += " active";
   document.getElementById("menu-/vote/add").className += " active";
 }
 if(path == "/user/add"){

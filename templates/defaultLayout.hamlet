@@ -82,10 +82,10 @@ $doctype 5
                                             <i class="fa fa-file-text">
                                             Daten exportieren
                         $if admin
-                            <li id="menu-Verwaltung" class="treeview">
+                            <li id="menu-Abgeordnete" class="treeview">
                                 <a href="#">
-                                    <i class="fa fa-id-card">
-                                    <span>Verwaltung
+                                    <i class="fa fa-bank">
+                                    <span>Abgeordnete
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right">
                                 <ul class="treeview-menu">
@@ -93,6 +93,14 @@ $doctype 5
                                         <a href="@{UiVoteAddR}">
                                             <i class="fa fa-plus">
                                             Abstimmung erstellen
+                        $if admin
+                            <li id="menu-Verwaltung" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-id-card">
+                                    <span>Verwaltung
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right">
+                                <ul class="treeview-menu">
                                     <li id="menu-/user/add">
                                         <a href="@{UiUserAddR}">
                                             <i class="fa fa-user-plus">
