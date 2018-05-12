@@ -2,8 +2,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Handler.Dashboard
-    ( getDashboardR
-    , getUiUserAddR
+    ( getUiUserAddR
     , getUiUserInfoR
     , getUiVoteAddR
     , getUiVoteInfoR
@@ -112,14 +111,4 @@ getUiGradeInfoR = defaultLayout $ do
              <> toWidget $(hamletFileReload "templates/gradeInfo.hamlet")
         else toWidget $(juliusFile "templates/gradeInfo.julius")
              <> toWidget $(hamletFile "templates/gradeInfo.hamlet")
-
-getDashboardR :: Handler Html
-getDashboardR = defaultLayout $ do
-    setTitle "Dashboard"
-    app <- getYesod
-    if appReload . appSettings $ app
-        then toWidget $(juliusFileReload "templates/dashboard.julius")
-             <> toWidget $(hamletFileReload "templates/dashboard.hamlet")
-        else toWidget $(juliusFile "templates/dashboard.julius")
-             <> toWidget $(hamletFile "templates/dashboard.hamlet")
 

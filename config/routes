@@ -31,8 +31,6 @@
 /access/out UiAccessOutR GET
 /access/export UiAccessExportR GET
 
-/dashboard DashboardR GET
-
 / RootR GET
 /favicon.ico FaviconR GET
 
