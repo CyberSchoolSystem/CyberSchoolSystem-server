@@ -101,7 +101,7 @@ instance Yesod App where -- TODO: SSL
 
     isAuthorized _ _ = isAuthenticated
 #else
-    isAuthorized _ _ = return Authorized
+    isAuthorized _ _ = return Authorized -- TODO Use config file
 #endif
 
     defaultLayout contents = do

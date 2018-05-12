@@ -131,7 +131,6 @@ $doctype 5
                               <span>Wahlergebnisse
             <div class="content-wrapper">
                 <section class="content-header">
-                    <h1>#{title}
                 <section class="content">
                     <div id="msg-div" style="display:none" class="callout callout-info">
                         <h4>Info:

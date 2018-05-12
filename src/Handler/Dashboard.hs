@@ -26,7 +26,7 @@ import           Yesod.Core.Widget  (toWidget, setTitle)
 
 getUiUserAddR :: Handler Html
 getUiUserAddR = defaultLayout $ do
-    setTitle "User add"
+    setTitle "Benutzer hinzufügen"
     app <- getYesod
     toWidget $(hamletFile "templates/userAdd.hamlet")
     if appReload . appSettings $ app
@@ -35,32 +35,32 @@ getUiUserAddR = defaultLayout $ do
 
 getUiUserInfoR :: Handler Html
 getUiUserInfoR = defaultLayout $ do
-    setTitle "User search"
+    setTitle "Benutzer suchen"
     app <- getYesod
     if appReload . appSettings $ app
         then toWidget $(juliusFileReload "templates/userInfo.julius")
              <> toWidget $(hamletFileReload "templates/userInfo.hamlet")
-        else toWidget $(juliusFile "templates/userInfo.hamlet")
+        else toWidget $(juliusFile "templates/userInfo.julius")
              <> toWidget $(hamletFile "templates/userInfo.hamlet")
 
 getUiVoteAddR :: Handler Html
 getUiVoteAddR = defaultLayout $ do
-    setTitle "Vote add"
+    setTitle "Abstimmung erstellen"
     app <- getYesod
     if appReload . appSettings $ app
         then toWidget $(juliusFileReload "templates/voteAdd.julius")
              <> toWidget $(hamletFileReload "templates/voteAdd.hamlet")
-        else toWidget $(juliusFile "templates/voteAdd.hamlet")
+        else toWidget $(juliusFile "templates/voteAdd.julius")
              <> toWidget $(hamletFile "templates/voteAdd.hamlet")
 
 getUiVoteInfoR :: Handler Html
 getUiVoteInfoR = defaultLayout $ do
-    setTitle "Vote info"
+    setTitle "Wahlen"
     app <- getYesod
     if appReload . appSettings $ app
         then toWidget $(juliusFileReload "templates/voteInfo.julius")
              <> toWidget $(hamletFileReload "templates/voteInfo.hamlet")
-        else toWidget $(juliusFile "templates/voteInfo.hamlet")
+        else toWidget $(juliusFile "templates/voteInfo.julius")
              <> toWidget $(hamletFile "templates/voteInfo.hamlet")
 
 getUiAccessInR :: Handler Html
@@ -70,7 +70,7 @@ getUiAccessInR = defaultLayout $ do
     if appReload . appSettings $ app
         then toWidget $(juliusFileReload "templates/accessIn.julius")
              <> toWidget $(hamletFileReload "templates/accessIn.hamlet")
-        else toWidget $(juliusFile "templates/accessIn.hamlet")
+        else toWidget $(juliusFile "templates/accessIn.julius")
              <> toWidget $(hamletFile "templates/accessIn.hamlet")
 
 getUiAccessOutR :: Handler Html
@@ -80,37 +80,37 @@ getUiAccessOutR = defaultLayout $ do
     if appReload . appSettings $ app
         then toWidget $(juliusFileReload "templates/accessOut.julius")
              <> toWidget $(hamletFileReload "templates/accessOut.hamlet")
-        else toWidget $(juliusFile "templates/accessOut.hamlet")
+        else toWidget $(juliusFile "templates/accessOut.julius")
              <> toWidget $(hamletFile "templates/accessOut.hamlet")
 
 getUiAccessExportR :: Handler Html
 getUiAccessExportR = defaultLayout $ do
-    setTitle "Access export"
+    setTitle "access export"
     app <- getYesod
     if appReload . appSettings $ app
         then toWidget $(juliusFileReload "templates/accessExport.julius")
              <> toWidget $(hamletFileReload "templates/accessExport.hamlet")
-        else toWidget $(juliusFile "templates/accessExport.hamlet")
+        else toWidget $(juliusFile "templates/accessExport.julius")
              <> toWidget $(hamletFile "templates/accessExport.hamlet")
 
 getUiGradeAddR :: Handler Html
 getUiGradeAddR = defaultLayout $ do
-    setTitle "grade add"
+    setTitle "Klasse erstellen"
     app <- getYesod
     if appReload . appSettings $ app
         then toWidget $(juliusFileReload "templates/gradeAdd.julius")
              <> toWidget $(hamletFileReload "templates/gradeAdd.hamlet")
-        else toWidget $(juliusFile "templates/gradeAdd.hamlet")
+        else toWidget $(juliusFile "templates/gradeAdd.julius")
              <> toWidget $(hamletFile "templates/gradeAdd.hamlet")
 
 getUiGradeInfoR :: Handler Html
 getUiGradeInfoR = defaultLayout $ do
-    setTitle "grade info"
+    setTitle "Klassenliste"
     app <- getYesod
     if appReload . appSettings $ app
         then toWidget $(juliusFileReload "templates/gradeInfo.julius")
              <> toWidget $(hamletFileReload "templates/gradeInfo.hamlet")
-        else toWidget $(juliusFile "templates/gradeInfo.hamlet")
+        else toWidget $(juliusFile "templates/gradeInfo.julius")
              <> toWidget $(hamletFile "templates/gradeInfo.hamlet")
 
 getDashboardR :: Handler Html
@@ -120,6 +120,6 @@ getDashboardR = defaultLayout $ do
     if appReload . appSettings $ app
         then toWidget $(juliusFileReload "templates/dashboard.julius")
              <> toWidget $(hamletFileReload "templates/dashboard.hamlet")
-        else toWidget $(juliusFile "templates/dashboard.hamlet")
+        else toWidget $(juliusFile "templates/dashboard.julius")
              <> toWidget $(hamletFile "templates/dashboard.hamlet")
 
