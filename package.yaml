@@ -49,7 +49,7 @@ ghc-options:
 - -Wincomplete-record-updates
 - -Wincomplete-uni-patterns
 - -Wredundant-constraints
-- -Werror
+- -eventlog
 
 flags:
   noAuth:
@@ -64,9 +64,13 @@ flags:
 when:
   - condition: flag(dev)
     then:
-      ghc-options: -O0
+      ghc-options:
+        - -O0
+        - -Wwarn
     else:
-      ghc-options: -O2
+      ghc-options:
+        - -O2
+        - -Werror
 
 
 library:

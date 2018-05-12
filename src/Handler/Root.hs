@@ -12,15 +12,11 @@ import           Text.Blaze.Html    (Html)
 import           Yesod.Core         (defaultLayout)
 import           Yesod.Core.Content (TypedContent(..), toContent)
 import           Yesod.Core.Handler (cacheSeconds)
-import           Yesod.Core.Widget  (whamlet)
+import           Yesod.Core.Widget  (setTitle)
 
 getRootR :: Handler Html
-getRootR = do
-    defaultLayout
-        [whamlet|
-            <h1> WELCOME TO THE SHOW!
-            <p> Not implemented
-        |]
+getRootR = defaultLayout $ do
+    setTitle "Startseite"
 
 getFaviconR :: Handler TypedContent
 getFaviconR = do cacheSeconds $ 60 * 60 * 24 * 30 -- cache a month

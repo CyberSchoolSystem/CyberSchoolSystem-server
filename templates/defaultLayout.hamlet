@@ -5,7 +5,7 @@ $doctype 5
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>#{title}
+        <title>#{title} - CyberSchoolSystem
         ^{headTags}
     <body class="hold-transition skin-blue sidebar-mini">
         <!-- Site wrapper -->
@@ -40,10 +40,6 @@ $doctype 5
                             <a href="@{RootR}">
                                 <i class="fa fa-graduation-cap">
                                 <span>Startseite
-                        <li id="menu-Dashboard">
-                            <a href="@{DashboardR}">
-                                <i class="fa fa-dashboard">
-                                <span>Dashboard
                         $if citizen
                             <li id="menu-Bürger" class="treeview">
                                 <a href="#">
