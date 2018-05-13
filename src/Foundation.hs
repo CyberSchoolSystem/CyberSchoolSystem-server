@@ -135,7 +135,6 @@ instance Yesod App where -- TODO: SSL
                         addScript (StaticR js_fastclick_js)
                         addScript (StaticR js_adminlte_min_js)
                         addScript (StaticR js_demo_js)
-                        addScript (StaticR js_morris_min_js) -- Pie Chart
                         addScript (StaticR js_raphael_min_js) -- Pie Chart
                         addScript (StaticR js_chart_min_js)
                         css
@@ -145,7 +144,7 @@ instance Yesod App where -- TODO: SSL
         withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
 
 instance RenderMessage App FormMessage where
-    renderMessage _ _ = defaultFormMessage 
+    renderMessage _ _ = defaultFormMessage
 
 instance RenderMessage App M.Message where
     renderMessage _ _ = M.fromMessage
