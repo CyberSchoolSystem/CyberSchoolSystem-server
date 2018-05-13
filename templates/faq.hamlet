@@ -11,10 +11,29 @@
                 <div id="faq1" class="panel-collapse collapse">
                     <div class="box-body">
                         Wie bei "normalen Wahlen" auch: Abgegebene Stimmen sind Verbindlich.
+
                 <div class="box-header with-border">
                     <h4 class="box-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#faq2">
-                            Wieso wird nie der Name Vereinigte Schwäbische Gymiraten erwähnt?
+                            Wieso wird nie der Name "Vereinigte Schwäbische Gymirate" erwähnt?
                 <div id="faq2" class="panel-collapse collapse">
                     <div class="box-body">
-                        Dieser Name ist schlicht nicht im Styl eines Seriösen Staatssystems.<br> Und er gefällt den Entwicklern nicht.
+                        Dieser Name ist schlicht nicht im Stil eines Seriösen Staatssystems.<br> Und er gefällt den Entwicklern nicht.
+
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#faq3">
+                            Welche Daten werden gespeichert?
+                <div id="faq3" class="panel-collapse collapse">
+                    <div class="box-body">
+                        Wir speichern deine Anwesenheitszeiten, bei welchen Wahlen du abstimmst (nicht für was), Name und Klasse
+
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#faq4">
+                            Wer kann diese Daten einsehen?
+                <div id="faq4" class="panel-collapse collapse">
+                    <div class="box-body">
+                        Die Anwesenheit kann der zuständige Klassenlehrer kontrollieren.
+                        Name und Klasse können von der Verwaltung eingesehen werden.
+                        Wofür du abstimmst kann niemand kontrollieren.

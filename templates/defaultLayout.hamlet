@@ -11,7 +11,7 @@ $doctype 5
         <!-- Site wrapper -->
         <div class="wrapper">
             <header class="main-header">
-                <a href="../../index2.html" class="logo">
+                <a href=@{RootR} class="logo">
                     <span class="logo-mini"><b>CSS</b>
                     <span class="logo-lg"><b>C</b>yber<b>S</b>chool<b>S</b>ystem
                 <nav class="navbar navbar-static-top">
