@@ -11,6 +11,7 @@ module Handler.Dashboard
     , getUiAccessExportR
     , getUiGradeAddR
     , getUiGradeInfoR
+    , getFaqR
     ) where
 
 import           Foundation
@@ -111,4 +112,15 @@ getUiGradeInfoR = defaultLayout $ do
              <> toWidget $(hamletFileReload "templates/gradeInfo.hamlet")
         else toWidget $(juliusFile "templates/gradeInfo.julius")
              <> toWidget $(hamletFile "templates/gradeInfo.hamlet")
+
+
+getFaqR :: Handler Html
+getFaqR = defaultLayout $ do
+    setTitle "FAQ"
+    app <- getYesod
+    if appReload . appSettings $ app
+        then toWidget $(juliusFileReload "templates/faq.julius")
+             <> toWidget $(hamletFileReload "templates/faq.hamlet")
+        else toWidget $(juliusFile "templates/faq.julius")
+             <> toWidget $(hamletFile "templates/faq.hamlet")
 

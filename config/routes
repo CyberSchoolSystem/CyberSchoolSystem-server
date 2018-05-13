@@ -32,6 +32,7 @@
 /access/export UiAccessExportR GET
 
 / RootR GET
+/faq FaqR GET
 -- /favicon.ico FaviconR GET
 
 /auth AuthR Auth getAuth
