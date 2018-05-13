@@ -65,7 +65,8 @@ function addRow(d) {
             "</td><td>" + gradeIdToName(u["gradeId"]) +
             "</td><td>" + ( u["admin"] == true ? "<i class='glyphicon glyphicon-ok'></i>" : "<i class='glyphicon glyphicon-remove'></i>" ) +
             "</td><td>" + ( u["citizen"] == true ? "<i class='glyphicon glyphicon-ok'></i>" : "<i class='glyphicon glyphicon-remove'></i>" ) +
-            "</td><td>" + gradeIdToName(u["teacher"]) +
+            //"</td><td>" + gradeIdToName(u["teacher"]) +
+            "</td><td>" + ( u["teacher"] != null ? gradeIdToName(u["teacher"]) : "<i class='glyphicon glyphicon-remove'></i>") +
             "</td><td>" + ( u["representative"] == true ? "<i class='glyphicon glyphicon-ok'></i>" : "<i class='glyphicon glyphicon-remove'></i>" ) +
             "</td><td>" + ( u["customs"] == true ? "<i class='glyphicon glyphicon-ok'></i>" : "<i class='glyphicon glyphicon-remove'></i>" ) +
             "</td><td>" + ( u["tech"] == true ? "<i class='glyphicon glyphicon-ok'></i>" : "<i class='glyphicon glyphicon-remove'></i>" ) +
