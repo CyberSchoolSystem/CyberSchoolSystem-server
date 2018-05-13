@@ -45,7 +45,7 @@
 
 `vid`: String
 
-`vote`: Object( `id`: String, `endOfLife`: String (Format: `2018-08-08T19:20:20Z`) `description`: String, (If EOL reached: `voted`: Int) `choices`: List of Objects, ((`votes`: Integer, if eol reached), `identity`: Integer, `description`: String))
+`vote`: Object( `id`: String, `endOfLife`: String (Format: `2018-08-08T19:20:20Z`) `description`: String, (If EOL reached: `voted`: Int) `choices`: List of Objects, ((`votes`: Integer, if eol reached), `identity`: Integer, `description`: String, `alreadyVoted`: Bool))
 
 `error`: Either `null` or Object (`missingField`, `timedOut`, `alreadyDone`, `unknown`, `notUnique` all a object (`msg`: String, `field`: List of fields (+values) that raised the error) `internalError`, `invalidArgs`,
 `permissionDenied`, `badMethod` object (`msg`: String, `info`: string), `notFound`, `notAuthenticated` object (`msg`: String))
