@@ -6,15 +6,16 @@ module Handler.Grade
     ) where
 
 import           Data.Aeson
-import           Data.Aeson.Types (typeMismatch)
-import           Data.Text (Text)
-import           Database.Persist ((==.))
+import           Data.Aeson.Types       (typeMismatch)
+import           Data.Text              (Text)
+import           Database.Persist       ((==.))
 import           Database.Persist.Class (insert, selectFirst, selectList, delete)
 import           Database.Persist.Types (Entity(..), Filter)
-import           Error
+import qualified Error                  as E
 import           Foundation
+import qualified Message                as M
 import           Model
-import           Yesod.Core.Json (requireJsonBody)
+import           Yesod.Core.Json        (requireJsonBody)
 import           Yesod.Persist.Core
 
 data AddGradeReq = AddGradeReq
@@ -42,7 +43,8 @@ postApiGradeAddR = do
         Nothing -> do
             x <- runDB $ insert Grade{gradeName = addGradeName req}
             return . toJSON $ object ["gradeId" .= x]
-        Just _ -> return . toJSON . NotUnique "Grade already exists" $ [("grade", addGradeName req)]
+        Just _ -> return . toJSON . E.NotUnique (M.fromMessage $ M.NotUnique M.Grade) $
+                      [("grade", addGradeName req)]
 
 {-| Return all gradeNames and gradeIds -}
 getApiGradeInfoR :: Handler Value
@@ -56,5 +58,6 @@ postApiGradeRemoveR = do
     req <- requireJsonBody :: Handler RmGradeReq
     res <- runDB $ selectFirst [GradeId ==. rmGradeId req] []
     case res of
-        Just g -> runDB $ delete (entityKey g) >> (return . toJSON $ (ENull :: Error Value))
-        Nothing -> return . toJSON . Unknown "Grade does not exist" $ [("gradeId", rmGradeId req)]
+        Just g -> runDB $ delete (entityKey g) >> (return . toJSON $ (E.ENull :: E.Error Value))
+        Nothing -> return . toJSON . E.Unknown (M.fromMessage (M.Unknown M.Grade)) $
+                       [("gradeId", rmGradeId req)]

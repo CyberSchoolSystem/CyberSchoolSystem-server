@@ -18,8 +18,9 @@ import           Data.Maybe               (catMaybes)
 import           Data.Text                (Text)
 import           Data.Time.Clock          (getCurrentTime)
 import           Data.Time.LocalTime      (ZonedTime, zonedTimeToUTC)
-import           Error
+import qualified Error                    as E
 import           Foundation
+import qualified Message                  as M
 import           Model
 import           Text.HTML.SanitizeXSS    (sanitizeBalance)
 import           Yesod.Auth               (requireAuthId, maybeAuthId)
@@ -165,9 +166,13 @@ postApiVoteActR = do
                 then
                     if isAllowed u v
                         then updateVote u v inp
-                        else return . toJSON $ AlreadyDone "You already voted" [("vid", actVoteId inp)]
-                else return . toJSON $ TimedOut "You already voted" [("vid", actVoteId inp)]
-        (_,_) -> return . toJSON . Unknown "This vote is unknown" $
+                        else return . toJSON $ E.AlreadyDone
+                                                   (M.fromMessage $ M.AlreadyDone M.Vote)
+                                                   [("vid", actVoteId inp)]
+                else return . toJSON $ E.TimedOut 
+                                           (M.fromMessage $ M.TimedOut M.Vote)
+                                           [("vid", actVoteId inp)]
+        (_,_) -> return . toJSON . E.Unknown (M.fromMessage $ M.Unknown M.Vote) $
             catMaybes [ const ("userId", toJSON $ auth) <$> user
                       , const ("vid", toJSON $ actVoteId inp) <$> vote]
 
@@ -177,7 +182,7 @@ updateVote user vote inp = do
     let choices = voteChoices . entityVal $ vote
     runDB $ update (entityKey vote) [push VoteVoted (entityKey user)]
     runDB $ update (entityKey vote) [VoteChoices =. updateChoices inp choices]
-    return . toJSON $ (ENull :: Error Value)
+    return . toJSON $ (E.ENull :: E.Error Value)
 
 {-| Insert Description -}
 updateChoices :: ApiVoteAct -> [Choice] -> [Choice]
@@ -203,7 +208,7 @@ postApiVoteAddR :: Handler Value
 postApiVoteAddR = do
     inp <- requireJsonBody :: Handler ApiVoteAdd
     _ <- runDB $ insert (addToVote inp)
-    return $ toJSON (ENull :: Error Value)
+    return $ toJSON (E.ENull :: E.Error Value)
 
 {-| Transform ApiVoteAdd request to database entity -}
 addToVote :: ApiVoteAdd -> Vote
@@ -226,5 +231,5 @@ postApiVoteRemoveR = do
     inp <- requireJsonBody :: Handler VoteDel
     result <- runDB $ selectFirst [VoteId ==. delId inp] []
     case result of
-        Just ent -> runDB $ delete (entityKey ent) >> (return . toJSON $ (ENull :: Error Value))
-        Nothing  -> return . toJSON $ Unknown "This vote is unknown" [("vid", delId inp)]
+        Just ent -> runDB $ delete (entityKey ent) >> (return . toJSON $ (E.ENull :: E.Error Value))
+        Nothing  -> return . toJSON $ E.Unknown "This vote is unknown" [("vid", delId inp)]

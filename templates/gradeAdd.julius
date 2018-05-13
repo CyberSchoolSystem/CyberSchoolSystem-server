@@ -19,7 +19,9 @@ $(document).ready(function() {
                         $("#addForm")[0].reset();
                         setmsg("Okay");
                     } else {
-                        seterror(JSON.stringify(d));
+                        for(var i in d['error']) {
+                            seterror(d['error'][i]['msg']);
+                        }
                     }
                  }
         });
