@@ -16,8 +16,9 @@ import           Database.Persist         ((==.))
 import           Database.Persist.Class   (selectFirst, update)
 import           Database.Persist.Types   (Entity(..))
 import           Database.Persist.MongoDB (push)
-import           Error
+import qualified Error                    as E
 import           Foundation
+import qualified Message                  as M
 import           Model
 import           Yesod.Core.Json          (requireJsonBody)
 import           Yesod.Persist.Core       (runDB)
@@ -55,11 +56,13 @@ addToDB direction req user =
                       then do
                           access <- liftIO $ newAccess direction
                           runDB $ update (entityKey u) [push UserAccess access]
-                          return . toJSON $ (ENull :: Error Value)
-                      else return . toJSON $ AlreadyDone "You already are on this side"
+                          return . toJSON $ (E.ENull :: E.Error Value)
+                      else return . toJSON $ E.AlreadyDone (M.fromMessage $ M.AlreadyDone M.Border)
                                                         [("username", toJSON $ idUser req)
                                                         ,("inside", toJSON $ direction)]
-        Nothing -> return . toJSON $ Unknown "Username not found" [("username", idUser req)]
+        Nothing -> return . toJSON $ E.Unknown
+                                         (M.fromMessage $ M.Unknown M.Username)
+                                         [("username", idUser req)]
 
 {-| Leave -}
 postApiAccessOutR :: Handler Value

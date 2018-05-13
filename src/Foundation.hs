@@ -15,6 +15,7 @@ import           Database.Persist.Class    (selectFirst)
 import           Database.Persist.MongoDB
 import           Database.Persist.Types    (Entity(..))
 import qualified Error                     as E
+import qualified Message                   as M
 import           Model                     (UserId, EntityField (..), Unique(..), User(..), Role(..))
 import           Paths_CyberSchoolSystem_Server (version)
 import           Settings
@@ -143,7 +144,10 @@ instance Yesod App where -- TODO: SSL
         withUrlRenderer $(hamletFile "templates/defaultLayout.hamlet")
 
 instance RenderMessage App FormMessage where
-    renderMessage _ _ = defaultFormMessage -- No Translation TODO: Maybe add translation
+    renderMessage _ _ = defaultFormMessage 
+
+instance RenderMessage App M.Message where
+    renderMessage _ _ = M.fromMessage
 
 instance YesodAuth App where
     type AuthId App = UserId
@@ -237,6 +241,7 @@ checkAuth  role failText (Just u) = do
         else return $ Unauthorized failText
 checkAuth _ _ Nothing = return AuthenticationRequired
 
+-- TODO: Convert to Message
 customErrorHandler :: ErrorResponse -> Handler TypedContent
 customErrorHandler NotFound = selectRep $ do
     provideRep $ defaultLayout $ do

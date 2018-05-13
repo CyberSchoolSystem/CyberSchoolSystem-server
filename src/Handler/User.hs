@@ -19,8 +19,9 @@ import           Data.Text.Encoding     (decodeUtf8, encodeUtf8)
 import           Database.Persist       ((==.), (=.))
 import           Database.Persist.Class (insert_, selectFirst, delete, update, selectList)
 import           Database.Persist.Types (Filter, Entity(..), Update)
-import           Error
+import qualified Error                  as E
 import           Foundation
+import qualified Message                as M
 import           Model
 import           Text.HTML.SanitizeXSS  (sanitizeBalance)
 import           Yesod.Auth             (requireAuthId)
@@ -135,8 +136,10 @@ postApiUserAddR = do
     user <- setPassword (addPassword req) $ addToUser req
     res <- runDB $ selectFirst [UserUsername ==. userUsername user] []
     case res of
-        Just _ -> return . toJSON $ (NotUnique "Username not Unique" [("username", userUsername user)])
-        Nothing -> runDB $ insert_ user >> (return . toJSON $ (ENull :: Error Value))
+        Just _ -> return . toJSON $ (E.NotUnique
+                                         (M.fromMessage $ M.NotUnique M.Username)
+                                         [("username", userUsername user)])
+        Nothing -> runDB $ insert_ user >> (return . toJSON $ (E.ENull :: E.Error Value))
 
 {-| Transform a request to a User -}
 addToUser :: AddUserReq -> User
@@ -156,8 +159,8 @@ postApiUserRemoveR = do
     req <- requireJsonBody :: Handler RmUserReq
     del <- runDB $ selectFirst (rmToFilter req) []
     case del of
-        Just e -> runDB $ delete (entityKey e) >> (return . toJSON $ (ENull :: Error Value))
-        Nothing -> return . toJSON . Unknown "User not known" $ rmInvalidArgs req
+        Just e -> runDB $ delete (entityKey e) >> (return . toJSON $ (E.ENull :: E.Error Value))
+        Nothing -> return . toJSON . E.Unknown (M.fromMessage $ M.Unknown M.User) $ rmInvalidArgs req
 
 {-| Construct invalid args error message, according to a RmUserReq -}
 rmInvalidArgs :: RmUserReq -> [(Text,Text)]
@@ -175,8 +178,8 @@ postApiUserUpdateR = do
         Just e -> do
             updates <- liftIO $ updateToUpdate req
             runDB $ update (entityKey e) updates
-            (return . toJSON $ (ENull :: Error Value))
-        Nothing -> return . toJSON . Unknown "User not known"  $ updateInvalidArgs req
+            (return . toJSON $ (E.ENull :: E.Error Value))
+        Nothing -> return . toJSON . E.Unknown (M.fromMessage $ M.Unknown M.User) $ updateInvalidArgs req
 
 {-| Create Database updates from a update request -}
 updateToFilter :: UpdateUserReq -> [Filter User]
@@ -226,7 +229,7 @@ getApiUserSelfInfoR = do
     user <- runDB $ selectFirst [UserId ==. auth] []
     case user of
         Just u -> return . toJSON . UserResp . entityVal $ u
-        Nothing -> return . toJSON . Unknown "User was deleted" $ [("username", user)]
+        Nothing -> return . toJSON . E.Unknown (M.fromMessage $ M.Unknown M.User) $ [("username", user)]
 
 {-| Set the password of the current user -}
 postApiUserSelfSetPwR :: Handler Value
@@ -238,5 +241,5 @@ postApiUserSelfSetPwR = do
     case user of
         Just _ -> do
             runDB $ update auth [UserPassword =. (Just $ password)]
-            return . toJSON $ (ENull :: Error Value)
-        Nothing -> return . toJSON . Unknown "User was Deleted" $ [("username", user)]
+            return . toJSON $ (E.ENull :: E.Error Value)
+        Nothing -> return . toJSON . E.Unknown (M.fromMessage $ M.Unknown M.User) $ [("username", user)]
