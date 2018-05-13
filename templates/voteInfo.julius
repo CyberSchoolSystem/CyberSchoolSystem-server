@@ -102,12 +102,11 @@ function sortVotes(d) {
     var running = [],
         terminated = [];
     for (var i in d) {
-        var time = Date.parse(d[i]["endOfLife"]),
-            now = new Date().getTime();
-        if (time >= now) {
-            running.push(d[i]);
-        } else {
-            terminated.push(d[i]);
+        if(d[i]["terminated"]){
+          terminated.push(d[i]);
+        }
+        else{
+          running.push(d[i]);
         }
     }
     return [running, terminated];
