@@ -107,14 +107,15 @@ function sortVotes(d) {
   var running = [],
     completed = [],
     terminated = [];
+  console.log(d);
   for (var i in d) {
     if(d[i]["terminated"]){
       terminated.push(d[i]);
     }
-    else{
+    if((d[i]["terminated"] == false) && (d[i]["alreadyVoted"] == false)){
       running.push(d[i]);
     }
-    if(d[i]["alreadyVoted"]){
+    if((d[i]["alreadyVoted"]) && (d[i]["terminated"] == false)){
       completed.push(d[i]);
     }
   }
