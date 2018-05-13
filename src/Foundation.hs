@@ -8,6 +8,7 @@
 module Foundation where
 
 import           Data.Text                 (Text)
+import qualified Data.Text                 as T
 import qualified Data.Text.Encoding        as TE
 import           Data.Version              (showVersion)
 import           Database.Persist          ((==.))
@@ -27,8 +28,8 @@ import           Text.Julius               (juliusFile)
 import           Text.Lucius               (luciusFileReload, luciusFile)
 import           Yesod
 import           Yesod.Auth
-import           Yesod.Auth.HashDB         (authHashDBWithForm)
 import           Yesod.Auth.Dummy          (authDummy)
+import           Yesod.Auth.HashDB         (authHashDBWithForm)
 import           Yesod.Core                (defaultClientSessionBackend)
 import           Yesod.Core.Handler        (withUrlRenderer, setUltDestCurrent, redirect)
 import           Yesod.Core.Widget         (toWidget, whamletFile)
@@ -175,7 +176,7 @@ instance YesodAuth App where
               loginForm action = $(whamletFile "templates/loginForm.hamlet")
 
     getAuthId creds = runDB $ do
-        req <- selectFirst [UserUsername ==. (credsIdent creds)] []
+        req <- selectFirst [UserUsername ==. (T.toLower . credsIdent $ creds)] []
         case req of
             Just (Entity eid _) -> return . Just $ eid
             Nothing -> return Nothing

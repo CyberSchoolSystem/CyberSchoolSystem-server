@@ -15,6 +15,7 @@ import           Data.Aeson
 import           Data.Aeson.Types       (typeMismatch)
 import           Data.Maybe             (catMaybes)
 import           Data.Text              (Text)
+import qualified Data.Text              as T
 import           Data.Text.Encoding     (decodeUtf8, encodeUtf8)
 import           Database.Persist       ((==.), (=.))
 import           Database.Persist.Class (insert_, selectFirst, delete, update, selectList)
@@ -147,7 +148,7 @@ addToUser AddUserReq{..} = User
     { userFirstName = addFirstName
     , userLastName = addLastName
     , userGrade = addGrade
-    , userUsername = addUsername
+    , userUsername = T.toLower addUsername
     , userPassword = Just $ addPassword -- TODO: Hash
     , userRoles = addRoles
     , userFails = 0

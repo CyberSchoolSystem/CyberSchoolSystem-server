@@ -44,7 +44,7 @@ appMain = do
             Just _ -> return ()
             Nothing -> do
                 g <- insert $ Grade "Dark Tower"
-                _ <- insert $ User "Crimson" "King" g "JESUS"
+                _ <- insert $ User "Crimson" "King" g "jesus"
                         (Just "sha256|17|pZUkwz0cnbtcVxSJBD3qeQ==|D3KVx2A/tAhcy44z2QjcG/FvoV2jEyvKm1nH+dgv0bw=")
                         0 [] Role{roleCitizen = True, roleRepresentative = True,
                                     roleTeacher = Nothing, roleAdmin = True,
