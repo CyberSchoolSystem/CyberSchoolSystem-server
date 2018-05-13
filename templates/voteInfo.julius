@@ -68,8 +68,8 @@ function showVotes(d) {
                 + terminated[i]["choices"][x]["votes"];
       }
       html  += "<div id=" + terminated[i]["id"] + " class='collapse'>"
-            + "<div class='chart-container' style='height:300px; width:300px'>"
-            + "<canvas id='chart-" + terminated[i]["id"] + "'</canvas>"
+            + "<div class='chart-container' style='width: 600px; height:300px'>"
+            + "<canvas id='chart-" + terminated[i]["id"] + "''</canvas>"
             + "</div>"
             + "</div>";
       html += "</li>";
@@ -85,8 +85,10 @@ function showVotes(d) {
         data.push(terminated[i]["choices"][x]["votes"]);
       }
       var ctx = document.getElementById("chart-" + terminated[i]["id"]);
-      var myChart = new Chart(ctx, {
+      var chart = new Chart(ctx, {
         type: 'pie',
+        responsive: false,
+        maintainAspectRatio: false,
         data: {
           labels: labels,
           datasets: [{
@@ -100,6 +102,7 @@ function showVotes(d) {
           }
         }
       });
+      chart.resize();
     }
 
 
