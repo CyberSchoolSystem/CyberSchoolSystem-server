@@ -17,7 +17,8 @@ function loadVotes() {
 function showVotes(d) {
     var sorted = sortVotes(d),
         running = sorted[0],
-        terminated = sorted[1];
+        terminated = sorted[1],
+        completed = sorted[2];
     var rowcounter = 1
     var html = "";
     for(i in running){
@@ -53,7 +54,6 @@ function showVotes(d) {
     }
     $("#running")[0].innerHTML += html;
     var html = "";
-    console.log(terminated);
     for(i in terminated){
       html += "<li>"
             + "<a href='#'><span class='text'>" + terminated[i]["title"] + "</span></a>";
@@ -66,6 +66,11 @@ function showVotes(d) {
       html += "</li>";
     }
     $("#terminated")[0].innerHTML += html;
+    var html = "";
+    for(i in completed){
+      html += "<li><span class='text'>" + completed[i]["title"] + ": </span>" + completed[i]["description"] + "</li>";
+    }
+    $("#completed")[0].innerHTML += html;
 }
 
 function vote(v, i) {
@@ -100,6 +105,7 @@ function vote(v, i) {
 
 function sortVotes(d) {
   var running = [],
+    completed = [],
     terminated = [];
   for (var i in d) {
     if(d[i]["terminated"]){
@@ -108,6 +114,9 @@ function sortVotes(d) {
     else{
       running.push(d[i]);
     }
+    if(d[i]["alreadyVoted"]){
+      completed.push(d[i]);
+    }
   }
-  return [running, terminated];
+  return [running, terminated, completed];
 }

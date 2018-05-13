@@ -140,3 +140,4 @@ $doctype 5
                     <b>Version
                     #{showVersion version}
                 <strong>&copy; CyberSchoolSystem <a href="https://github.com/CyberSchoolSystem">GitHub</a>
+                <a href="@{FaqR}"><i class="fa fa-question"></i></a>
