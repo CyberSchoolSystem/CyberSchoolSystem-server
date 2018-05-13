@@ -7,6 +7,7 @@ module Settings
     ) where
 
 import          Data.Aeson
+import          Data.Text                (Text)
 import          Database.Persist.MongoDB (MongoConf)
 
 data AppSettings = AppSettings -- TODO: Add useful settings from Scaffold
@@ -15,6 +16,8 @@ data AppSettings = AppSettings -- TODO: Add useful settings from Scaffold
     , appDummyLogin :: Bool
     , appReload :: Bool
     , appStaticDir :: String
+    , appLoginMinutes :: Int
+    , appMOTD :: Text
     }
 
 instance FromJSON AppSettings where
@@ -24,6 +27,8 @@ instance FromJSON AppSettings where
         appDummyLogin <- o .:? "dummyLogin" .!= appDevelopment
         appReload <- o .:? "reloadeMode" .!= appDevelopment
         appStaticDir <- o .:? "staticDir" .!= "static/"
+        appLoginMinutes <- o .: "loginMinutes" .!= 120
+        appMOTD <- o .:? "motd" .!= ""
 
         return AppSettings {..}
 

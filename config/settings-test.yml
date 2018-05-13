@@ -1,5 +1,6 @@
 development: False
 dummyLogin: True
+motd: "Testing mode. Du solltest das nicht sehen"
 
 database:
   host: "127.0.0.1"

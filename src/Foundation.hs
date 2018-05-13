@@ -65,11 +65,9 @@ instance Yesod App where -- TODO: SSL
         where
             genFileName l = "autogen-" ++ base64md5 l
     makeSessionBackend _ = fmap Just $
-#ifdef DEVELOPMENT
-        defaultClientSessionBackend 5 "client_session_key.aes"
-#else
-        defaultClientSessionBackend 20 "client_session_key.aes" -- TODO: Use Config file
-#endif
+        defaultClientSessionBackend
+            (appLoginMinutes $ compileTimeAppSettings)
+            "client_session_key.aes"
 
 #ifndef NO_AUTH
     isAuthorized (StaticR _) _ = return Authorized
@@ -114,7 +112,8 @@ instance Yesod App where -- TODO: SSL
         citizen <- authResultToBool <$> isCitizen
         customs <- authResultToBool <$> isCustoms
         representative <- authResultToBool <$> isRepresentative
-        let css =
+        let motd = appMOTD . appSettings $ app
+            css =
                 if (appReload . appSettings $ app)
                     then toWidget $(luciusFileReload "templates/defaultLayout.lucius")
                     else toWidget $(luciusFile "templates/defaultLayout.lucius")

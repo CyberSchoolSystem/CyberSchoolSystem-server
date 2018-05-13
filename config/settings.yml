@@ -1,12 +1,14 @@
-host: localhost
-connections: 10
+host: "_env:HOST:localhost"
+connections: "_env:HOST_CONNECTIONS:10"
 
-# development: False
-# dummyLogin: False
-# reloadeMode: False
-staticDir: "static/"
+development: "_env:DEVELOPMENT:False"
+dummyLogin: "_env:DUMMY:False"
+reloadeMode: "_env:RELOAD:False"
+loginMinutes: "_env:LOGIN_TIME:120"
+staticDir: "_env:STATIC:static/"
+motd: "_env:MODT:"
 
 database:
-  host: "127.0.0.1"
-  database: "CyberSchoolSystem"
-  connections: 10
+  host: "_env:DB_IP:127.0.0.1"
+  database: "_env:DB_COLLECTION:CyberSchoolSystem"
+  connections: "_env:DB_CONNECTIONS:10"

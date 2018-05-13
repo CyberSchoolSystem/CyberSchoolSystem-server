@@ -1,4 +1,5 @@
 development: True
+motd: "Development Mode. Do solltest das nicht sehen"
 
 database:
   host: "127.0.0.1"
