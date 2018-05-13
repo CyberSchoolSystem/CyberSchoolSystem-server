@@ -3,3 +3,8 @@
 margin-right: 5px;
 margin-bottom: 5px !important;
 }
+
+.mute-all {
+   opacity: 0.4;
+   pointer-events:none;
+}

@@ -1,15 +1,7 @@
 <h2 class="page-header">
     Aktuell laufend
 <div id="running">
-
-
-<div class="box">
-    <div class="box-header">
-        <i class="fa fa-list">
-        <h3 class="box-title">
-            Bereits abgestimmt
-    <div class="box-body">
-        <ul id="completed" class="todo-list">
+<div id="completed">
 
 <div class="box">
     <div class="box-header">

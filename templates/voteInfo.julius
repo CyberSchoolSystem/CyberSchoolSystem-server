@@ -53,22 +53,90 @@ function showVotes(d) {
         rowcounter++;
     }
     $("#running")[0].innerHTML += html;
+
+
+
+
     var html = "";
     for(i in terminated){
       html += "<li>"
-            + "<a href='#'><span class='text'>" + terminated[i]["title"] + "</span></a>";
+            + "<a data-toggle='collapse' data-target=#" + terminated[i]["id"] + " href='#'><span class='text'>" + terminated[i]["title"] + "</span></a>";
       for(x in terminated[i]["choices"]){
           html += " | "
                 + terminated[i]["choices"][x]["description"]
                 + ": "
                 + terminated[i]["choices"][x]["votes"];
       }
+      html  += "<div id=" + terminated[i]["id"] + " class='collapse'>"
+            + "<div class='chart-container' style='height:300px; width:300px'>"
+            + "<canvas id='chart-" + terminated[i]["id"] + "'</canvas>"
+            + "</div>"
+            + "</div>";
       html += "</li>";
     }
+    console.log(labels);
+    console.log(data);
     $("#terminated")[0].innerHTML += html;
+    for(i in terminated){
+      var labels = [];
+      var data = [];
+      for(x in terminated[i]["choices"]){
+        labels.push(terminated[i]["choices"][x]["description"]);
+        data.push(terminated[i]["choices"][x]["votes"]);
+      }
+      var ctx = document.getElementById("chart-" + terminated[i]["id"]);
+      var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: ["#0074D9", "#FF4136", "#2ECC40", "#FF851B", "#7FDBFF", "#B10DC9", "#FFDC00", "#001f3f", "#39CCCC", "#01FF70", "#85144b", "#F012BE", "#3D9970", "#111111", "#AAAAAA"]
+          }]
+        },
+        options: {
+          animation: {
+            animateRotate: false
+          }
+        }
+      });
+    }
+
+
+
+
+
+    var rowcounter = 1
     var html = "";
     for(i in completed){
-      html += "<li><span class='text'>" + completed[i]["title"] + ": </span>" + completed[i]["description"] + "</li>";
+        var buttons = "";
+        for (var j in completed[i]["choices"]) {
+            buttons += "<button class='btn btn-primary btn-primary-spacing' value='" + completed[i]["choices"][j] + "'>"
+                    + completed[i]["choices"][j]["description"] + "</button>"
+        }
+
+        var ended = moment(completed[i]["endOfLife"]).format('DD.MM.YYYY HH:mm');
+        if (rowcounter == 1){ //All 3 boxes a new row
+          html += "<div class='row'><!-- new row-->";
+        }
+        html  += "<div class='col-md-4'>"
+              + "<div class='box box-solid mute-all'>"
+              + "<div class='box-header with-border'>"
+              + "<h3 class='box-title'>" + completed[i]["title"] + "</h3>"
+              + "</div>"
+              + "<div class='box-body'>"
+              + completed[i]["description"]
+              + "<div>" + buttons + "</div>"
+              + "<div>Ende: " + ended + "</div>"
+              + "</div>"
+              + "</div>"
+              + "</div>";
+
+        if ((rowcounter == 3) || i == completed.length-1){ //All 3 boxes a new row
+          html += "</div> <!-- close row-->";
+          rowcounter = 0;
+        }
+        rowcounter++;
     }
     $("#completed")[0].innerHTML += html;
 }
@@ -89,7 +157,7 @@ function vote(v, i) {
              },
              success: function (d) {
                 if (d["error"] == null) {
-                    setmsg("Du hast erfolgreich abgestimmt, Vielen Dank!");
+                    location.reload();
                 }
                 else{
                   if(d.error.alreadyDone.msg == "You already voted"){
