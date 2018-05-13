@@ -99,15 +99,15 @@ function vote(v, i) {
 }
 
 function sortVotes(d) {
-    var running = [],
-        terminated = [];
-    for (var i in d) {
-        if(d[i]["terminated"]){
-          terminated.push(d[i]);
-        }
-        else{
-          running.push(d[i]);
-        }
+  var running = [],
+    terminated = [];
+  for (var i in d) {
+    if(d[i]["terminated"]){
+      terminated.push(d[i]);
     }
-    return [running, terminated];
+    else{
+      running.push(d[i]);
+    }
+  }
+  return [running, terminated];
 }
