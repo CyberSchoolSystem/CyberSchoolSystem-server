@@ -150,10 +150,9 @@ $doctype 5
                     <b>Version
                     #{showVersion version}
                 <strong>&copy; CyberSchoolSystem <a href="https://github.com/CyberSchoolSystem">GitHub</a>
-                <a href="@{FaqR}"><i class="fa fa-question"></i></a>
+                <a href="@{FaqR}"><i class="fa fa-question"></i>
 
 
-                <!-- Modal -->
 <div class="modal fade" id="profilModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -169,6 +168,5 @@ $doctype 5
                     <tr>
                         <th>Nachname
                         <th><div id="lastname">
-              <tr>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen
