@@ -13,6 +13,7 @@ import           Database.Persist.Class   (selectFirst, selectList, insert, upda
 import           Database.Persist.MongoDB (nestEq, (->.), push)
 import           Data.Aeson
 import           Data.Aeson.Types         (typeMismatch)
+import qualified Data.HashMap.Lazy        as HML
 import           Data.Maybe               (catMaybes)
 import           Data.Text                (Text)
 import           Data.Time.Clock          (getCurrentTime)
@@ -21,7 +22,7 @@ import           Error
 import           Foundation
 import           Model
 import           Text.HTML.SanitizeXSS    (sanitizeBalance)
-import           Yesod.Auth               (requireAuthId)
+import           Yesod.Auth               (requireAuthId, maybeAuthId)
 import           Yesod.Core.Json          (FromJSON, requireJsonBody)
 import           Yesod.Persist.Core       (runDB)
 
@@ -112,9 +113,24 @@ instance ToJSON ChoiceRunning where
 {-| Handle Post on /api/vote/info -}
 postApiVoteInfoR :: Handler Value
 postApiVoteInfoR = do
+    maid <- maybeAuthId
     inp  <- requireJsonBody :: Handler VoteReq -- TODO: Check Application Type?
     rec <- runDB $ selectList (reqToDBFilter inp) []
-    fmap (toJSON) . liftIO . sequence $ (toValue <$> rec)
+    votes <- liftIO . sequence $ (toValue <$> rec)
+    let voted = maidToVoted maid . entityVal <$> rec
+    return . toJSON $ zipWith (\v b -> mergeAeson [v, object ["alreadyVoted" .= b]]) votes voted
+
+{-| Check whether user has already voted -}
+maidToVoted :: Maybe UserId -> Vote -> Bool
+maidToVoted Nothing _ = False
+maidToVoted (Just u) vote = hasVoted u vote
+    where hasVoted i Vote{voteVoted = v} = elem i v
+
+{-| Merge two json values -}
+mergeAeson :: [Value] -> Value
+mergeAeson = Object . HML.unions . map go
+    where go (Object x) = x
+          go _ = undefined
 
 {-| Create a list of Mongo filters based on a VoteReq -}
 reqToDBFilter :: VoteReq -> [Filter Vote]
