@@ -113,6 +113,7 @@ instance Yesod App where -- TODO: SSL
         customs <- authResultToBool <$> isCustoms
         representative <- authResultToBool <$> isRepresentative
         let motd = appMOTD . appSettings $ app
+            hasMotd = motd /= ""
             css =
                 if (appReload . appSettings $ app)
                     then toWidget $(luciusFileReload "templates/defaultLayout.lucius")

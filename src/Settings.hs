@@ -27,7 +27,7 @@ instance FromJSON AppSettings where
         appDummyLogin <- o .:? "dummyLogin" .!= appDevelopment
         appReload <- o .:? "reloadeMode" .!= appDevelopment
         appStaticDir <- o .:? "staticDir" .!= "static/"
-        appLoginMinutes <- o .: "loginMinutes" .!= 120
+        appLoginMinutes <- o .:? "loginMinutes" .!= 120
         appMOTD <- o .:? "motd" .!= ""
 
         return AppSettings {..}

@@ -128,10 +128,11 @@ $doctype 5
             <div class="content-wrapper">
                 <section class="content-header">
                 <section class="content">
-                    <div id="motd-div" style="display:block" class="callout callout-info">
-                        <h4>Anmerkung:
-                        <div id="motd">
-                            #{motd}
+                    $if hasMotd
+                        <div id="motd-div" style="display:block" class="callout callout-info">
+                            <h4>Anmerkung:
+                            <div id="motd">
+                                #{motd}
                     <div id="msg-div" style="display:none" class="callout callout-success">
                         <h4>Info:
                         <div id="msg">
