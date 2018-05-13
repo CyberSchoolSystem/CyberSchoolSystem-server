@@ -82,7 +82,9 @@ $(document).ready(function() {
                   $("#voteAdd")[0].reset();
                   setmsg("Abstimmung wurde veröffentlicht!");
                 }else{
-                  seterror(JSON.stringify(d));
+                    for(var i in d['error']) {
+                        seterror(d['error'][i]['msg']);
+                    }
                 }
              }
     });
