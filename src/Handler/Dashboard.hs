@@ -5,7 +5,8 @@ module Handler.Dashboard
     ( getUiUserAddR
     , getUiUserInfoR
     , getUiVoteAddR
-    , getUiVoteInfoR
+    , getUiVoteRunningR
+    , getUiVoteTerminatedR
     , getUiAccessOutR
     , getUiAccessInR
     , getUiAccessExportR
@@ -53,15 +54,26 @@ getUiVoteAddR = defaultLayout $ do
         else toWidget $(juliusFile "templates/voteAdd.julius")
              <> toWidget $(hamletFile "templates/voteAdd.hamlet")
 
-getUiVoteInfoR :: Handler Html
-getUiVoteInfoR = defaultLayout $ do
-    setTitle "Wahlen"
+getUiVoteRunningR :: Handler Html
+getUiVoteRunningR = defaultLayout $ do
+    setTitle "Wählen"
     app <- getYesod
     if appReload . appSettings $ app
-        then toWidget $(juliusFileReload "templates/voteInfo.julius")
-             <> toWidget $(hamletFileReload "templates/voteInfo.hamlet")
-        else toWidget $(juliusFile "templates/voteInfo.julius")
-             <> toWidget $(hamletFile "templates/voteInfo.hamlet")
+        then toWidget $(juliusFileReload "templates/voteRunning.julius")
+             <> toWidget $(hamletFileReload "templates/voteRunning.hamlet")
+        else toWidget $(juliusFile "templates/voteRunning.julius")
+             <> toWidget $(hamletFile "templates/voteRunning.hamlet")
+
+
+getUiVoteTerminatedR :: Handler Html
+getUiVoteTerminatedR = defaultLayout $ do
+    setTitle "Wahlergebnisse"
+    app <- getYesod
+    if appReload . appSettings $ app
+        then toWidget $(juliusFileReload "templates/voteTerminated.julius")
+             <> toWidget $(hamletFileReload "templates/voteTerminated.hamlet")
+        else toWidget $(juliusFile "templates/voteTerminated.julius")
+             <> toWidget $(hamletFile "templates/voteTerminated.hamlet")
 
 getUiAccessInR :: Handler Html
 getUiAccessInR = defaultLayout $ do

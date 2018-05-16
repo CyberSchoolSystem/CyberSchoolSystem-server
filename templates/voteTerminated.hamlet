@@ -1,0 +1,12 @@
+<h2 class="page-header">
+    Aktuell laufend
+<div id="running">
+<div id="completed">
+
+<div class="box">
+    <div class="box-header">
+        <i class="fa fa-list">
+        <h3 class="box-title">
+            Abgeschlossen
+    <div class="box-body">
+        <ul id="terminated" class="todo-list">

@@ -3,80 +3,74 @@ $(document).ready(function () {
 });
 
 function loadVotes() {
-    $.ajax({ url: "@{ApiVoteInfoR}",
-             type: "POST",
-             data: JSON.stringify( { }),
-             contentType: "application/json",
-             dataType: "json",
-             success: function(d) {
-                showVotes(d);
-             }
-    });
+  $.ajax({ url: "@{ApiVoteInfoR}",
+          type: "POST",
+          data: JSON.stringify( { }),
+          contentType: "application/json",
+          dataType: "json",
+          success: function(d) {
+            showVotes(d);
+          }
+  });
 }
 
 function showVotes(d) {
-    var sorted = sortVotes(d),
-        running = sorted[0],
-        terminated = sorted[1],
-        completed = sorted[2];
-    var rowcounter = 1
-    var html = "";
-    for(i in running){
-        var buttons = "";
-        for (var j in running[i]["choices"]) {
-            buttons += "<button class='btn btn-primary btn-primary-spacing' value='" + running[i]["choices"][j] + "' onclick=vote('"
-                    + running[i]["id"] + "'," + running[i]["choices"][j]["identity"] + ")>"
-                    + running[i]["choices"][j]["description"] + "</button>"
-        }
-
-        var ended = moment(running[i]["endOfLife"]).format('DD.MM.YYYY HH:mm');
-        if (rowcounter == 1){ //All 3 boxes a new row
-          html += "<div class='row'><!-- new row-->";
-        }
-        html  += "<div class='col-md-4'>"
-              + "<div class='box box-solid'>"
-              + "<div class='box-header with-border'>"
-              + "<h3 class='box-title'>" + running[i]["title"] + "</h3>"
-              + "</div>"
-              + "<div class='box-body'>"
-              + running[i]["description"]
-              + "<div>" + buttons + "</div>"
-              + "<div>Ende: " + ended + "</div>"
-              + "</div>"
-              + "</div>"
-              + "</div>";
-
-        if ((rowcounter == 3) || i == running.length-1){ //All 3 boxes a new row
-          html += "</div> <!-- close row-->";
-          rowcounter = 0;
-        }
-        rowcounter++;
-    }
-    $("#running")[0].innerHTML += html;
-
-
-
-
-    var html = "";
-    for(i in terminated){
-      html += "<li>"
-            + "<a data-toggle='collapse' data-target=#" + terminated[i]["id"] + " href='#'><span class='text'>" + terminated[i]["title"] + "</span></a>";
-      for(x in terminated[i]["choices"]){
-          html += " | "
-                + terminated[i]["choices"][x]["description"]
-                + ": "
-                + terminated[i]["choices"][x]["votes"];
+  var sorted = sortVotes(d),
+    running = sorted[0],
+    terminated = sorted[1],
+    completed = sorted[2];
+  var rowcounter = 1
+  var html = "";
+  for(i in running){
+    var buttons = "";
+      for (var j in running[i]["choices"]) {
+        buttons += "<button class='btn btn-primary btn-primary-spacing' value='" + running[i]["choices"][j] + "' onclick=vote('"
+          + running[i]["id"] + "'," + running[i]["choices"][j]["identity"] + ")>"
+          + running[i]["choices"][j]["description"] + "</button>"
       }
-      html  += "<div id=" + terminated[i]["id"] + " class='collapse'>"
-            + "<div class='chart-container' style='width: 600px; height:300px'>"
-            + "<canvas id='chart-" + terminated[i]["id"] + "''</canvas>"
-            + "</div>"
-            + "</div>";
-      html += "</li>";
+
+      var ended = moment(running[i]["endOfLife"]).format('DD.MM.YYYY HH:mm');
+      if (rowcounter == 1){ //All 3 boxes a new row
+        html += "<div class='row'><!-- new row-->";
+      }
+      html  += "<div class='col-md-4'>"
+        + "<div class='box box-solid'>"
+        + "<div class='box-header with-border'>"
+        + "<h3 class='box-title'>" + running[i]["title"] + "</h3>"
+        + "</div>"
+        + "<div class='box-body'>"
+        + running[i]["description"]
+        + "<div>" + buttons + "</div>"
+        + "<div>Ende: " + ended + "</div>"
+        + "</div>"
+        + "</div>"
+        + "</div>";
+
+      if ((rowcounter == 3) || i == running.length-1){ //All 3 boxes a new row
+        html += "</div> <!-- close row-->";
+        rowcounter = 0;
+      }
+      rowcounter++;
+  }
+  $("#running")[0].innerHTML += html;
+  var html = "";
+  for(i in terminated){
+    html += "<li>"
+      + "<a data-toggle='collapse' data-target=#" + terminated[i]["id"] + " href='#'><span class='text'>" + terminated[i]["title"] + "</span></a>";
+    for(x in terminated[i]["choices"]){
+      html += " | "
+        + terminated[i]["choices"][x]["description"]
+        + ": "
+        + terminated[i]["choices"][x]["votes"];
     }
-    console.log(labels);
-    console.log(data);
-    $("#terminated")[0].innerHTML += html;
+    html  += "<div id=" + terminated[i]["id"] + " class='collapse'>"
+      + "<div class='chart-container' style='width: 600px; height:300px'>"
+      + "<canvas id='chart-" + terminated[i]["id"] + "''</canvas>"
+      + "</div>"
+      + "</div>";
+    html += "</li>";
+  }
+  $("#terminated")[0].innerHTML += html;
     for(i in terminated){
       var labels = [];
       var data = [];

@@ -25,7 +25,8 @@
 /user/grade/info UiGradeInfoR GET
 
 /vote/add UiVoteAddR GET
-/vote/info UiVoteInfoR GET
+/vote/running UiVoteRunningR GET
+/vote/terminated UiVoteTerminatedR GET
 
 /access/in UiAccessInR GET
 /access/out UiAccessOutR GET
