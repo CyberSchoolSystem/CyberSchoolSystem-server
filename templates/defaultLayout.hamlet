@@ -134,10 +134,13 @@ $doctype 5
                 <section class="content-header">
                 <section class="content">
                     $if hasMotd
-                        <div id="motd-div" style="display:block" class="callout callout-info">
+                        <div id="motd-div" style="display:block" class="callout callout-warning">
                             <h4>Anmerkung:
                             <div id="motd">
                                 #{motd}
+                    $maybe msg <- mmsg
+                        <div id="msg-div" style="display:block" class="callout callout-info">
+                            #{msg}
                     <div id="msg-div" style="display:none" class="callout callout-success">
                         <h4>Info:
                         <div id="msg">

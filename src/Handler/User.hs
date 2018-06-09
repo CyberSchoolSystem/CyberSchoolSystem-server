@@ -132,8 +132,7 @@ instance ToJSON (UserResp User) where
 
 postApiUserAddR :: Handler Value
 postApiUserAddR = do
-    -- u <- addToUser <$> requireJsonBody
-    req <- requireJsonBody
+    req <- requireJsonBody :: Handler AddUserReq
     user <- setPassword (addPassword req) $ addToUser req
     res <- runDB $ selectFirst [UserUsername ==. userUsername user] []
     case res of
@@ -197,11 +196,11 @@ updateToUpdate UpdateUserReq{..} = do
                 Just u -> Just <$> makePassword' u 14
                 Nothing -> return Nothing
     return $ catMaybes [ (UserFirstName =.) <$> updateFirstName
-                                             , (UserLastName =.) <$> updateLastName
-                                             , (UserGrade =.) <$> updateGrade
-                                             , (UserUsername =.) <$> updateUsername
-                                             , (UserPassword =.) <$> Just <$> pw
-                                             , (UserRoles =.) <$> updateRole ] -- TODO: Make more flexible
+                       , (UserLastName =.) <$> updateLastName
+                       , (UserGrade =.) <$> updateGrade
+                       , (UserUsername =.) <$> (T.toLower <$> updateUsername)
+                       , (UserPassword =.) <$> Just <$> pw
+                       , (UserRoles =.) <$> updateRole ] -- TODO: Make more flexible
 
 {-| Make a Text password -}
 makePassword' :: Text -> Int -> IO Text
