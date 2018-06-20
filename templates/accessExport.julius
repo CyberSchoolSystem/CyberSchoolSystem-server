@@ -1,0 +1,16 @@
+$(document).ready(function (){
+    $.ajax({ url: "@{ApiAccessExportR}",
+                type: "POST",
+                data: null,
+                contentType: "application/json",
+                dataType: "json",
+                statusCode: {
+                400: function () {
+                    alert("Malformed json. Please report bug");
+                }
+                },
+                success: function (d) {
+                    console.log(d);
+                }
+    });
+})

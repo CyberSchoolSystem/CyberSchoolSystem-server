@@ -5,7 +5,7 @@
 
 /api/access/in ApiAccessInR POST
 /api/access/out ApiAccessOutR POST
-/api/access/export ApiAccessExportR POST
+/api/access/export ApiAccessExportR GET
 
 /api/joke/random JokeR GET
 

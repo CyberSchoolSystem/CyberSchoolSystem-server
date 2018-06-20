@@ -2,28 +2,38 @@
 module Handler.Access 
     ( postApiAccessInR
     , postApiAccessOutR
-    , postApiAccessExportR
+    , getApiAccessExportR
     ) where
 
 import           Control.Monad.IO.Class   (liftIO)
 import           Data.Aeson
 import           Data.Aeson.Types         (typeMismatch)
 import           Data.Bits                (xor)
-import qualified Data.Text as T
+import           Data.Default             (def)
+import           Data.List                (sortBy)
+import           Data.Monoid              ((<>))
+import qualified Data.Text                as T
+import qualified Data.Text.IO             as T
 import           Data.Time.Calendar       (fromGregorian)
-import           Data.Time.Clock          (UTCTime(..), getCurrentTime)
+import           Data.Time.Clock          (UTCTime(..), getCurrentTime, diffUTCTime)
 import           Database.Persist         ((==.))
-import           Database.Persist.Class   (selectFirst, update)
+import           Database.Persist.Class   (selectFirst, selectList, update)
 import           Database.Persist.Types   (Entity(..))
 import           Database.Persist.MongoDB (push)
 import qualified Error                    as E
 import           Foundation
 import qualified Message                  as M
 import           Model
+import           Text.Pandoc.Builder      (Pandoc, Blocks, Alignment(..),
+                                           doc, table, text, plain, bulletList)
+import           Text.Pandoc.Writers.HTML (writeHtml5String)
+import           Text.Pandoc              (setUserDataDir, runIO)
+import           Yesod.Auth               (requireAuthId)
 import           Yesod.Core.Json          (requireJsonBody)
 import           Yesod.Persist.Core       (runDB)
 
-data AccessUser = AccessUser
+type Gradename = T.Text
+data AccessUser = AccessUser -- TODO: Newtype?
     { idUser :: T.Text
     }
 
@@ -71,5 +81,81 @@ postApiAccessOutR = do
     user <- runDB $ selectFirst [UserUsername ==. idUser req] []
     addToDB False req user
 
-postApiAccessExportR :: Handler Value
-postApiAccessExportR = undefined
+getApiAccessExportR :: Handler Value
+getApiAccessExportR = do
+    auth <- requireAuthId
+    user <- runDB $ selectFirst [UserId ==. auth] []
+    case user of
+        Just u -> do
+            (users, gradeN) <- loadGradeUsers (entityVal u)
+            let pan = renderGradeTable users gradeN
+            liftIO $ savePDF pan
+            return $ toJSON pan
+            -- liftIO $ writeHtml5String def pan
+        Nothing -> return . toJSON . E.Unknown (M.fromMessage $ M.Unknown M.User) $ [("username", user)]
+
+{-| Load all users and the grade a teacher is responsible for -}
+loadGradeUsers :: User -> Handler ([User], Gradename)
+loadGradeUsers User{userRoles = r} = do
+    let grade = roleTeacher r
+    case grade of
+        Just g -> do
+            u <- fmap entityVal <$> (runDB $ selectList [UserGrade ==. g] [])
+            name <- runDB $ selectFirst [GradeId ==. g] []
+            case name of
+                Just n -> return (u, gradeName . entityVal $ n)
+                Nothing -> error "Unknown grade. This should not happen."
+        Nothing -> error "Teacher role already checked by login system. This should not happen"
+
+{-| Render information -}
+renderGradeTable :: [User] -> Gradename -> Pandoc
+renderGradeTable users gradeN =
+    doc $ table (text . T.unpack $ gradeN)
+                [(AlignLeft, 1), (AlignLeft, 1), (AlignLeft, 1), (AlignLeft, 1)]
+                (tblocks <$> ["Name", "Anwesend von ... bis ...", "Zeit anwesend (in h)", "Kommentar"])
+                (userToRow <$> sorted)
+    where sorted = sortBy lastName users
+          lastName x y = compare (userLastName x) (userLastName y)
+          userToRow u = let timestamp = timeInside u in
+              [plain . text . T.unpack $ (userLastName u) <> (userFirstName u),
+              fst timestamp,
+              snd timestamp,
+              tblocks "test"]
+
+{-| Get the time User was present (numerically and as intervals -}
+timeInside :: User -> (Blocks, Blocks)
+timeInside user = (interval, numeric)
+    where
+        interval = bulletList $ tupToMsg <$> tup
+        numeric = tblocks $ show . sum $ diffTup  <$> tup
+        tup = accessTuples user
+        diffTup (s, em) =
+            case em of
+                Just e -> diffUTCTime e s
+                Nothing -> 0
+        tupToMsg (s, em) =
+            case em of 
+                Just e -> tblocks $ (show s) <> " bis " <> (show $ e)
+                Nothing -> tblocks $ (show s) <>
+                    " bis [nicht richtig abgemeldet, oder noch anwesend]"
+
+{-| Load a users access list into sorted, logical tuples -}
+accessTuples :: User -> [(UTCTime, Maybe UTCTime)]
+accessTuples u = chunk $ accessTime <$> access -- TODO sort
+    where
+        access         = userAccess u
+        chunk []       = []
+        chunk [x]      = [(x, Nothing)]
+        chunk (x:y:zs) = (x, Just y) : chunk zs
+
+savePDF :: Pandoc -> IO ()
+savePDF pandoc = do
+    pdf <- runIO $ do
+        setUserDataDir Nothing
+        writeHtml5String def pandoc
+    case pdf of
+        Left _ -> error "fail"
+        Right p -> T.writeFile "test.html" p
+
+tblocks :: String -> Blocks
+tblocks = plain . text
