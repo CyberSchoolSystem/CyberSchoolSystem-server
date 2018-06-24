@@ -30,8 +30,9 @@ import           Yesod
 import           Yesod.Auth
 import           Yesod.Auth.Dummy          (authDummy)
 import           Yesod.Auth.HashDB         (authHashDBWithForm)
+import           Yesod.Auth.Message        (germanMessage, AuthMessage(..))
 import           Yesod.Core                (defaultClientSessionBackend)
-import           Yesod.Core.Handler        (withUrlRenderer, setUltDestCurrent, redirect)
+import           Yesod.Core.Handler        (withUrlRenderer, setUltDestCurrent, redirect, getMessage)
 import           Yesod.Core.Widget         (toWidget, whamletFile)
 import           Yesod.Default.Util        (addStaticContentExternal)
 import           Yesod.Form.Types          (FormMessage)
@@ -114,6 +115,7 @@ instance Yesod App where -- TODO: SSL
         citizen <- authResultToBool <$> isCitizen
         customs <- authResultToBool <$> isCustoms
         representative <- authResultToBool <$> isRepresentative
+        mmsg <- getMessage
         let motd = appMOTD . appSettings $ app
             hasMotd = motd /= ""
             css =
@@ -155,9 +157,11 @@ instance YesodAuth App where
     type AuthId App = UserId
     loginDest _ = RootR
     logoutDest _ = RootR
+    renderAuthMessage _ _ = germanMessage
 
     authLayout widget = do
         maid <- maybeAuthId
+        mmsg <- getMessage
         let cont = do
                 addStylesheet (StaticR css_bootstrap_min_css)
                 addStylesheet (StaticR css_font_awesome_min_css)
@@ -172,15 +176,15 @@ instance YesodAuth App where
             Just _ -> redirect RootR
             Nothing -> withUrlRenderer $(hamletFile "templates/loginLayout.hamlet")
 
-    authPlugins app = [ authHashDBWithForm loginForm (Just . UniqueUser)] ++ extra
+    authPlugins app = [authHashDBWithForm loginForm (Just . UniqueUser . T.toLower)] ++ extra
         where extra = [authDummy | appDummyLogin $ appSettings app]
               loginForm action = $(whamletFile "templates/loginForm.hamlet")
 
-    getAuthId creds = runDB $ do
-        req <- selectFirst [UserUsername ==. (T.toLower . credsIdent $ creds)] []
+    authenticate creds = do
+        req <- runDB $ selectFirst [UserUsername ==. (T.toLower . credsIdent $ creds)] []
         case req of
-            Just (Entity eid _) -> return . Just $ eid
-            Nothing -> return Nothing
+            Just (Entity eid _) -> return $ Authenticated eid
+            Nothing             -> return . UserError $ IdentifierNotFound (credsIdent creds)
 
     authHttpManager = error "W T F"
 

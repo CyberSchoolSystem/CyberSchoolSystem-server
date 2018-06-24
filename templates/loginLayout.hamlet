@@ -8,4 +8,6 @@
             <div class="login-logo">
                 <a href="/"><b>C</b>yber<b>S</b>chool<b>S</b>ystem</a>
             <div class="login-box-body">
+                $maybe msg <- mmsg
+                    #{msg}
                 ^{bodyTags}
