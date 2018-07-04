@@ -15,7 +15,7 @@ $('#datetimepicker1').on("dp.change",function (e) {
 });
 
 $(document).ready(function() {
-  var max_fields      = 30;
+  var max_fields      = 10;
   var wrapper         = $(".container1");
   var add_button      = $("#add_choice");
   var div             = document.getElementById("container1");
@@ -29,7 +29,7 @@ $(document).ready(function() {
       clrerror();
     }
     else{
-      seterror("Sie können maximal 5 Entscheidungsmöglichkeiten erstellen.");
+      seterror("Sie können maximal " + max_fields + " Entscheidungsmöglichkeiten erstellen.");
     }
   });
 
@@ -45,13 +45,13 @@ $(document).ready(function() {
     var doc = document.getElementById("voteAdd");
     var choices = [];
 
-    for (var i = 1; i < x; i++){
+    for (var i = 1; i <= x; i++){
       if(document.getElementById("choice_" + i)){
         choices.push(doc["choice_" + i].value);
       }
     }
     var data = {  description: doc["beschreibung"].value,
-                  choices: choices.sort(),
+                  choices: choices,
                   endOfLife: endOfLife,
                   title: doc["titel"].value
                 };
