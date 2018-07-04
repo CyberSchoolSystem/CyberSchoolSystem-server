@@ -46,7 +46,8 @@ function delUser(u) {
              },
              success: function (d) {
                 if (d["error"] != null) {
-                    seterror(JSON.stringify(d));
+                    for(var i in d['error']) {
+                        seterror(d['error'][i]['msg']);
                 } else {
                     setmsg("okay");
                 }
