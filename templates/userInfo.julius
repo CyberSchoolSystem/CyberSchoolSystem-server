@@ -48,6 +48,7 @@ function delUser(u) {
                 if (d["error"] != null) {
                     for(var i in d['error']) {
                         seterror(d['error'][i]['msg']);
+                    }
                 } else {
                     setmsg("okay");
                 }
