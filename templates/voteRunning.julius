@@ -10,6 +10,7 @@ function loadVotes() {
           dataType: "json",
           success: function(d) {
             showVotes(d);
+            console.log(d);
           }
   });
 }
@@ -23,7 +24,7 @@ function showVotes(d) {
   var html = "";
   for(i in running){
     var buttons = "";
-      for (var j in running[i]["choices"]) {
+      for(var j in running[i]["choices"]) {
         buttons += "<button class='btn btn-primary btn-primary-spacing' value='" + running[i]["choices"][j] + "' onclick=vote('"
           + running[i]["id"] + "'," + running[i]["choices"][j]["identity"] + ")>"
           + running[i]["choices"][j]["description"] + "</button>"
@@ -46,7 +47,7 @@ function showVotes(d) {
         + "</div>"
         + "</div>";
 
-      if ((rowcounter == 3) || i == running.length-1){ //All 3 boxes a new row
+      if ((rowcounter == 3) || i == running.length-1){ //Every 3 boxes a new row
         html += "</div> <!-- close row-->";
         rowcounter = 0;
       }

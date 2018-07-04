@@ -15,7 +15,7 @@ $('#datetimepicker1').on("dp.change",function (e) {
 });
 
 $(document).ready(function() {
-  var max_fields      = 5;
+  var max_fields      = 30;
   var wrapper         = $(".container1");
   var add_button      = $("#add_choice");
   var div             = document.getElementById("container1");
@@ -44,22 +44,14 @@ $(document).ready(function() {
     clrerror();
     var doc = document.getElementById("voteAdd");
     var choices = [];
-    choices.push(doc["choice_1"].value)
-    choices.push(doc["choice_2"].value)
-    var choice_3 = document.getElementById("choice_3");
-    if(choice_3){
-      choices.push(doc["choice_3"].value)
-    }
-    var choice_4 = document.getElementById("choice_4");
-    if(choice_4){
-      choices.push(doc["choice_4"].value)
-    }
-    var choice_5 = document.getElementById("choice_5");
-    if(choice_5){
-      choices.push(doc["choice_5"].value)
+
+    for (var i = 1; i < x; i++){
+      if(document.getElementById("choice_" + i)){
+        choices.push(doc["choice_" + i].value);
+      }
     }
     var data = {  description: doc["beschreibung"].value,
-                  choices: choices,
+                  choices: choices.sort(),
                   endOfLife: endOfLife,
                   title: doc["titel"].value
                 };

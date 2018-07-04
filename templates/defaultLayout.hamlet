@@ -168,5 +168,32 @@ $doctype 5
                     <tr>
                         <th>Nachname
                         <th><div id="lastname">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwordModal">
+                  Passwort ändern
+
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen
+
+<div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h4 class="modal-title">
+                   <i class="fa fa-lock"></i>
+                   Passwort ändern
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <th>Altes Passwort
+                        <th><input type="password">
+                    <tr>
+                        <th>Neues Passwort
+                        <th><input type="password">
+                    <tr>
+                        <th>Passwort wiederholen
+                        <th><input type="password">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Ändern
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen
