@@ -24,7 +24,11 @@ $(document).ready(function() {
                     for (var u in d) {
                         addRow(d[u]);
                     }
-                 }
+                    document.getElementById("lastUpdate").innerHTML = "Zuletzt aktualisiert um " + moment().format("H:mm");
+                 },
+                 error: function(xhr, status, text) {
+                    seterror("Es scheint der Server antwortet nicht.");
+                }
         });
     });
 });

@@ -40,4 +40,4 @@
                         <th>Bearbeiten
                 <tbody>
     <div class="box-footer">
-        Zuletzt aktualisiert um XX.XX
+        <p id="lastUpdate">
