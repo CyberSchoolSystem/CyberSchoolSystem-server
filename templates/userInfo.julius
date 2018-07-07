@@ -25,6 +25,7 @@ $(document).ready(function() {
                         addRow(d[u]);
                     }
                     document.getElementById("lastUpdate").innerHTML = "Zuletzt aktualisiert um " + moment().format("H:mm");
+                    clrerror();
                  },
                  error: function(xhr, status, text) {
                     seterror("Es scheint der Server antwortet nicht.");
@@ -54,6 +55,7 @@ function delUser(u) {
                         seterror(d['error'][i]['msg']);
                     }
                 } else {
+                    clrerror();
                     setmsg("okay");
                 }
              }
