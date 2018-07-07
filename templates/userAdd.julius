@@ -39,7 +39,7 @@ $(document).ready(function() {
                     }
                  },
                  success: function (d) {
-                    if (d == null) {
+                    if (d.error == null) {
                         $("#addForm")[0].reset();
                         setmsg("Okay");
                     } else {
