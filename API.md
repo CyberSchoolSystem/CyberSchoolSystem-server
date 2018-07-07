@@ -24,7 +24,7 @@
 |`/api/user/grade/add` | POST | `application/json` | "grade" | "gradeId" or error |
 |`/api/user/grade/info` | GET | | | `[ { "id": gradeId, "name": grade } ] ` |
 |`/api/user/grade/remove` | POST | `application/json` | "gradeId" | "error" |
-|`/api/user/self/setpw` | POST | `application/json` | "password" | "error" |
+|`/api/user/self/setpw` | POST | `application/json` | "newPW", "oldPW" | "error" |
 |`/api/user/self/info` | GET | | | "userPriv" |
 
 
@@ -42,6 +42,10 @@
 `idUsername`: String
 
 `password`: String
+
+`newPW`: String
+
+`oldPW`: String
 
 `vid`: String
 

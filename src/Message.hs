@@ -12,10 +12,12 @@ data Message = AlreadyDone Object
              | TimedOut Object
              | Unknown Object
              | NotUnique Object
+             | Wrong Object
 
 data Object = Vote
             | Username
             | User
+            | Password
             | Border
             | Grade
 
@@ -31,3 +33,5 @@ fromMessage (AlreadyDone Border) = "Der User ist bereits auf dieser Seite der Gr
 
 fromMessage (NotUnique Grade) = "Diese Klasse existiert bereits!"
 fromMessage (Unknown Grade) = "Diese Klasse existiert nicht. Bitte lade die seite neu!"
+
+fromMessage (Wrong Password) = "Falsches Passwort. Bitte versuche es erneut!"

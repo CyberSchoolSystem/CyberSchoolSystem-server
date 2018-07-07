@@ -26,7 +26,7 @@ import qualified Message                as M
 import           Model
 import           Text.HTML.SanitizeXSS  (sanitizeBalance)
 import           Yesod.Auth             (requireAuthId)
-import           Yesod.Auth.HashDB      (setPassword)
+import           Yesod.Auth.HashDB      (setPassword, validatePass)
 import           Yesod.Auth.Util.PasswordStore (makePassword)
 import           Yesod.Core.Json        (requireJsonBody)
 import           Yesod.Persist.Core
@@ -68,6 +68,7 @@ data UpdateUserReq = UpdateUserReq
 
 data UpdatePwReq = UpdatePwReq
     { newPw :: Text
+    , oldPw :: Text
     }
 
 instance FromJSON AddUserReq where
@@ -106,7 +107,9 @@ instance FromJSON UpdateUserReq where
     parseJSON invalid = typeMismatch "UpdateUserReq" invalid
 
 instance FromJSON UpdatePwReq where
-    parseJSON (Object v) = UpdatePwReq <$> v .: "password"
+    parseJSON (Object v) = UpdatePwReq
+        <$> v .: "newPW"
+        <*> v .: "oldPW"
     parseJSON invalid = typeMismatch "UpdateUserReq" invalid
 
 instance ToJSON (AdminResp User) where
@@ -239,7 +242,12 @@ postApiUserSelfSetPwR = do
     auth <- requireAuthId
     user <- runDB $ selectFirst [UserId ==. auth] []
     case user of
-        Just _ -> do
-            runDB $ update auth [UserPassword =. (Just $ password)]
-            return . toJSON $ (E.ENull :: E.Error Value)
+        Just u -> updateWithPW u (oldPw req) password
         Nothing -> return . toJSON . E.Unknown (M.fromMessage $ M.Unknown M.User) $ [("username", user)]
+
+updateWithPW :: Entity User -> Text -> Text -> Handler Value
+updateWithPW user old password
+    | validatePass (entityVal user) old == Just True = do
+        runDB $ update (entityKey user) [UserPassword =. (Just password)]
+        return . toJSON $ (E.ENull :: E.Error Value)
+    | otherwise = return . toJSON . E.Wrong (M.fromMessage $ M.Wrong M.Password) $ [("oldPW", old)]

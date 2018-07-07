@@ -14,6 +14,7 @@ data Error a = MissingField Msg [Field]
              | AlreadyDone Msg [(Field, a)]
              | Unknown Msg [(Field, a)]
              | NotUnique Msg [(Field, a)]
+             | Wrong Msg [(Field, a)]
              | NotFound Msg
              | InternalError Msg Text -- 500
              | InvalidArgs Msg [Text] -- 400
@@ -34,6 +35,7 @@ instance ToJSON a => ToJSON (Error a) where
     toJSON (NotAuthenticated t)   = wrap $ object ["notAuthenticated" .= object ["msg" .= t]]
     toJSON (PermissionDenied t f) = wrap $ object ["permissionDenied" .= object ["msg" .= t, "info" .= f]]
     toJSON (BadMethod t f)        = wrap $ object ["badMethod" .= object ["msg" .= t, "info" .= f]]
+    toJSON (Wrong t f)            = wrap $ object ["wrong" .= errorField t f]
     toJSON ENull                  = wrap Null
 
 errorField :: ToJSON a => Text -> a -> Value

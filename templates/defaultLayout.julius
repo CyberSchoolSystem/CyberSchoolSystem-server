@@ -23,7 +23,6 @@ function clrerror() {
 function nameToGradeId(n) {
     for (var obj in classes) {
         if (classes[obj]["name"] == n) {
-            console.log(classes[obj]);
             return classes[obj]["id"];
         }
     }
@@ -86,6 +85,37 @@ if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('
 
 $(document).ready(function () {
     loadProfile();
+    $("#submitPW").click( function() {
+        var doc = document.getElementById("changePWForm");
+        if (doc["newPW"].value != doc["newPWrep"].value) {
+            seterror("Passwörter stimmen nicht überein");
+            return;
+        }
+        var data = { oldPW: doc["oldPW"].value,
+                     newPW: doc["newPW"].value }
+        $.ajax({ url: "@{ApiUserSelfSetPwR}",
+                 type: "POST",
+                 data: JSON.stringify(data),
+                 contentType: "application/json",
+                 dataType: "json",
+                 statusCode: {
+                    400: function () {
+                        alert("Malformed json. Please report bug");
+                    }
+                 },
+                 success: function (d) {
+                    if (d['error'] == null) {
+                        $("#changePWForm")[0].reset();
+                        setmsg("Okay");
+                        clrerror();
+                    } else {
+                        for(var i in d['error']) {
+                            seterror(d['error'][i]['msg']);
+                        }
+                    }
+                 }
+        });
+    });
 });
 
 function loadProfile() {
@@ -101,7 +131,6 @@ function loadProfile() {
 }
 
 function showProfile(d){
-    console.log(d);
     $("#firstname")[0].innerHTML = d["firstName"];
     $("#lastname")[0].innerHTML = d["lastName"];
 }
