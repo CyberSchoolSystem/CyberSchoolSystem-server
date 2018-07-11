@@ -32,6 +32,7 @@ Vote json
     title Text
     description Text
     voted [UserId]
+    creator UserId
     choices [Choice]
     endOfLife UTCTime
     deriving Show Eq

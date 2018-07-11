@@ -207,13 +207,15 @@ isActive Vote{voteEndOfLife = v} = do
 postApiVoteAddR :: Handler Value
 postApiVoteAddR = do
     inp <- requireJsonBody :: Handler ApiVoteAdd
-    _ <- runDB $ insert (addToVote inp)
+    auth <- requireAuthId
+    _ <- runDB $ insert (addToVote auth inp)
     return $ toJSON (E.ENull :: E.Error Value)
 
 {-| Transform ApiVoteAdd request to database entity -}
-addToVote :: ApiVoteAdd -> Vote
-addToVote v = Vote {
+addToVote :: UserId -> ApiVoteAdd -> Vote
+addToVote u v = Vote {
     voteDescription = addDesc v,
+    voteCreator = u,
     voteTitle = addTitle v,
     voteVoted = [],
     voteEndOfLife = zonedTimeToUTC $ addEOL v,
