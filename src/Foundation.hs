@@ -43,6 +43,7 @@ data App = App
     { appSettings :: AppSettings
     , appConnPool :: ConnectionPool
     , appStatic   :: Static
+    , appHostname :: String
     }
 
 mkYesodData "App" $(parseRoutesFile "config/routes")
@@ -118,6 +119,7 @@ instance Yesod App where -- TODO: SSL
         mmsg <- getMessage
         let motd = appMOTD . appSettings $ app
             hasMotd = motd /= ""
+            hostname = appHostname app
             css =
                 if (appReload . appSettings $ app)
                     then toWidget $(luciusFileReload "templates/defaultLayout.lucius")

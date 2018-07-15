@@ -150,6 +150,8 @@ $doctype 5
                     ^{bodyTags}
             <footer class="main-footer">
                 <div class="pull-right hidden-xs">
+                    <b>Provided by:
+                    #{hostname}
                     <b>Version
                     #{showVersion version}
                 <strong>&copy; CyberSchoolSystem <a href="https://github.com/CyberSchoolSystem">GitHub</a>

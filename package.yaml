@@ -91,6 +91,7 @@ library:
     - data-default-class
     - file-embed
     - hjsmin
+    - hostname
     - http-conduit
     - http-types
     - persistent-template

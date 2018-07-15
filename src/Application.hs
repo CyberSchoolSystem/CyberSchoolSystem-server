@@ -13,6 +13,7 @@ module Application
 import           Database.Persist.MongoDB
 import           Foundation
 import           Handler
+import           Network.HostName (getHostName)
 import           Settings
 import           Model
 import           Yesod.Auth
@@ -25,6 +26,7 @@ mkYesodDispatch "App" resourcesApp
 mkFoundation :: AppSettings -> IO App
 mkFoundation appSettings = do
     appConnPool <- createPoolConfig $ appDatabaseConf appSettings
+    appHostname <- getHostName
     appStatic <- (if appReload appSettings then staticDevel else static)
                  (appStaticDir appSettings)
 
