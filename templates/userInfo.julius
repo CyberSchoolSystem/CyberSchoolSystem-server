@@ -32,6 +32,38 @@ $(document).ready(function() {
                 }
         });
     });
+    $("#submitEditUser").click( function() {
+      var doc = document.getElementById("editModalForm");
+      var data = {  idUsername: doc["editModalUsername"].value,
+                    password: doc["editModalPassword"].value };
+      console.log(data);
+
+      $.ajax({ url: "@{ApiUserUpdateR}",
+               type: "POST",
+               data: JSON.stringify(data),
+               contentType: "application/json",
+               dataType: "json",
+               statusCode: {
+                  400: function () {
+                      alert("Malformed json. Please report bug");
+                  }
+               },
+               success: function (d) {
+                  if (d['error'] == null) {
+                      $("#editModalForm")[0].reset();
+                      setmsg("Okay");
+                      clrerror();
+                  } else {
+                      for(var i in d['error']) {
+                          seterror(d['error'][i]['msg']);
+                      }
+                  }
+               }
+      });
+
+
+      $('#editUser').modal('hide');
+    });
 });
 function loadUserInfo(u){
     loadGrades();
@@ -48,14 +80,18 @@ function loadUserInfo(u){
              },
              success: function (d) {
                 clrerror();
-                console.log(d);
-                document.getElementById('editModalVorname').innerHTML = d[0]["firstName"];
-                document.getElementById('editModalNachname').innerHTML = d[0]["lastName"];
-                document.getElementById('editModalUsername').innerHTML = d[0]["username"];
-                document.getElementById('editModalKlasse').innerHTML = gradeIdToName(d[0]["gradeId"]);
+                document.getElementById('editModalVorname').value = d[0]["firstName"];
+                document.getElementById('editModalNachname').value = d[0]["lastName"];
+                document.getElementById('editModalUsername').value = d[0]["username"];
+                document.getElementById('editModalKlasse').value = gradeIdToName(d[0]["gradeId"]);
              },
              error: function(xhr, status, text) {
                 seterror("Es scheint der Server antwortet nicht.");
+                document.getElementById('editModalVorname').value = "";
+                document.getElementById('editModalNachname').value = "";
+                document.getElementById('editModalUsername').value = "";
+                document.getElementById('editModalKlasse').value = "";
+                $('#editUser').modal('hide');
             }
     });
 }
