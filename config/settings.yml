@@ -6,9 +6,12 @@ dummyLogin: "_env:DUMMY:False"
 reloadeMode: "_env:RELOAD:False"
 loginMinutes: "_env:LOGIN_TIME:120"
 staticDir: "_env:STATIC:static/"
-motd: "_env:MODT:Dies ist eine Testwahl"
+motd: "_env:MODT:"
 
 database:
   host: "_env:DB_IP:127.0.0.1"
   database: "_env:DB_COLLECTION:CyberSchoolSystem"
   connections: "_env:DB_CONNECTIONS:10"
+  port: "_env:DB_PORT:27017"
+  user: "_env:DB_USER"
+  password: "_env:DB_PASSWORD"
