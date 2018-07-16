@@ -33,8 +33,34 @@ $(document).ready(function() {
         });
     });
 });
+function loadUserInfo(u){
+    loadGrades();
+    var data = {username: u};
+    $.ajax({ url: "@{ApiUserInfoR}",
+             type: "POST",
+             data: JSON.stringify(data),
+             contentType: "application/json",
+             dataType: "json",
+             statusCode: {
+                400: function () {
+                    alert("Malformed json. Please report bug");
+                }
+             },
+             success: function (d) {
+                clrerror();
+                console.log(d);
+                document.getElementById('editModalVorname').innerHTML = d[0]["firstName"];
+                document.getElementById('editModalNachname').innerHTML = d[0]["lastName"];
+                document.getElementById('editModalUsername').innerHTML = d[0]["username"];
+                document.getElementById('editModalKlasse').innerHTML = gradeIdToName(d[0]["gradeId"]);
+             },
+             error: function(xhr, status, text) {
+                seterror("Es scheint der Server antwortet nicht.");
+            }
+    });
+}
 
-function delUser(u) {
+function delUser(u){
     clrmsg();
     clrerror();
     var data = { idUsername: u };
@@ -62,11 +88,19 @@ function delUser(u) {
     });
 }
 
+function editUser(u){
+  clrmsg();
+  clrerror();
+  loadUserInfo(u);
+  $('#editUser').modal('show');
+}
+
 function addRow(d) {
     var roles = d["roles"];
     delete d["roles"]
     var u = Object.assign(d, roles),
-        button = "<button class='btn btn-danger' onclick=delUser('" + d["username"] + "')><i class='fa fa-trash'></i></button>",
+        buttondel = "<button class='btn btn-danger' onclick=delUser('" + d["username"] + "')><i class='fa fa-trash'></i></button>",
+        buttonedit = "<button class='btn btn-warning' onclick=editUser('" + d["username"] + "')><i class='fa fa-edit'></i></button>",
         mk = "<tr><td>" + u["firstName"] +
             "</td><td>" + u["lastName"] +
             "</td><td>" + u["username"] +
@@ -78,8 +112,9 @@ function addRow(d) {
             "</td><td>" + ( u["representative"] == true ? "<i class='glyphicon glyphicon-ok'></i>" : "<i class='glyphicon glyphicon-remove'></i>" ) +
             "</td><td>" + ( u["customs"] == true ? "<i class='glyphicon glyphicon-ok'></i>" : "<i class='glyphicon glyphicon-remove'></i>" ) +
             "</td><td>" + ( u["tech"] == true ? "<i class='glyphicon glyphicon-ok'></i>" : "<i class='glyphicon glyphicon-remove'></i>" ) +
-            "</td><td>" + button +
-            "</td><td><button class='btn btn-warning'><i class='fa fa-edit'></i></button></td></tr>";
+            "</td><td>" + buttonedit +
+            "</td><td>" + buttondel +
+            "</td></tr>";
     $("#result tbody").append(mk);
 }
 

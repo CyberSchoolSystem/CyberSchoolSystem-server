@@ -206,3 +206,39 @@ $doctype 5
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" value="Submit" id="submitPW">Ändern
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen
+<!-- Edit user modal -->
+<div id="editUser" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+               <h4 class="modal-title">
+                 <i class="fa fa-edit"></i>
+                 Benutzer bearbeiten
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;
+            <form name="form" id="changePWForm">
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <th>Vorname:
+                        <th>
+                            <p id="editModalVorname">
+                    <tr>
+                        <th>Nachname:
+                        <th>
+                            <p id="editModalNachname">
+                    <tr>
+                        <th>Username:
+                        <th>
+                            <p id="editModalUsername">
+                    <tr>
+                        <th>Klasse:
+                        <th>
+                            <p id="editModalKlasse">
+                    <tr>
+                        <th>Neues Passwort
+                        <th>
+                            <input type="password" name="password">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" value="Submit" id="submitEditUser">Ändern
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen

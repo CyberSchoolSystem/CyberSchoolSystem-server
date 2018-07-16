@@ -36,8 +36,8 @@
                         <th>Abgeordneter
                         <th>Zollbeamter
                         <th>Techniker
-                        <th>Löschen
                         <th>Bearbeiten
+                        <th>Löschen
                 <tbody>
     <div class="box-footer">
         <p id="lastUpdate">
