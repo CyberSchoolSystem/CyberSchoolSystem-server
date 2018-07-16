@@ -88,7 +88,9 @@ $(document).ready(function () {
     $("#submitPW").click( function() {
         var doc = document.getElementById("changePWForm");
         if (doc["newPW"].value != doc["newPWrep"].value) {
-            seterror("Passwörter stimmen nicht überein");
+            $('#passwordModal').modal('hide');
+            $('#profilModal').modal('hide');
+            seterror("Passwörter stimmen nicht überein.");
             return;
         }
         var data = { oldPW: doc["oldPW"].value,
@@ -106,12 +108,16 @@ $(document).ready(function () {
                  success: function (d) {
                     if (d['error'] == null) {
                         $("#changePWForm")[0].reset();
-                        setmsg("Okay");
+                        setmsg("Passwort erfolgreich geändert.");
                         clrerror();
+                        $('#passwordModal').modal('hide');
+                        $('#profilModal').modal('hide');
                     } else {
                         for(var i in d['error']) {
                             seterror(d['error'][i]['msg']);
                         }
+                        $('#passwordModal').modal('hide');
+                        $('#profilModal').modal('hide');
                     }
                  }
         });
