@@ -19,7 +19,7 @@
 |-----|----------------|-------------------|---------------------|------|
 |`/api/user/add`| POST | `application/json` | "firstName", "lastName", "gradeId", "username", "role" <br> Optional: "password" | "error" |
 |`/api/user/remove` | POST | `application/json` | "username" | "error" |
-|`/api/user/update` | POST | `application/json` | "idUsername" <br> Optional: "firstName", "lastName", "gradeId", "username", "password" | "error" |
+|`/api/user/update` | POST | `application/json` | "idUsername" <br> Optional: "firstName", "lastName", "gradeId", "username", "password", "role" | "error" |
 |`/api/user/info` | POST | `application/json` | Optional: "firstName", "lastName", "gradeId", "username" | `[ user ]` |
 |`/api/user/grade/add` | POST | `application/json` | "grade" | "gradeId" or error |
 |`/api/user/grade/info` | GET | | | `[ { "id": gradeId, "name": grade } ] ` |
