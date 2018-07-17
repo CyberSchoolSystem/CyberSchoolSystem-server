@@ -67,10 +67,11 @@ instance Yesod App where -- TODO: SSL
             content
         where
             genFileName l = "autogen-" ++ base64md5 l
-    makeSessionBackend _ = fmap Just $
+    makeSessionBackend app = fmap Just $
         defaultClientSessionBackend
-            (appLoginMinutes $ compileTimeAppSettings)
-            "client_session_key.aes"
+            (appLoginMinutes settings)
+            (appKeyFile settings)
+        where settings = appSettings app
 
 #ifndef NO_AUTH
     isAuthorized (StaticR _) _ = return Authorized
