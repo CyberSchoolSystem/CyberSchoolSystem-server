@@ -3,7 +3,7 @@ services:
   web:
     image: f4814n/css-server:latest
     deploy:
-      replicas: 1
+      replicas: 4
       resources:
         limits:
           cpus: "0.3"
@@ -12,15 +12,21 @@ services:
         condition: on-failure
     environment:
       DB_IP: "mongo"
+      KEY_FILE: "/app/key/keyfile"
     ports:
       - "3000:3000"
     networks:
       - webnet
+    volumes:
+      - "key:/app/key"
 
   mongo:
     image: mongo:latest
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
       resources:
         limits:
           cpus: "0.3"
@@ -28,6 +34,8 @@ services:
       restart_policy:
         condition: on-failure
     command: ["mongod", "--dbpath", "/data/db"]
+    ports:
+      - "27017:27017"
     volumes:
       - "database:/data/db"
     networks:
@@ -36,7 +44,7 @@ services:
   monitor:
     image: dockersamples/visualizer:stable
     deploy:
-      replicas: 1
+      replicas: 2
       resources:
         limits:
           cpus: "0.05"
@@ -55,3 +63,4 @@ networks:
 
 volumes:
   database:
+  key:
