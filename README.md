@@ -11,3 +11,7 @@ Flags:
 
 ## Notes
 Open /api/joke/random to add a JESUS user
+
+## Licensing
+This project is licensed under the MIT license (s LICENSE.md).
+The Gymnasium Weigarten logo (static/img/GW_log.png) is owned by the Gymnasium Weingarten.
