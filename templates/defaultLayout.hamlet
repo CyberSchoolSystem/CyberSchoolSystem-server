@@ -209,6 +209,7 @@ $doctype 5
 <!-- Edit user modal -->
 <div id="editUser" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
     <form name="editModalForm" id="editModalForm">
+        <input type="hidden" name="editModalidUsername" id="editModalidUsername" value="">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -216,7 +217,7 @@ $doctype 5
                         <i class="fa fa-edit"></i>
                         Benutzer bearbeiten
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;
+                            <span aria-hidden="true">&times;
                 <div class="modal-body">
                     <table class="table">
                         <tr>
@@ -234,7 +235,29 @@ $doctype 5
                         <tr>
                             <th>Klasse:
                             <th>
-                                <input type="text" name="editModalKlasse" id="editModalKlasse">
+                                <select name="editModalKlasse" id="editModalKlasse" class="form-control">
+                        <tr>
+                            <th>Rollen:
+                            <th>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="editModalcitizen" id="editModalcitizen" value="citizen">
+                                    <label class="form-check-label" for="rolle">Bürger
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="editModalcustoms" id="editModalcustoms" value="customs">
+                                    <label class="form-check-label" for="rolle">Zollbeamter
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="editModalrepresentative" id="editModalrepresentative" value="representative">
+                                    <label class="form-check-label" for="rolle">Abgeordneter
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="editModalteacher" id="editModalteacher" value="teacher">
+                                    <label class="form-check-label" for="rolle">Klassenlehrer
+                                    <select name="editModalteachGrade" id="editModalteachGrade" class="form-control" disabled="disabled">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="editModaladmin" id="editModaladmin" value="admin">
+                                    <label class="form-check-label" for="rolle">Administrator
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="editModaltech" id="editModaltech" value="tech">
+                                    <label class="form-check-label" for="rolle">Techniker
                         <tr>
                             <th>Neues Passwort
                             <th>

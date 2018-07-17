@@ -2,6 +2,15 @@
 
 $(document).ready(function() {
     loadGrades();
+
+    $("#editModalteacher").change( function() {
+        if(this.checked) {
+            $("#editModalteachGrade").prop('disabled', false);
+        } else {
+            $("#editModalteachGrade").prop('disabled', true);
+        }
+    });
+
     $("#submit").click( function() {
         var doc = document.getElementById("infoForm");
         var data = { firstName: doc["firstName"].value,
@@ -24,7 +33,7 @@ $(document).ready(function() {
                     for (var u in d) {
                         addRow(d[u]);
                     }
-                    document.getElementById("lastUpdate").innerHTML = "Zuletzt aktualisiert um " + moment().format("H:mm");
+                    document.getElementById("lastUpdate").innerHTML = "Zuletzt aktualisiert um " + moment().format("H:mm") + " Uhr.";
                     clrerror();
                  },
                  error: function(xhr, status, text) {
@@ -34,9 +43,38 @@ $(document).ready(function() {
     });
     $("#submitEditUser").click( function() {
       var doc = document.getElementById("editModalForm");
-      var data = {  idUsername: doc["editModalUsername"].value,
-                    password: doc["editModalPassword"].value };
-      console.log(data);
+      if (doc["editModalteacher"].checked == false) {
+          var teach = null;
+      } else {
+          var teach = nameToGradeId(doc["editModalteachGrade"].value);
+      }
+      if(doc["editModalPassword"].value == ""){
+          var data = {  idUsername: doc["editModalidUsername"].value,
+                        username: doc["editModalUsername"].value,
+                        firstName: doc["editModalVorname"].value,
+                        lastName: doc["editModalNachname"].value,
+                        gradeId: nameToGradeId(doc["editModalKlasse"].value),
+                        role: { admin: doc["editModaladmin"].checked,
+                                citizen: doc["editModalcitizen"].checked,
+                                teacher: teach,
+                                customs: doc["editModalcustoms"].checked,
+                                tech: doc["editModaltech"].checked,
+                                representative: doc["editModalrepresentative"].checked } };
+      }
+      else{
+        var data = {  idUsername: doc["editModalidUsername"].value,
+                      username: doc["editModalUsername"].value,
+                      firstName: doc["editModalVorname"].value,
+                      lastName: doc["editModalNachname"].value,
+                      gradeId: nameToGradeId(doc["editModalKlasse"].value),
+                      role: { admin: doc["editModaladmin"].checked,
+                              citizen: doc["editModalcitizen"].checked,
+                              teacher: teach,
+                              customs: doc["editModalcustoms"].checked,
+                              tech: doc["editModaltech"].checked,
+                              representative: doc["editModalrepresentative"].checked },
+                      password: doc["editModalPassword"].value };
+      }
 
       $.ajax({ url: "@{ApiUserUpdateR}",
                type: "POST",
@@ -51,7 +89,8 @@ $(document).ready(function() {
                success: function (d) {
                   if (d['error'] == null) {
                       $("#editModalForm")[0].reset();
-                      setmsg("Okay");
+                      setmsg("Benutzer bearbeitet.");
+                      document.getElementById("submit").click();
                       clrerror();
                   } else {
                       for(var i in d['error']) {
@@ -83,14 +122,32 @@ function loadUserInfo(u){
                 document.getElementById('editModalVorname').value = d[0]["firstName"];
                 document.getElementById('editModalNachname').value = d[0]["lastName"];
                 document.getElementById('editModalUsername').value = d[0]["username"];
+                document.getElementById('editModalidUsername').value = d[0]["username"];
                 document.getElementById('editModalKlasse').value = gradeIdToName(d[0]["gradeId"]);
+                document.getElementById("editModaladmin").checked = d[0]["roles"]["admin"];
+                document.getElementById("editModalrepresentative").checked = d[0]["roles"]["representative"];
+                document.getElementById("editModalcitizen").checked = d[0]["roles"]["citizen"];
+                document.getElementById("editModalteacher").checked = d[0]["roles"]["teacher"];
+                document.getElementById("editModaltech").checked = d[0]["roles"]["tech"];
+                document.getElementById("editModalcustoms").checked = d[0]["roles"]["customs"];
+                if(d[0]["roles"]["teacher"]){
+                    document.getElementById('editModalteachGrade').value = gradeIdToName(d[0]["roles"]["teacher"]);
+                }
              },
              error: function(xhr, status, text) {
                 seterror("Es scheint der Server antwortet nicht.");
                 document.getElementById('editModalVorname').value = "";
                 document.getElementById('editModalNachname').value = "";
                 document.getElementById('editModalUsername').value = "";
+                document.getElementById('editModalidUsername').value = "";
                 document.getElementById('editModalKlasse').value = "";
+                document.getElementById('editModalteachGrade').value = "";
+                document.getElementById("editModaladmin").checked = false;
+                document.getElementById("editModalrepresentative").checked = false;
+                document.getElementById("editModalcitizen").checked = false;
+                document.getElementById("editModalteacher").checked = false;
+                document.getElementById("editModaltech").checked = false;
+                document.getElementById("editModalcustoms").checked = false;
                 $('#editUser').modal('hide');
             }
     });
@@ -118,7 +175,8 @@ function delUser(u){
                     }
                 } else {
                     clrerror();
-                    setmsg("okay");
+                    setmsg("Benutzer gelöscht.");
+                    document.getElementById("submit").click();
                 }
              }
     });
@@ -172,9 +230,12 @@ function loadGrades() {
              dataType: "json",
              success: function (d) {
                  classes = d;
+                 $("#editModalteachGrade")[0].innerHTML = "";
+                 $("#editModalKlasse")[0].innerHTML = "";
                  for (var obj in d) {
                     var newVal = "<option>" + d[obj]["name"] + "</option>";
-                    $("#klasse")[0].innerHTML += newVal;
+                    $("#editModalteachGrade")[0].innerHTML += newVal;
+                    $("#editModalKlasse")[0].innerHTML += newVal;
                  }
              }
     });
