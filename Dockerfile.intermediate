@@ -1,0 +1,5 @@
+FROM fpco/stack-build:lts-10.4 as builder
+WORKDIR /app
+ADD . /app
+RUN stack build
+RUN rm -r /app

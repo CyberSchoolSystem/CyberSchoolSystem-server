@@ -1,4 +1,4 @@
-FROM fpco/stack-build:lts-10.4 as builder
+FROM f4814n/css-intermediate:latest as builder
 WORKDIR /app
 ADD . /app
 RUN stack install
