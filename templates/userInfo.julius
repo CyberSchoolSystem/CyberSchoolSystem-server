@@ -11,36 +11,10 @@ $(document).ready(function() {
         }
     });
 
-    $("#submit").click( function() {
-        var doc = document.getElementById("infoForm");
-        var data = { firstName: doc["firstName"].value,
-                     lastName: doc["lastName"].value,
-                     username: doc["username"].value,
-                     grade: nameToGradeId(doc["grade"].value)};
-        filter(data);
-        $.ajax({ url: "@{ApiUserInfoR}",
-                 type: "POST",
-                 data: JSON.stringify(data),
-                 contentType: "application/json",
-                 dataType: "json",
-                 statusCode: {
-                    400: function () {
-                        alert("Malformed json. Please report bug");
-                    }
-                 },
-                 success: function (d) {
-                    $('#result tbody').empty();
-                    for (var u in d) {
-                        addRow(d[u]);
-                    }
-                    document.getElementById("lastUpdate").innerHTML = "Zuletzt aktualisiert um " + moment().format("H:mm") + " Uhr.";
-                    clrerror();
-                 },
-                 error: function(xhr, status, text) {
-                    seterror("Es scheint der Server antwortet nicht.");
-                }
-        });
-    });
+    $("#submit").click(searchUser);
+    // $("#infoForm").oninput(searchUser);
+    document.getElementById('infoForm').oninput = searchUser;
+
     $("#submitEditUser").click( function() {
       var doc = document.getElementById("editModalForm");
       if (doc["editModalteacher"].checked == false) {
@@ -149,6 +123,37 @@ function loadUserInfo(u){
                 document.getElementById("editModaltech").checked = false;
                 document.getElementById("editModalcustoms").checked = false;
                 $('#editUser').modal('hide');
+            }
+    });
+}
+
+function searchUser() {
+    var doc = document.getElementById("infoForm");
+    var data = { firstName: doc["firstName"].value,
+                    lastName: doc["lastName"].value,
+                    username: doc["username"].value,
+                    grade: nameToGradeId(doc["grade"].value)};
+    filter(data);
+    $.ajax({ url: "@{ApiUserInfoR}",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                statusCode: {
+                400: function () {
+                    alert("Malformed json. Please report bug");
+                }
+                },
+                success: function (d) {
+                $('#result tbody').empty();
+                for (var u in d) {
+                    addRow(d[u]);
+                }
+                document.getElementById("lastUpdate").innerHTML = "Zuletzt aktualisiert um " + moment().format("H:mm") + " Uhr.";
+                clrerror();
+                },
+                error: function(xhr, status, text) {
+                seterror("Es scheint der Server antwortet nicht.");
             }
     });
 }

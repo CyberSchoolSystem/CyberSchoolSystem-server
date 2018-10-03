@@ -18,6 +18,7 @@ import           Data.Text              (Text)
 import qualified Data.Text              as T
 import           Data.Text.Encoding     (decodeUtf8, encodeUtf8)
 import           Database.Persist       ((==.), (=.))
+import           Database.Persist.MongoDB ((=~.), MongoRegex())
 import           Database.Persist.Class (insert_, selectFirst, delete, update, selectList)
 import           Database.Persist.Types (Filter, Entity(..), Update)
 import qualified Error                  as E
@@ -219,11 +220,15 @@ postApiUserInfoR = do
 
 {-| Create a database filter from a info request -}
 infoToFilter :: InfoUserReq -> [Filter User]
-infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName ==.) <$> T.toLower <$> infoFirstName
-                                         , (UserLastName ==.) <$> T.toLower <$> infoLastName
+infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName =~.) . toMongoRegex <$> infoFirstName
+                                         , (UserLastName =~.) . toMongoRegex <$> infoLastName
                                          , (UserGrade ==.) <$> infoGrade
-                                         , (UserUsername ==.) <$> infoUsername
+                                         , (UserUsername =~.) . toMongoRegex <$> infoUsername
                                          , (UserRoles ==.) <$> infoRole ]
+
+{-| Create Regex from text |-}
+toMongoRegex :: Text -> MongoRegex
+toMongoRegex t = (t, "ims")
 
 {-| Get information about the current user -}
 getApiUserSelfInfoR :: Handler Value
