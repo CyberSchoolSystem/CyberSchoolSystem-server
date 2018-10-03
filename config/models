@@ -36,3 +36,5 @@ Vote json
     choices [Choice]
     endOfLife UTCTime
     deriving Show Eq
+Migration
+    name Text

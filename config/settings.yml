@@ -7,7 +7,7 @@ reloadeMode: "_env:RELOAD:False"
 loginMinutes: "_env:LOGIN_TIME:120"
 staticDir: "_env:STATIC:static/"
 motd: "_env:MODT:"
-keyFile: "_env:KEY_FILE"
+keyFile: "_env:KEY_FILE:client_session_key.aes"
 
 database:
   host: "_env:DB_IP:127.0.0.1"

@@ -147,8 +147,8 @@ postApiUserAddR = do
 {-| Transform a request to a User -}
 addToUser :: AddUserReq -> User
 addToUser AddUserReq{..} = User
-    { userFirstName = addFirstName
-    , userLastName = addLastName
+    { userFirstName = T.toLower addFirstName
+    , userLastName = T.toLower addLastName
     , userGrade = addGrade
     , userUsername = T.toLower addUsername
     , userPassword = Just $ addPassword -- TODO: Hash
@@ -198,8 +198,8 @@ updateToUpdate UpdateUserReq{..} = do
     pw <- case updatePassword of
                 Just u -> Just <$> makePassword' u 14
                 Nothing -> return Nothing
-    return $ catMaybes [ (UserFirstName =.) <$> updateFirstName
-                       , (UserLastName =.) <$> updateLastName
+    return $ catMaybes [ (UserFirstName =.) <$> T.toLower <$> updateFirstName
+                       , (UserLastName =.) <$> T.toLower <$> updateLastName
                        , (UserGrade =.) <$> updateGrade
                        , (UserUsername =.) <$> (T.toLower <$> updateUsername)
                        , (UserPassword =.) <$> Just <$> pw
@@ -219,8 +219,8 @@ postApiUserInfoR = do
 
 {-| Create a database filter from a info request -}
 infoToFilter :: InfoUserReq -> [Filter User]
-infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName ==.) <$> infoFirstName
-                                         , (UserLastName ==.) <$> infoLastName
+infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName ==.) <$> T.toLower <$> infoFirstName
+                                         , (UserLastName ==.) <$> T.toLower <$> infoLastName
                                          , (UserGrade ==.) <$> infoGrade
                                          , (UserUsername ==.) <$> infoUsername
                                          , (UserRoles ==.) <$> infoRole ]
