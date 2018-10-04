@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    image: f4814n/css-server:latest
+    image: f4814n/css-server:v1.0.3
     deploy:
       replicas: 4
       resources:
@@ -14,7 +14,8 @@ services:
       DB_IP: "mongo"
       KEY_FILE: "/app/key/keyfile"
     ports:
-      - "3000:3000"
+      - "80:80"
+      - "443:443"
     networks:
       - webnet
     volumes:
