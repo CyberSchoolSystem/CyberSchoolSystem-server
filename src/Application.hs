@@ -10,11 +10,9 @@ module Application
     , mkFoundation
     ) where
 
-import           Control.Monad (forM)
 import           Database.Persist.MongoDB
 import           Foundation
 import           Handler
-import           Migration
 import           Network.HostName (getHostName)
 import           Settings
 import           Model
@@ -42,8 +40,6 @@ appMain :: IO ()
 appMain = do
     settings <- loadYamlSettings [configSettingsYml] [] useEnv
     foundation <- mkFoundation settings
-    -- (runMigrator $ runDBwithApp foundation) <$> migrationData
-    _ <- migrationData `forM` (runMigrator $ runDBWithApp foundation)
     runDBWithApp foundation $ do
         r <- selectFirst [UserUsername !=. ""] []
         case r of

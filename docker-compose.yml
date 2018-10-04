@@ -21,7 +21,7 @@ services:
       - "key:/app/key"
 
   mongo:
-    image: mongo:latest
+    image: mongo:4.0
     deploy:
       mode: global
       placement:
