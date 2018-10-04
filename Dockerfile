@@ -3,10 +3,10 @@ WORKDIR /app
 ADD . /app
 RUN stack install
 
-FROM nginx:16.04
+FROM nginx:latest
 WORKDIR /app
 COPY --from=builder /root/.local/bin/server /app/
-COPY --from=builder /app/scripts/startReverseProxy.sh
+COPY --from=builder /app/scripts /app/scripts
 COPY --from=builder /app/config /app/config
 COPY --from=builder /app/static /app/static
 RUN apt update

@@ -5,8 +5,11 @@ then
     echo "Found certificate"
 else
     echo "Generating certificate"
-    openssl req -x509 -newkey rsa:4096 -keyout /cert/key.pem -out /cert/cert.pem -days 365 -nodes
-exit
+    mkdir /cert -p
+    openssl req -x509 -newkey rsa:4096 -keyout /cert/key.pem \
+         -out /cert/cert.pem -days 365 -nodes \
+         -subj "/C=DE/ST=Baden Württemberg/L=Loc/O=Schule Als Staat/OU=Wahlsystem/CN=fred-sas/emailAddress=noname"
+fi
 
 nginx -c /app/config/nginx.conf
 /app/server

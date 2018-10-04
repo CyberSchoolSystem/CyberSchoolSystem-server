@@ -39,7 +39,7 @@ runMigrator runDB migration = runDB $ do
 lowercaseUserDataM :: Action IO ()
 lowercaseUserDataM = do
     users <- selectList [UserUsername !=. ""] []
-    users `forM` lowercase
+    _ <- users `forM` lowercase
     return ()
     where
         lowercase user =
