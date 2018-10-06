@@ -18,6 +18,7 @@ data AppSettings = AppSettings -- TODO: Add useful settings from Scaffold
     , appStaticDir :: String
     , appLoginMinutes :: Int
     , appMOTD :: Text
+    , appTmpFilePath :: FilePath
     }
 
 instance FromJSON AppSettings where
@@ -29,6 +30,7 @@ instance FromJSON AppSettings where
         appStaticDir <- o .:? "staticDir" .!= "static/"
         appLoginMinutes <- o .:? "loginMinutes" .!= 120
         appMOTD <- o .:? "motd" .!= ""
+        appTmpFilePath <- o .:? "tmpFilePath" .!= "/tmp"
 
         return AppSettings {..}
 

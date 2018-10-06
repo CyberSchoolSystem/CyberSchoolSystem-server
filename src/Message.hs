@@ -18,6 +18,7 @@ data Object = Vote
             | User
             | Border
             | Grade
+            | Export
 
 fromMessage :: Message -> Text
 fromMessage (AlreadyDone Vote) = "Du hast bereits an dieser Abstimmung teilgenommen!"
@@ -28,6 +29,7 @@ fromMessage (NotUnique Username) = "Dieser Username existiert bereits. Bitte wä
 fromMessage (Unknown User) = "Dieser User existiert nict. Bitte lade die Seite neu!"
 
 fromMessage (AlreadyDone Border) = "Der User ist bereits auf dieser Seite der Grenze"
+fromMessage (AlreadyDone Export) = "Sie haben diese datei bereits exportiert!"
 
 fromMessage (NotUnique Grade) = "Diese Klasse existiert bereits!"
 fromMessage (Unknown Grade) = "Diese Klasse existiert nicht. Bitte lade die seite neu!"

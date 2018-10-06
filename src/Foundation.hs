@@ -4,7 +4,9 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE CPP                   #-}
+{-# LANGUAGE ViewPatterns          #-}
 {-# OPTIONS_GHC -Wno-overlapping-patterns #-}
+
 module Foundation where
 
 import           Data.Text                 (Text)

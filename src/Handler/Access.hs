@@ -2,7 +2,7 @@
 module Handler.Access 
     ( postApiAccessInR
     , postApiAccessOutR
-    , getApiAccessExportR
+    , postApiAccessExportR
     ) where
 
 import           Control.Monad.IO.Class   (liftIO)
@@ -10,6 +10,7 @@ import           Data.Aeson
 import           Data.Aeson.Types         (typeMismatch)
 import           Data.Bits                (xor)
 import           Data.Default             (def)
+import qualified Data.HashMap.Lazy        as HML
 import           Data.List                (sortBy)
 import           Data.Monoid              ((<>))
 import qualified Data.Text                as T
@@ -22,6 +23,7 @@ import           Database.Persist.Types   (Entity(..))
 import           Database.Persist.MongoDB (push)
 import qualified Error                    as E
 import           Foundation
+import           Handler.File             (addFile)
 import qualified Message                  as M
 import           Model
 import           Text.Pandoc.Builder      (Pandoc, Blocks, Alignment(..),
@@ -81,18 +83,31 @@ postApiAccessOutR = do
     user <- runDB $ selectFirst [UserUsername ==. idUser req] []
     addToDB False req user
 
-getApiAccessExportR :: Handler Value
-getApiAccessExportR = do
+{-| Render a pdf -}
+postApiAccessExportR :: Handler Value
+postApiAccessExportR = do
     auth <- requireAuthId
+    now <- liftIO $ getCurrentTime
     user <- runDB $ selectFirst [UserId ==. auth] []
     case user of
         Just u -> do
             (users, gradeN) <- loadGradeUsers (entityVal u)
-            let pan = renderGradeTable users gradeN
-            liftIO $ savePDF pan
-            return $ toJSON pan
-            -- liftIO $ writeHtml5String def pan
-        Nothing -> return . toJSON . E.Unknown (M.fromMessage $ M.Unknown M.User) $ [("username", user)]
+            add <- addFile (entityKey u) "text/html" now "export.html"
+            saveFile add (renderGradeTable users gradeN)
+        Nothing -> return . toJSON $
+            E.Unknown (M.fromMessage $ M.Unknown M.User) [("username", user)]
+
+{-| Save a file if it was saved into the db -}
+saveFile :: Maybe File -> Pandoc -> Handler Value
+saveFile add pan = do
+    case add of
+        Nothing ->
+            return . toJSON $
+                E.AlreadyDone (M.fromMessage $ M.AlreadyDone M.Export)
+                    ([] :: [(T.Text,T.Text)])
+        Just file -> do
+            liftIO $ savePDF pan (fileFilePath file)
+            return . mergeAeson $ [(toJSON (E.ENull :: E.Error Value)), (toJSON file)]
 
 {-| Load all users and the grade a teacher is responsible for -}
 loadGradeUsers :: User -> Handler ([User], Gradename)
@@ -122,7 +137,7 @@ renderGradeTable users gradeN =
               snd timestamp,
               tblocks "test"]
 
-{-| Get the time User was present (numerically and as intervals -}
+{-| Get the time User was present (numerically and as intervals) -}
 timeInside :: User -> (Blocks, Blocks)
 timeInside user = (interval, numeric)
     where
@@ -148,14 +163,21 @@ accessTuples u = chunk $ accessTime <$> access -- TODO sort
         chunk [x]      = [(x, Nothing)]
         chunk (x:y:zs) = (x, Just y) : chunk zs
 
-savePDF :: Pandoc -> IO ()
-savePDF pandoc = do
+{-| Save a File and register it into global context -}
+savePDF :: Pandoc -> FilePath -> IO ()
+savePDF pandoc filepath = do
     pdf <- runIO $ do
         setUserDataDir Nothing
         writeHtml5String def pandoc
     case pdf of
         Left _ -> error "fail"
-        Right p -> T.writeFile "test.html" p
+        Right p -> T.writeFile filepath p
 
 tblocks :: String -> Blocks
 tblocks = plain . text
+
+mergeAeson :: [Value] -> Value
+mergeAeson = Object . HML.unions . map mrg
+    where
+        mrg (Object x) = x
+        mrg _          = error "This should not happen"

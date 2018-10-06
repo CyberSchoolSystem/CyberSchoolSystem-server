@@ -3,6 +3,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE CPP               #-}
+{-# LANGUAGE ViewPatterns      #-}
 {-# OPTIONS_GHC -Wno-orphans   #-} -- Do not fail at -Werror
 
 module Application
