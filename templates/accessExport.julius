@@ -1,16 +1,22 @@
 $(document).ready(function (){
-    $.ajax({ url: "@{ApiAccessExportR}",
-                type: "POST",
-                data: null,
-                contentType: "application/json",
-                dataType: "json",
-                statusCode: {
-                400: function () {
-                    alert("Malformed json. Please report bug");
-                }
-                },
-                success: function (d) {
-                    console.log(d);
-                }
+    $("#export").click( function () {
+        $.ajax({ url: "@{ApiAccessExportR}",
+                    type: "POST",
+                    data: null,
+                    contentType: "application/json",
+                    dataType: "json",
+                    statusCode: {
+                    400: function () {
+                        alert("Malformed json. Please report bug");
+                    }
+                    },
+                    success: function (d) {
+                        if( d['link']) {
+                            $("#link")[0].innerHTML = d['link'];
+                        } else {
+                            $("#link")[0].innerHTML = "No link returned. FAIL";
+                        }
+                    }
+        });
     });
 })
