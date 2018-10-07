@@ -4,3 +4,4 @@
         <h3><i class="fa fa-warning text-yellow"></i> Oops! Zugriff verweigert.</h3>
         <p>
             Du hast nicht die benötigte Berechtigung diese Seite aufzurufen.
+        <p>#{e}

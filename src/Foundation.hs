@@ -5,6 +5,7 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE CPP                   #-}
 {-# LANGUAGE ViewPatterns          #-}
+{-# LANGUAGE QuasiQuotes           #-}
 {-# OPTIONS_GHC -Wno-overlapping-patterns #-}
 
 module Foundation where
