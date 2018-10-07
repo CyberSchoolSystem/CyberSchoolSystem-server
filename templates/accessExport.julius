@@ -1,8 +1,25 @@
+var exportDay = null;
+
+$(function () {
+    $("#datetimepicker3").datetimepicker({
+        inline: true,
+        sideBySide: true,
+        locale: 'de',
+        format: 'YYYY MM DD',
+        stepping: 1
+    })
+})
+
+$('#datetimepicker3').on("dp.change",function (e) {
+    exportDay = moment(e.date._d, "ddd MMM MM YYYY HH:mm:ss ZZ").format('YYYY-MM-DD HH:mm:ss Z');
+    console.log(exportDay);
+});
+
 $(document).ready(function (){
     $("#export").click( function () {
         $.ajax({ url: "@{ApiAccessExportR}",
                     type: "POST",
-                    data: null,
+                    data: JSON.stringify( { day: exportDay }),
                     contentType: "application/json",
                     dataType: "json",
                     statusCode: {
@@ -14,9 +31,9 @@ $(document).ready(function (){
                     },
                     },
                     success: function (d) {
-                        console.log(d);
                         if(d['link']) {
-                            $("#link")[0].innerHTML = d['link'];
+                            $("#link")[0].innerHTML =
+                                "<a href=\"" + d['link'] + "\"> Exportierte datei </a>";
                         } else if (d['error']) {
                             for(var i in d['error']) {
                                 seterror(d['error'][i]['msg']);

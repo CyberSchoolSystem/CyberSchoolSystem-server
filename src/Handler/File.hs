@@ -4,9 +4,9 @@ module Handler.File
     ) where
 
 import           Control.Monad.IO.Class (liftIO)
+import qualified Data.ByteString        as BS
 import           Data.Monoid            ((<>))
 import           Data.Text              (Text)
-import qualified Data.Text.IO           as T
 import           Data.Time.Clock        (UTCTime())
 import           Database.Persist       ((==.))
 import           Database.Persist.Class (selectFirst, insert_)
@@ -30,7 +30,7 @@ getFileR title = do
         (Just _, Just f) -> do
             let val = entityVal f
                 mime = fileMime val
-            cont <- liftIO $ toContent <$> T.readFile (fileFilePath val)
+            cont <- liftIO $ toContent <$> BS.readFile (fileFilePath val)
             return $ TypedContent mime cont
         (Just _, Nothing) -> notFound
         (Nothing, _) -> error "User not in database. This should not happen"

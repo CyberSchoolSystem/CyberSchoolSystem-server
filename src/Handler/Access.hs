@@ -9,14 +9,17 @@ import           Control.Monad.IO.Class   (liftIO)
 import           Data.Aeson
 import           Data.Aeson.Types         (typeMismatch)
 import           Data.Bits                (xor)
+import           Data.ByteString.Lazy     (ByteString)
+import qualified Data.ByteString.Lazy     as BL
 import           Data.Default             (def)
 import qualified Data.HashMap.Lazy        as HML
 import           Data.List                (sortBy)
 import           Data.Monoid              ((<>))
+import           Data.Time.LocalTime      (ZonedTime(..), TimeZone(), zonedTimeToUTC, utcToZonedTime)
 import qualified Data.Text                as T
 import qualified Data.Text.IO             as T
-import           Data.Time.Calendar       (fromGregorian)
-import           Data.Time.Clock          (UTCTime(..), getCurrentTime, diffUTCTime)
+import           Data.Time.Calendar       (Day(), fromGregorian)
+import           Data.Time.Clock          (UTCTime(..), getCurrentTime, diffUTCTime, addUTCTime)
 import           Database.Persist         ((==.))
 import           Database.Persist.Class   (selectFirst, selectList, update)
 import           Database.Persist.Types   (Entity(..))
@@ -29,6 +32,7 @@ import           Model
 import           Text.Pandoc.Builder      (Pandoc, Blocks, Alignment(..),
                                            doc, table, text, plain, bulletList)
 import           Text.Pandoc.Writers.HTML (writeHtml5String)
+import           Text.Pandoc.Writers.Docx (writeDocx)
 import           Text.Pandoc              (setUserDataDir, runIO)
 import           Yesod.Auth               (requireAuthId)
 import           Yesod.Core.Json          (requireJsonBody)
@@ -39,9 +43,18 @@ data AccessUser = AccessUser -- TODO: Newtype?
     { idUser :: T.Text
     }
 
+data AccessExport = AccessExport
+    { exportDay    :: ZonedTime
+    }
+
 instance FromJSON AccessUser where
     parseJSON (Object v) = AccessUser 
         <$> v .: "username"
+    parseJSON invalid = typeMismatch "AccessUser" invalid
+
+instance FromJSON AccessExport where
+    parseJSON (Object v) = AccessExport
+        <$> v .: "day"
     parseJSON invalid = typeMismatch "AccessUser" invalid
 
 {-| Access -}
@@ -86,14 +99,24 @@ postApiAccessOutR = do
 {-| Render a pdf -}
 postApiAccessExportR :: Handler Value
 postApiAccessExportR = do
+    req <- requireJsonBody :: Handler AccessExport
     auth <- requireAuthId
     now <- liftIO $ getCurrentTime
     user <- runDB $ selectFirst [UserId ==. auth] []
     case user of
         Just u -> do
+            let day = utctDay . zonedTimeToUTC . exportDay $ req
+                zone = zonedTimeZone . exportDay $ req
+                filename = "export - "
+                    <> (userUsername . entityVal $ u)
+                    <> " "
+                    <> (T.pack . show $ day) <> ".docx"
             (users, gradeN) <- loadGradeUsers (entityVal u)
-            add <- addFile (entityKey u) "text/html" now "export.html"
-            saveFile add (renderGradeTable users gradeN)
+            add <- addFile (entityKey u)
+                "application/vnd.openxmlformats-officedocument.wordprocessingml"
+                (addUTCTime 300 now) -- Delete in 5 minutes
+                filename
+            saveFile add (renderGradeTable day zone users gradeN)
         Nothing -> return . toJSON $
             E.Unknown (M.fromMessage $ M.Unknown M.User) [("username", user)]
 
@@ -123,34 +146,39 @@ loadGradeUsers User{userRoles = r} = do
         Nothing -> error "Teacher role already checked by login system. This should not happen"
 
 {-| Render information -}
-renderGradeTable :: [User] -> Gradename -> Pandoc
-renderGradeTable users gradeN =
+renderGradeTable :: Day -> TimeZone -> [User] -> Gradename -> Pandoc
+renderGradeTable day zone users gradeN =
     doc $ table (text . T.unpack $ gradeN)
                 [(AlignLeft, 1), (AlignLeft, 1), (AlignLeft, 1), (AlignLeft, 1)]
                 (tblocks <$> ["Name", "Anwesend von ... bis ...", "Zeit anwesend (in h)", "Kommentar"])
                 (userToRow <$> sorted)
     where sorted = sortBy lastName users
           lastName x y = compare (userLastName x) (userLastName y)
-          userToRow u = let timestamp = timeInside u in
+          userToRow u = let timestamp = timeInside day zone u in
               [plain . text . T.unpack $ (userLastName u) <> (userFirstName u),
               fst timestamp,
               snd timestamp,
               tblocks "test"]
 
 {-| Get the time User was present (numerically and as intervals) -}
-timeInside :: User -> (Blocks, Blocks)
-timeInside user = (interval, numeric)
+timeInside :: Day -> TimeZone -> User -> (Blocks, Blocks)
+timeInside day zone user = (interval, numeric)
     where
         interval = bulletList $ tupToMsg <$> tup
-        numeric = tblocks $ show . sum $ diffTup  <$> tup
-        tup = accessTuples user
+        numeric = tblocks $ show . sum $ diffTup <$> tup
+        tup = filter inDay $ accessTuples user
+        inDay a = -- True if Both tuple elements are equal to Just day or Nothing
+            (utctDay . fst $ a) == day && (maybe True (\x -> day == utctDay x) $ snd a)
         diffTup (s, em) =
             case em of
                 Just e -> diffUTCTime e s
                 Nothing -> 0
         tupToMsg (s, em) =
             case em of 
-                Just e -> tblocks $ (show s) <> " bis " <> (show $ e)
+                Just e -> tblocks $
+                    (show . utcToZonedTime zone $ s)
+                    <> " bis "
+                    <> (show. utcToZonedTime zone $ e)
                 Nothing -> tblocks $ (show s) <>
                     " bis [nicht richtig abgemeldet, oder noch anwesend]"
 
@@ -168,10 +196,10 @@ savePDF :: Pandoc -> FilePath -> IO ()
 savePDF pandoc filepath = do
     pdf <- runIO $ do
         setUserDataDir Nothing
-        writeHtml5String def pandoc
+        writeDocx def pandoc
     case pdf of
         Left _ -> error "fail"
-        Right p -> T.writeFile filepath p
+        Right p -> BL.writeFile filepath p
 
 tblocks :: String -> Blocks
 tblocks = plain . text

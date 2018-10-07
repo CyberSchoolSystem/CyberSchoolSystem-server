@@ -13,6 +13,7 @@
 |-----|----------------|-------------------|---------------------|------|
 |`/api/access/in` | POST | `application/json` | "username" | "error" |
 |`/api/access/out` | POST | `application/json` | "username" | "error" |
+|`/api/access/export` | POST | `application/json` | "day" | "error", "link" |
 
 ## Users
 | URI | Request Method | Request Body Type | Request Body Keys | Return |
