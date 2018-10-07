@@ -102,10 +102,6 @@ $doctype 5
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right">
                                 <ul class="treeview-menu">
-                                    <li id="menu-/user/add">
-                                        <a href="@{UiUserAddR}">
-                                            <i class="fa fa-user-plus">
-                                            Benutzer hinzufügen
                                     <li id="menu-/user/info">
                                         <a href="@{UiUserInfoR}">
                                             <i class="fa fa-search">
@@ -126,6 +122,10 @@ $doctype 5
                                         <a href="@{UiGradeInfoR}">
                                             <i class="fa fa-list">
                                             Klassenliste
+                                    <li id="menu-/user/add">
+                                        <a href="@{UiUserAddR}">
+                                            <i class="fa fa-user-plus">
+                                            Benutzer hinzufügen
                       <li id="menu-Wahlergebnisse">
                           <a href="@{UiVoteTerminatedR}">
                               <i class="fa fa-pie-chart">

@@ -84,11 +84,11 @@ instance Yesod App where -- TODO: SSL
     isAuthorized UiVoteTerminatedR _ = isCitizen
     isAuthorized UiVoteRunningR _ = isCitizen
 
-    isAuthorized ApiUserAddR _ = isAdmin
-    isAuthorized ApiUserRemoveR _ = isAdmin
+    isAuthorized ApiUserAddR _ = isTech
+    isAuthorized ApiUserRemoveR _ = isTech
     isAuthorized ApiUserInfoR _ = isAdmin
     isAuthorized ApiUserUpdateR _ = isAdmin
-    isAuthorized UiUserAddR _ = isAdmin
+    isAuthorized UiUserAddR _ = isTech
     isAuthorized UiUserInfoR _ = isAdmin
 
     isAuthorized ApiGradeAddR _ = isTech

@@ -58,17 +58,17 @@ $(document).ready(function() {
                statusCode: {
                   400: function () {
                       alert("Malformed json. Please report bug");
-                  }
-               },
-               success: function (d) {
-                  if (d['error'] == null) {
-                      $("#editModalForm")[0].reset();
-                      setmsg("Benutzer bearbeitet.");
-                      document.getElementById("submit").click();
-                      clrerror();
-                  } else {
-                      for(var i in d['error']) {
-                          seterror(d['error'][i]['msg']);
+                  },
+                  success: function (d) {
+                      if (d['error'] == null) {
+                          $("#editModalForm")[0].reset();
+                          setmsg("Benutzer bearbeitet.");
+                          document.getElementById("submit").click();
+                          clrerror();
+                      } else {
+                          for(var i in d['error']) {
+                              seterror(d['error'][i]['msg']);
+                          }
                       }
                   }
                }
@@ -171,7 +171,13 @@ function delUser(u){
                 400: function (jqXHR) {
                     alert("malformed json. Please report bug");
                     seterror(jqXHR.responseText);
-                }
+                },
+                403: function(jqXHR) {
+                    d = JSON.parse(jqXHR.responseText);
+                    for (var i in d['error']) {
+                        seterror(d['error'][i]['msg']);
+                    }
+                },
              },
              success: function (d) {
                 if (d["error"] != null) {

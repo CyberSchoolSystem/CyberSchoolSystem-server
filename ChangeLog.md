@@ -6,4 +6,7 @@
 * Bugfix versions (e.g x.x.1): Bugfixes and dockerfile stuff
 
 ## 1.0
-Initial production ready version
+* Initial production ready version
+
+## 1.0.4
+* Need Tech role to create/delete users

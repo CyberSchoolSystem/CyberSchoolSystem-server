@@ -41,7 +41,7 @@
                     <label class="form-check-label" for="rolle">Techniker
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="customs" id="teacher" value="teacher">
-                    <label class="form-check-label" for="rolle">Customs
+                    <label class="form-check-label" for="rolle">Zollbeamter
             <div class="form-group">
                 <label for="klasse">Lehrerklasse
                 <select name="teachGrade" id="teachGrade" class="form-control" disabled="disabled">

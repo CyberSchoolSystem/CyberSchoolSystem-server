@@ -47,7 +47,7 @@ if(path == "/vote/add"){
   document.getElementById("menu-/vote/add").className += " active";
 }
 if(path == "/user/add"){
-  document.getElementById("menu-Verwaltung").className += " active";
+  document.getElementById("menu-Techniker").className += " active";
   document.getElementById("menu-/user/add").className += " active";
 }
 if(path == "/user/info"){
