@@ -12,16 +12,17 @@ $(document).ready(function (){
                     500: function (d) {
                         seterror("INTERNAL SERVER ERROR");
                     },
+                    },
                     success: function (d) {
                         console.log(d);
-                        if( d['link']) {
+                        if(d['link']) {
                             $("#link")[0].innerHTML = d['link'];
                         } else if (d['error']) {
                             for(var i in d['error']) {
                                 seterror(d['error'][i]['msg']);
                             }
                         }
-                    }}
+                    }
         });
     });
 })
