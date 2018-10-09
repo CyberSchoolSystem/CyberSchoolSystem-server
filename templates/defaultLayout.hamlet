@@ -235,7 +235,7 @@ $doctype 5
                         <tr>
                             <th>Klasse:
                             <th>
-                                <select name="editModalKlasse" id="editModalKlasse" class="form-control">
+                                <select name="editModalKlasse" id="GradeSelectionModal" class="form-control">
                         <tr>
                             <th>Rollen:
                             <th>
@@ -251,7 +251,7 @@ $doctype 5
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" name="editModalteacher" id="editModalteacher" value="teacher">
                                     <label class="form-check-label" for="rolle">Klassenlehrer
-                                    <select name="editModalteachGrade" id="editModalteachGrade" class="form-control" disabled="disabled">
+                                    <select name="editModalteachGrade" id="GradeSelectionTeacher" class="form-control" disabled="disabled">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" name="editModaladmin" id="editModaladmin" value="admin">
                                     <label class="form-check-label" for="rolle">Administrator

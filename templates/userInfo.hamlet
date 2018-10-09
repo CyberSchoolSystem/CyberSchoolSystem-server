@@ -17,8 +17,7 @@
                     <input type="text" name="username" class="form-control" id="benutzername" placeholder="henning.klatt">
             <div class="form-group">
                 <label for="klasse">Klasse
-                <select name="grade" id="klasse" class="form-control">
-                    <option selected>
+                <select name="grade" id="GradeSelection" class="form-control">
             <div class="form-group row">
                 <div class="col-sm-10">
                     <button type="button" value="Submit" id="submit" class="btn btn-primary">Suchen
