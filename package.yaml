@@ -88,12 +88,16 @@ library:
     - blaze-html
     - bytestring
     - containers
+    - data-default
     - data-default-class
     - file-embed
     - hjsmin
     - hostname
     - http-conduit
     - http-types
+    - MissingH
+    - pandoc
+    - pandoc-types
     - persistent-template
     - shakespeare
     - template-haskell
@@ -103,7 +107,6 @@ library:
     - wai
     - yaml
     - yesod-auth-hashdb
-    - xlsx
     - xss-sanitize
     - yesod-form
     - yesod-persistent

@@ -1,0 +1,44 @@
+var exportDay = null;
+
+$(function () {
+    $("#datetimepicker3").datetimepicker({
+        inline: true,
+        sideBySide: true,
+        locale: 'de',
+        format: 'YYYY MM DD',
+        stepping: 1
+    })
+})
+
+$('#datetimepicker3').on("dp.change",function (e) {
+    exportDay = moment(e.date._d, "ddd MMM MM YYYY HH:mm:ss ZZ").format('YYYY-MM-DD HH:mm:ss Z');
+    console.log(exportDay);
+});
+
+$(document).ready(function (){
+    $("#export").click( function () {
+        $.ajax({ url: "@{ApiAccessExportR}",
+                    type: "POST",
+                    data: JSON.stringify( { day: exportDay }),
+                    contentType: "application/json",
+                    dataType: "json",
+                    statusCode: {
+                    400: function () {
+                        alert("Malformed json. Please report bug");
+                    },
+                    500: function (d) {
+                        seterror("INTERNAL SERVER ERROR");
+                    },
+                    },
+                    success: function (d) {
+                        if(d['link']) {
+                            window.location.href = d['link'];
+                        } else if (d['error']) {
+                            for(var i in d['error']) {
+                                seterror(d['error'][i]['msg']);
+                            }
+                        }
+                    }
+        });
+    });
+})

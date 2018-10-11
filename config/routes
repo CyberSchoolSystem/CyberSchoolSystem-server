@@ -1,3 +1,4 @@
+-- API Routes
 /api/vote/info ApiVoteInfoR POST
 /api/vote/vote ApiVoteActR POST
 /api/vote/add  ApiVoteAddR POST
@@ -19,6 +20,7 @@
 /api/user/self/info ApiUserSelfInfoR GET
 /api/user/self/setpw ApiUserSelfSetPwR POST
 
+-- UI Routes
 /user/add UiUserAddR GET
 /user/info UiUserInfoR GET
 /user/grade/add UiGradeAddR GET
@@ -28,9 +30,11 @@
 /vote/running UiVoteRunningR GET
 /vote/terminated UiVoteTerminatedR GET
 
-/access/in UiAccessInR GET
-/access/out UiAccessOutR GET
+/access UiAccessR GET
 /access/export UiAccessExportR GET
+
+
+/file/#Text FileR GET
 
 / RootR GET
 /faq FaqR GET

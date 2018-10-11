@@ -19,6 +19,7 @@ data AppSettings = AppSettings -- TODO: Add useful settings from Scaffold
     , appLoginMinutes :: Int
     , appMOTD :: Text
     , appKeyFile :: FilePath
+    , appTmpFilePath :: FilePath
     }
 
 instance FromJSON AppSettings where
@@ -31,6 +32,7 @@ instance FromJSON AppSettings where
         appLoginMinutes <- o .:? "loginMinutes" .!= 120
         appMOTD <- o .:? "motd" .!= ""
         appKeyFile <- o .: "keyFile" .!= "client_session_key.aes"
+        appTmpFilePath <- o .:? "tmpFilePath" .!= "/tmp"
 
         return AppSettings {..}
 

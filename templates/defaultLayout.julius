@@ -9,6 +9,20 @@ function seterror(d) {
     document.getElementById("error").innerHTML = d;
 }
 
+function handleError(d) {
+    clrmsg();
+    clrerror();
+    var msg = "";
+    if (d["error"] != null) {
+        for(var i in d['error']) {
+            msg += d['error'][i]['msg'];
+        }
+        seterror(msg);
+    } else {
+        setmsg("Okay");
+    }
+}
+
 function clrmsg() {
     //document.getElementById("msg").innerHTML = '';
     document.getElementById('msg-div').style.display = 'none';
@@ -69,13 +83,9 @@ if(path == "/access/export"){
   document.getElementById("menu-Lehrer").className += " active";
   document.getElementById("menu-/access/export").className += " active";
 }
-if(path == "/access/in"){
+if(path == "/access"){
   document.getElementById("menu-Zoll").className += " active";
   document.getElementById("menu-/access/in").className += " active";
-}
-if(path == "/access/out"){
-  document.getElementById("menu-Zoll").className += " active";
-  document.getElementById("menu-/access/out").className += " active";
 }
 
 if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > 0) {

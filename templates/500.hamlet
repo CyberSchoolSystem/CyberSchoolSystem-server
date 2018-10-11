@@ -4,3 +4,4 @@
         <h3><i class="fa fa-warning text-yellow"></i> Oops! Unerwarteter Serverfehler.</h3>
         <p>
             Bitte wende dich an die Entwickler falls diese noch nicht panisch zu dir rennen sollten.
+        <p>#{e}

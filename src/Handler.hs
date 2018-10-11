@@ -6,6 +6,7 @@ module Handler
     , module Handler.Root
     , module Handler.User
     , module Handler.Grade
+    , module Handler.File
     ) where
 
 import Handler.Access
@@ -15,3 +16,4 @@ import Handler.Joke
 import Handler.Root
 import Handler.User
 import Handler.Grade
+import Handler.File

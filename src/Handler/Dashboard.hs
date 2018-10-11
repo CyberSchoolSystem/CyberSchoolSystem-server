@@ -7,8 +7,7 @@ module Handler.Dashboard
     , getUiVoteAddR
     , getUiVoteRunningR
     , getUiVoteTerminatedR
-    , getUiAccessOutR
-    , getUiAccessInR
+    , getUiAccessR
     , getUiAccessExportR
     , getUiGradeAddR
     , getUiGradeInfoR
@@ -75,25 +74,15 @@ getUiVoteTerminatedR = defaultLayout $ do
         else toWidget $(juliusFile "templates/voteTerminated.julius")
              <> toWidget $(hamletFile "templates/voteTerminated.hamlet")
 
-getUiAccessInR :: Handler Html
-getUiAccessInR = defaultLayout $ do
+getUiAccessR :: Handler Html
+getUiAccessR = defaultLayout $ do
     setTitle "Access in"
     app <- getYesod
     if appReload . appSettings $ app
-        then toWidget $(juliusFileReload "templates/accessIn.julius")
-             <> toWidget $(hamletFileReload "templates/accessIn.hamlet")
-        else toWidget $(juliusFile "templates/accessIn.julius")
-             <> toWidget $(hamletFile "templates/accessIn.hamlet")
-
-getUiAccessOutR :: Handler Html
-getUiAccessOutR = defaultLayout $ do
-    setTitle "Access out"
-    app <- getYesod
-    if appReload . appSettings $ app
-        then toWidget $(juliusFileReload "templates/accessOut.julius")
-             <> toWidget $(hamletFileReload "templates/accessOut.hamlet")
-        else toWidget $(juliusFile "templates/accessOut.julius")
-             <> toWidget $(hamletFile "templates/accessOut.hamlet")
+        then toWidget $(juliusFileReload "templates/access.julius")
+             <> toWidget $(hamletFileReload "templates/access.hamlet")
+        else toWidget $(juliusFile "templates/access.julius")
+             <> toWidget $(hamletFile "templates/access.hamlet")
 
 getUiAccessExportR :: Handler Html
 getUiAccessExportR = defaultLayout $ do

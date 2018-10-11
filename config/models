@@ -36,5 +36,9 @@ Vote json
     choices [Choice]
     endOfLife UTCTime
     deriving Show Eq
-Migration
-    name Text
+File
+    filePath FilePath
+    mime ContentType
+    title Text
+    owner UserId
+    destroy UTCTime

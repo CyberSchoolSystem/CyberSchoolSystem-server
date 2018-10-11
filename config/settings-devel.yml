@@ -1,6 +1,7 @@
 development: True
 motd: "Development Mode. Do solltest das nicht sehen"
 keyFile: "_env:KEY_FILE:client_session_key.aes"
+tmpFilePath: "."
 
 database:
   host: "127.0.0.1"

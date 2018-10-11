@@ -63,13 +63,9 @@ $doctype 5
                                         <i class="fa fa-angle-left pull-right">
                                 <ul class="treeview-menu">
                                     <li id="menu-/access/in">
-                                        <a href="@{UiAccessInR}">
+                                        <a href="@{UiAccessR}">
                                             <i class="fa fa-sign-in">
-                                            Eingang
-                                    <li id="menu-/access/out">
-                                        <a href="@{UiAccessOutR}">
-                                            <i class="fa fa-sign-out">
-                                            Ausgang
+                                            Grenzübergang
                         $if teach
                             <li id="menu-Lehrer" class="treeview">
                                 <a href="#">

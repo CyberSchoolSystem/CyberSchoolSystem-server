@@ -4,3 +4,4 @@
         <h3><i class="fa fa-warning text-yellow"></i> Bad Request</h3>
         <p>
             Bitte wende dich an einen Entwickler und schildere genau die Situation in welcher dieser Fehler kam.
+        <p>#{show e}
