@@ -124,7 +124,7 @@ instance ToJSON (AdminResp User) where
 
 instance ToJSON (UserResp User) where
     toJSON UserResp{usrGetUsr = u} = object
-        [ "firstName" .= ((sanitizeBalance $ userFirstName u))
+        [ "firstName" .= (sanitizeBalance $ userFirstName u)
         , "lastName" .= (sanitizeBalance $ userLastName u)
         , "gradeId" .= userGrade u
         , "username" .= (sanitizeBalance $ userUsername u)

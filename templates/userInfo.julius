@@ -206,8 +206,8 @@ function addRow(d) {
     var u = Object.assign(d, roles),
         buttondel = "<button class='btn btn-danger' onclick=delUser('" + d["username"] + "')><i class='fa fa-trash'></i></button>",
         buttonedit = "<button class='btn btn-warning' onclick=editUser('" + d["username"] + "')><i class='fa fa-edit'></i></button>",
-        mk = "<tr><td>" + u["firstName"] +
-            "</td><td>" + u["lastName"] +
+        mk = "<tr><td>" + formatName(u["firstName"]) +
+            "</td><td>" + formatName(u["lastName"]) +
             "</td><td>" + u["username"] +
             "</td><td>" + gradeIdToName(u["gradeId"]) +
             "</td><td>" + ( u["admin"] == true ? "<i class='glyphicon glyphicon-ok'></i>" : "<i class='glyphicon glyphicon-remove'></i>" ) +

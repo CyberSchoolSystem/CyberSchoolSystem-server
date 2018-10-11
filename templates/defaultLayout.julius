@@ -147,8 +147,12 @@ function loadProfile() {
 }
 
 function showProfile(d){
-    $("#firstname")[0].innerHTML = d["firstName"];
-    $("#lastname")[0].innerHTML = d["lastName"];
+    $("#firstname")[0].innerHTML = formatName(d["firstName"]);
+    $("#lastname")[0].innerHTML = formatName(d["lastName"]);
     userGradeId = d["gradeId"];
     userGrade = gradeIdToName(d["gradeId"]);
+}
+
+function formatName(d) {
+    return d.charAt(0).toUpperCase() + d.slice(1).toLowerCase();
 }
