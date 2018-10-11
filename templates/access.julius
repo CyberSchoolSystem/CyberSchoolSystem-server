@@ -6,6 +6,8 @@ $(document).ready( function () {
 });
 
 function switchState() {
+    clrerror();
+    clrmsg();
     if (state == "in") {
         state = "out";
         document.getElementById('directionTitle').innerHTML = "Ausgang";
