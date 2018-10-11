@@ -94,6 +94,7 @@ library:
     - hjsmin
     - http-conduit
     - http-types
+    - MissingH
     - pandoc
     - pandoc-types
     - persistent-template

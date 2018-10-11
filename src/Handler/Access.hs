@@ -28,6 +28,7 @@ import           Foundation
 import           Handler.File             (addFile)
 import qualified Message                  as M
 import           Model
+import           System.Time.Utils        (renderSecs)
 import           Text.Pandoc.Builder      (Pandoc, Blocks, Alignment(..),
                                            doc, table, text, plain, bulletList)
 import           Text.Pandoc.Writers.Docx (writeDocx)
@@ -112,7 +113,7 @@ postApiAccessExportR = do
             (users, gradeN) <- loadGradeUsers (entityVal u)
             add <- addFile (entityKey u)
                 "application/vnd.openxmlformats-officedocument.wordprocessingml"
-                (addUTCTime 300 now) -- Delete in 5 minutes
+                (addUTCTime 20 now) -- Delete in 5 minutes
                 filename
             saveFile add (renderGradeTable day zone users gradeN)
         Nothing -> return . toJSON $
@@ -163,7 +164,7 @@ timeInside :: Day -> TimeZone -> User -> (Blocks, Blocks)
 timeInside day zone user = (interval, numeric)
     where
         interval = bulletList $ tupToMsg <$> tup
-        numeric = tblocks $ show . sum $ diffTup <$> tup
+        numeric = tblocks $ renderSecs . ceiling . sum $ diffTup <$> tup
         tup = filter inDay $ accessTuples user
         inDay a = -- True if Both tuple elements are equal to Just day or Nothing
             (utctDay . fst $ a) == day && (maybe True (\x -> day == utctDay x) $ snd a)
@@ -201,6 +202,7 @@ savePDF pandoc filepath = do
 
 showTime :: FormatTime a => a -> String
 showTime = formatTime defaultTimeLocale "%H:%M"
+
 tblocks :: String -> Blocks
 tblocks = plain . text
 

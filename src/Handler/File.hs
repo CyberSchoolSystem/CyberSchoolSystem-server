@@ -1,6 +1,7 @@
 module Handler.File
     ( getFileR
     , addFile
+    , fileRemover
     ) where
 
 import           Control.Monad.IO.Class (liftIO)

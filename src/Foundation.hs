@@ -10,9 +10,11 @@
 
 module Foundation where
 
+import           Control.Monad          (forM_)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.Encoding        as TE
+import           Data.Time.Clock           (getCurrentTime)
 import           Data.Version              (showVersion)
 import           Database.Persist          ((==.))
 import           Database.Persist.Class    (selectFirst)
@@ -20,7 +22,7 @@ import           Database.Persist.MongoDB
 import           Database.Persist.Types    (Entity(..))
 import qualified Error                     as E
 import qualified Message                   as M
-import           Model                     (UserId, EntityField (..), Unique(..), User(..), Role(..))
+import           Model
 import           Paths_CyberSchoolSystem_Server (version)
 import           Settings
 import           Settings.Static
@@ -54,6 +56,7 @@ instance Yesod App where -- TODO: SSL
     -- approot = ApprootStatic
     -- yesodMiddleware = (sslOnleMiddleware 20) . defaultYesodMiddleware
     -- makeSessionBackend _ = sslOnlySessions $ fmap Just $
+    yesodMiddleware = fileRemover  . defaultYesodMiddleware
     errorHandler = customErrorHandler
     addStaticContent ext mime content = do
         app <- getYesod
@@ -244,6 +247,16 @@ checkAuth  role failText (Just u) = do
         then return Authorized
         else return $ Unauthorized failText
 checkAuth _ _ Nothing = return AuthenticationRequired
+
+{-| Remove files if TTL is over -}
+fileRemover :: HandlerT App IO res -> HandlerT App IO res
+fileRemover handler = do
+    now <- liftIO $ getCurrentTime
+    files <- runDB $ selectList [FileFilePath !=. ""] []
+    let toRemove = entityKey <$> filter destroy files
+        destroy a = (fileDestroy . entityVal $ a) < now
+    runDB $ forM_ toRemove delete
+    handler
 
 -- TODO: Convert to Message
 customErrorHandler :: ErrorResponse -> Handler TypedContent
