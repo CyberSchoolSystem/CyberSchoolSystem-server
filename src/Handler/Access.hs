@@ -9,7 +9,6 @@ import           Control.Monad.IO.Class   (liftIO)
 import           Data.Aeson
 import           Data.Aeson.Types         (typeMismatch)
 import           Data.Bits                (xor)
-import           Data.ByteString.Lazy     (ByteString)
 import qualified Data.ByteString.Lazy     as BL
 import           Data.Default             (def)
 import qualified Data.HashMap.Lazy        as HML
@@ -17,9 +16,9 @@ import           Data.List                (sortBy)
 import           Data.Monoid              ((<>))
 import           Data.Time.LocalTime      (ZonedTime(..), TimeZone(), zonedTimeToUTC, utcToZonedTime)
 import qualified Data.Text                as T
-import qualified Data.Text.IO             as T
 import           Data.Time.Calendar       (Day(), fromGregorian)
 import           Data.Time.Clock          (UTCTime(..), getCurrentTime, diffUTCTime, addUTCTime)
+import           Data.Time.Format         (FormatTime(..), formatTime, defaultTimeLocale)
 import           Database.Persist         ((==.))
 import           Database.Persist.Class   (selectFirst, selectList, update)
 import           Database.Persist.Types   (Entity(..))
@@ -31,7 +30,6 @@ import qualified Message                  as M
 import           Model
 import           Text.Pandoc.Builder      (Pandoc, Blocks, Alignment(..),
                                            doc, table, text, plain, bulletList)
-import           Text.Pandoc.Writers.HTML (writeHtml5String)
 import           Text.Pandoc.Writers.Docx (writeDocx)
 import           Text.Pandoc              (setUserDataDir, runIO)
 import           Yesod.Auth               (requireAuthId)
@@ -155,10 +153,10 @@ renderGradeTable day zone users gradeN =
     where sorted = sortBy lastName users
           lastName x y = compare (userLastName x) (userLastName y)
           userToRow u = let timestamp = timeInside day zone u in
-              [plain . text . T.unpack $ (userLastName u) <> (userFirstName u),
+              [plain . text . T.unpack $ (userLastName u) <> " " <> (userFirstName u),
               fst timestamp,
               snd timestamp,
-              tblocks "test"]
+              tblocks ""]
 
 {-| Get the time User was present (numerically and as intervals) -}
 timeInside :: Day -> TimeZone -> User -> (Blocks, Blocks)
@@ -171,15 +169,15 @@ timeInside day zone user = (interval, numeric)
             (utctDay . fst $ a) == day && (maybe True (\x -> day == utctDay x) $ snd a)
         diffTup (s, em) =
             case em of
-                Just e -> diffUTCTime e s
+                Just e -> diffUTCTime e s / (60 * 60) -- In Hours
                 Nothing -> 0
         tupToMsg (s, em) =
             case em of 
                 Just e -> tblocks $
-                    (show . utcToZonedTime zone $ s)
+                    (showTime . utcToZonedTime zone $ s)
                     <> " bis "
-                    <> (show. utcToZonedTime zone $ e)
-                Nothing -> tblocks $ (show s) <>
+                    <> (showTime . utcToZonedTime zone $ e)
+                Nothing -> tblocks $ (showTime s) <>
                     " bis [nicht richtig abgemeldet, oder noch anwesend]"
 
 {-| Load a users access list into sorted, logical tuples -}
@@ -201,6 +199,8 @@ savePDF pandoc filepath = do
         Left _ -> error "fail"
         Right p -> BL.writeFile filepath p
 
+showTime :: FormatTime a => a -> String
+showTime = formatTime defaultTimeLocale "%H:%M"
 tblocks :: String -> Blocks
 tblocks = plain . text
 

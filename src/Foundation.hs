@@ -96,8 +96,7 @@ instance Yesod App where -- TODO: SSL
     isAuthorized UiGradeAddR _ = isTech
     isAuthorized UiGradeInfoR _ = isTech
 
-    isAuthorized UiAccessInR _ = isCustoms
-    isAuthorized UiAccessOutR _ = isCustoms
+    isAuthorized UiAccessR _ = isCustoms
     isAuthorized ApiAccessInR _ = isCustoms
     isAuthorized ApiAccessOutR _ = isCustoms
     isAuthorized ApiAccessExportR _ = isTeacher

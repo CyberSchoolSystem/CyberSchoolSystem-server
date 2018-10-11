@@ -1,0 +1,78 @@
+var state = "in";
+
+$(document).ready( function () {
+    document.getElementById('inForm').oninput = searchUsers;
+    loadGrades();
+});
+
+function switchState() {
+    if (state == "in") {
+        state = "out";
+        document.getElementById('directionTitle').innerHTML = "Ausgang";
+        document.getElementById('switchMode').innerHTML = "Eingang";
+    } else if (state == "out") {
+        state = "in";
+        document.getElementById('directionTitle').innerHTML = "Eingang";
+        document.getElementById('switchMode').innerHTML = "Ausgang";
+    } else {
+        seterror("Fehler. Bitte Seite neu laden");
+    }
+}
+
+function searchUsers() {
+    var doc = document.getElementById("inForm");
+        data = { username: doc["inUsername"].value }
+    $.ajax({ url: "@{ApiUserInfoR}",
+            type: "POST",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            dataType: "json",
+            statusCode: {
+                400: function () {
+                    alert("Malformed json. Please report bug");
+                }
+            },
+            success: function (d) {
+                var mk = "";
+                for (var i in d) {
+                    mk += "<tr onclick=actUser('" + d[i]['username'] + "')>" + '<td>' +
+                            d[i]['firstName'] + ' ' + d[i]['lastName'] + ' ' +
+                            '(Kl. ' + gradeIdToName(d[i]['gradeId']) + ')' +
+                            "</td></tr>"
+                }
+                $('#result tbody')[0].innerHTML = mk;
+            }
+        });
+}
+
+function actUser(u) {
+    var data = { username: u };
+    if (state == "in") {
+        var url = "@{ApiAccessInR}";
+    } else {
+        var url = "@{ApiAccessOutR}";
+    }
+
+    $.ajax({ url: url,
+             type: "POST",
+             data: JSON.stringify(data),
+             contentType: "application/json",
+             dataType: "json",
+             statusCode: {
+                 400: function () {
+                     alert("Malformed json. Please report bug");
+                 }
+             },
+             success: handleError
+    });
+}
+
+function loadGrades() {
+    $.ajax({ url: "@{ApiGradeInfoR}",
+             type: "GET",
+             dataType: "json",
+             success: function (d) {
+                 classes = d;
+             }
+    });
+}

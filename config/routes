@@ -30,8 +30,7 @@
 /vote/running UiVoteRunningR GET
 /vote/terminated UiVoteTerminatedR GET
 
-/access/in UiAccessInR GET
-/access/out UiAccessOutR GET
+/access UiAccessR GET
 /access/export UiAccessExportR GET
 
 
