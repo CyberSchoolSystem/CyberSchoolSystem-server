@@ -5,9 +5,9 @@ $(document).ready(function() {
 
     $("#editModalteacher").change( function() {
         if(this.checked) {
-            $("#editModalteachGrade").prop('disabled', false);
+            $("#GradeSelectionTeacher").prop('disabled', false);
         } else {
-            $("#editModalteachGrade").prop('disabled', true);
+            $("#GradeSelectionTeacher").prop('disabled', true);
         }
     });
 
@@ -79,7 +79,6 @@ $(document).ready(function() {
     });
 });
 function loadUserInfo(u){
-    loadGrades();
     var data = {username: u};
     $.ajax({ url: "@{ApiUserInfoR}",
              type: "POST",
@@ -93,11 +92,12 @@ function loadUserInfo(u){
              },
              success: function (d) {
                 clrerror();
+                loadGrades();
                 document.getElementById('editModalVorname').value = d[0]["firstName"];
                 document.getElementById('editModalNachname').value = d[0]["lastName"];
                 document.getElementById('editModalUsername').value = d[0]["username"];
                 document.getElementById('editModalidUsername').value = d[0]["username"];
-                document.getElementById('editModalKlasse').value = gradeIdToName(d[0]["gradeId"]);
+                document.getElementById('GradeSelection').value = gradeIdToName(d[0]["gradeId"]);
                 document.getElementById("editModaladmin").checked = d[0]["roles"]["admin"];
                 document.getElementById("editModalrepresentative").checked = d[0]["roles"]["representative"];
                 document.getElementById("editModalcitizen").checked = d[0]["roles"]["citizen"];
@@ -105,7 +105,7 @@ function loadUserInfo(u){
                 document.getElementById("editModaltech").checked = d[0]["roles"]["tech"];
                 document.getElementById("editModalcustoms").checked = d[0]["roles"]["customs"];
                 if(d[0]["roles"]["teacher"]){
-                    document.getElementById('editModalteachGrade').value = gradeIdToName(d[0]["roles"]["teacher"]);
+                    document.getElementById('GradeSelectionTeacher').value = gradeIdToName(d[0]["roles"]["teacher"]);
                 }
              },
              error: function(xhr, status, text) {
@@ -114,8 +114,8 @@ function loadUserInfo(u){
                 document.getElementById('editModalNachname').value = "";
                 document.getElementById('editModalUsername').value = "";
                 document.getElementById('editModalidUsername').value = "";
-                document.getElementById('editModalKlasse').value = "";
-                document.getElementById('editModalteachGrade').value = "";
+                document.getElementById('GradeSelection').value = "";
+                document.getElementById('GradeSelectionTeacher').value = "";
                 document.getElementById("editModaladmin").checked = false;
                 document.getElementById("editModalrepresentative").checked = false;
                 document.getElementById("editModalcitizen").checked = false;
@@ -241,12 +241,20 @@ function loadGrades() {
              dataType: "json",
              success: function (d) {
                  classes = d;
-                 $("#editModalteachGrade")[0].innerHTML = "";
-                 $("#editModalKlasse")[0].innerHTML = "";
+                 var gradeName = gradeIdToName(userGradeId);
+                 $("#GradeSelectionTeacher")[0].innerHTML = "";
+                 $("#GradeSelectionModal")[0].innerHTML = "";
+                 $("#GradeSelection")[0].innerHTML = "";
                  for (var obj in d) {
                     var newVal = "<option>" + d[obj]["name"] + "</option>";
-                    $("#editModalteachGrade")[0].innerHTML += newVal;
-                    $("#editModalKlasse")[0].innerHTML += newVal;
+                    $("#GradeSelectionTeacher")[0].innerHTML += newVal;
+                    $("#GradeSelection")[0].innerHTML += newVal;
+                    if(d[obj]["name"] == gradeName){
+                      $("#GradeSelectionModal")[0].innerHTML += "<option selected>" + d[obj]["name"] + "</option>";
+                    }
+                    else{
+                      $("#GradeSelectionModal")[0].innerHTML += newVal;
+                    }
                  }
              }
     });

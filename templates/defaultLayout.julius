@@ -149,4 +149,6 @@ function loadProfile() {
 function showProfile(d){
     $("#firstname")[0].innerHTML = d["firstName"];
     $("#lastname")[0].innerHTML = d["lastName"];
+    userGradeId = d["gradeId"];
+    userGrade = gradeIdToName(d["gradeId"]);
 }
