@@ -22,6 +22,8 @@ function switchState() {
 }
 
 function searchUsers() {
+    clrmsg();
+    clrerror();
     var doc = document.getElementById("inForm");
         data = { username: doc["inUsername"].value }
     $.ajax({ url: "@{ApiUserInfoR}",

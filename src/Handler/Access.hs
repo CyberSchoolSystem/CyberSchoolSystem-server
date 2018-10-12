@@ -14,11 +14,11 @@ import           Data.Default             (def)
 import qualified Data.HashMap.Lazy        as HML
 import           Data.List                (sortBy)
 import           Data.Monoid              ((<>))
-import           Data.Time.LocalTime      (ZonedTime(..), TimeZone(), zonedTimeToUTC, utcToZonedTime)
+import           Data.Time.LocalTime      (ZonedTime(..), TimeZone(), zonedTimeToUTC, utcToLocalTime)
 import qualified Data.Text                as T
 import           Data.Time.Calendar       (Day(), fromGregorian)
 import           Data.Time.Clock          (UTCTime(..), getCurrentTime, diffUTCTime, addUTCTime)
-import           Data.Time.Format         (FormatTime(..), formatTime, defaultTimeLocale)
+import           Data.Time.Format         (FormatTime(..), TimeLocale(..), formatTime)
 import           Database.Persist         ((==.))
 import           Database.Persist.Class   (selectFirst, selectList, update)
 import           Database.Persist.Types   (Entity(..))
@@ -30,7 +30,7 @@ import qualified Message                  as M
 import           Model
 import           System.Time.Utils        (renderSecs)
 import           Text.Pandoc.Builder      (Pandoc, Blocks, Alignment(..),
-                                           doc, table, text, plain, bulletList)
+                                           doc, table, text, plain, bulletList, setTitle)
 import           Text.Pandoc.Writers.Docx (writeDocx)
 import           Text.Pandoc              (setUserDataDir, runIO)
 import           Yesod.Auth               (requireAuthId)
@@ -146,11 +146,11 @@ loadGradeUsers User{userRoles = r} = do
 
 {-| Render information -}
 renderGradeTable :: Day -> TimeZone -> [User] -> Gradename -> Pandoc
-renderGradeTable day zone users gradeN =
-    doc $ table (text . T.unpack $ gradeN)
-                [(AlignLeft, 1), (AlignLeft, 1), (AlignLeft, 1), (AlignLeft, 1)]
-                (tblocks <$> ["Name", "Anwesend von ... bis ...", "Zeit anwesend (in h)", "Kommentar"])
-                (userToRow <$> sorted)
+renderGradeTable day zone users gradeN = setTitle "Anwesenheitsliste" $ doc $
+    table (text $ T.unpack gradeN <> " (" <> show day <> ")")
+          [(AlignLeft, 0.2), (AlignLeft, 0.5), (AlignLeft, 0.1), (AlignLeft, 0.1)]
+          (tblocks <$> ["Name", "Anwesend von ... bis ...", "Zeit anwesend (in h)", "Kommentar"])
+          (userToRow <$> sorted)
     where sorted = sortBy lastName users
           lastName x y = compare (userLastName x) (userLastName y)
           userToRow u = let timestamp = timeInside day zone u in
@@ -170,16 +170,16 @@ timeInside day zone user = (interval, numeric)
             (utctDay . fst $ a) == day && (maybe True (\x -> day == utctDay x) $ snd a)
         diffTup (s, em) =
             case em of
-                Just e -> diffUTCTime e s / (60 * 60) -- In Hours
+                Just e -> diffUTCTime e s -- In Hours
                 Nothing -> 0
         tupToMsg (s, em) =
             case em of 
                 Just e -> tblocks $
-                    (showTime . utcToZonedTime zone $ s)
+                    (showTime . utcToLocalTime zone $ s)
                     <> " bis "
-                    <> (showTime . utcToZonedTime zone $ e)
-                Nothing -> tblocks $ (showTime s) <>
-                    " bis [nicht richtig abgemeldet, oder noch anwesend]"
+                    <> (showTime . utcToLocalTime zone $ e)
+                Nothing -> tblocks $ (showTime . utcToLocalTime zone $ s) <>
+                    " bis --"
 
 {-| Load a users access list into sorted, logical tuples -}
 accessTuples :: User -> [(UTCTime, Maybe UTCTime)]
@@ -201,7 +201,21 @@ savePDF pandoc filepath = do
         Right p -> BL.writeFile filepath p
 
 showTime :: FormatTime a => a -> String
-showTime = formatTime defaultTimeLocale "%H:%M"
+showTime = formatTime fmt "%H:%M"
+    where fmt = TimeLocale [("Sonntag", "So"),
+                            ("Montag", "Mo"),
+                            ("Dienstag", "Di"),
+                            ("Mittwoch", "Mi"),
+                            ("Donnerstag", "Do"),
+                            ("Freitag", "Fr"),
+                            ("Samstag", "Sa")]
+                           []
+                           ("am", "pm")
+                           "%H:%M"
+                           ""
+                           ""
+                           ""
+                           []
 
 tblocks :: String -> Blocks
 tblocks = plain . text
