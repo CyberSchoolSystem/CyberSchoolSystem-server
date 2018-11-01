@@ -6,6 +6,7 @@ function loadGrades() {
     $.ajax({ url: "@{ApiGradeInfoR}",
              type: "GET",
              dataType: "json",
+             statusCode: defaultStatusCode,
              success: function (d) {
                  classes = d;
                  for (var obj in d) {
@@ -26,17 +27,9 @@ function delGrade(g) {
              contentType: "application/json",
              data: JSON.stringify(d),
              dataType: "json",
-             statusCode: {
-                400: function (jqXHR) {
-                    alert("malformed json, please report bug");
-                }
-             },
+             statusCode: defaultStatusCode,
              success: function (d) {
-                if (d["error"] != null) {
-                    seterror(JSON.stringify(d));
-                } else {
-                    setmsg("okay");
-                }
+                handleError(d);
              }
     });
 }

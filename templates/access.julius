@@ -31,11 +31,7 @@ function searchUsers() {
             data: JSON.stringify(data),
             contentType: "application/json",
             dataType: "json",
-            statusCode: {
-                400: function () {
-                    alert("Malformed json. Please report bug");
-                }
-            },
+            statusCode: defaultStatusCode,
             success: function (d) {
                 var mk = "";
                 for (var i in d) {
@@ -62,12 +58,10 @@ function actUser(u) {
              data: JSON.stringify(data),
              contentType: "application/json",
              dataType: "json",
-             statusCode: {
-                 400: function () {
-                     alert("Malformed json. Please report bug");
-                 }
-             },
-             success: handleError
+             statusCode: defaultStatusCode,
+             success: function (d) {
+                handleError(d);
+             }
     });
 }
 
@@ -75,6 +69,7 @@ function loadGrades() {
     $.ajax({ url: "@{ApiGradeInfoR}",
              type: "GET",
              dataType: "json",
+             statusCode: defaultStatusCode,
              success: function (d) {
                  classes = d;
              }

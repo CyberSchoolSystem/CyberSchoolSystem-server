@@ -1,4 +1,18 @@
 var classes;
+var userGradeId;
+var defaultStatusCode = {
+    400: function () {
+        handleError({'error': {'fail': {'msg': "MalformedJSON. Report bug"}}});
+    },
+    500: function (d) {
+        handleError(JSON.parse(d.responseText));
+    }
+}
+
+var defaultError = function (xhr, status, text) {
+    handleError({'error': {'fail': {'msg': "Der Server antwortet nicht."}}});
+}
+
 function setmsg(d) {
     document.getElementById('msg-div').style.display = 'block';
     document.getElementById("msg").innerHTML = d;
@@ -9,17 +23,24 @@ function seterror(d) {
     document.getElementById("error").innerHTML = d;
 }
 
-function handleError(d) {
+function handleError(d, c) {
     clrmsg();
     clrerror();
     var msg = "";
     if (d["error"] != null) {
         for(var i in d['error']) {
             msg += d['error'][i]['msg'];
+            if (d['error'][i]['info']) {
+                msg += ' (' + d['error'][i]['info'] + ')';
+            }
         }
         seterror(msg);
     } else {
-        setmsg("Okay");
+        if(typeof c === "undefined") {
+            setmsg("Okay");
+        } else {
+            setmsg(c);
+        }
     }
 }
 
@@ -110,25 +131,14 @@ $(document).ready(function () {
                  data: JSON.stringify(data),
                  contentType: "application/json",
                  dataType: "json",
-                 statusCode: {
-                    400: function () {
-                        alert("Malformed json. Please report bug");
-                    }
-                 },
+                 statusCode: defaultStatusCode,
                  success: function (d) {
                     if (d['error'] == null) {
                         $("#changePWForm")[0].reset();
-                        setmsg("Passwort erfolgreich geändert.");
-                        clrerror();
-                        $('#passwordModal').modal('hide');
-                        $('#profilModal').modal('hide');
-                    } else {
-                        for(var i in d['error']) {
-                            seterror(d['error'][i]['msg']);
-                        }
-                        $('#passwordModal').modal('hide');
-                        $('#profilModal').modal('hide');
                     }
+                    $('#passwordModal').modal('hide');
+                    $('#profilModal').modal('hide');
+                    handleError(d, "Passwort erfolgreich geändert.");
                  }
         });
     });
@@ -140,6 +150,7 @@ function loadProfile() {
              data: JSON.stringify( { }),
              contentType: "application/json",
              dataType: "json",
+             statusCode: defaultStatusCode,
              success: function(d) {
                 showProfile(d);
              }

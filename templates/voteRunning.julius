@@ -8,9 +8,10 @@ function loadVotes() {
           data: JSON.stringify( { }),
           contentType: "application/json",
           dataType: "json",
+          statusCode: defaultStatusCode,
           success: function(d) {
+            handleError(d);
             showVotes(d);
-            console.log(d);
           }
   });
 }
@@ -148,22 +149,13 @@ function vote(v, i) {
              data: JSON.stringify({ vid: v,
                                    choice: i}),
              dataType: "json",
-             statusCode: {
-                400: function (d) {
-                    console.log(d);
-                }
-             },
+             statusCode: defaultStatusCode,
              success: function (d) {
                 if (d["error"] == null) {
                     location.reload();
                 }
-                else{
-                  if(d.error.alreadyDone.msg == "You already voted"){
-                    seterror("Du hast bereits an dieser Wahl deine Stimme abgegeben.")
-                  }
-                  else{
-                    seterror(JSON.stringify(d));
-                  }
+                else {
+                    handleError(d);
                 }
              }
     });
@@ -173,7 +165,6 @@ function sortVotes(d) {
   var running = [],
     completed = [],
     terminated = [];
-  console.log(d);
   for (var i in d) {
     if(d[i]["terminated"]){
       terminated.push(d[i]);

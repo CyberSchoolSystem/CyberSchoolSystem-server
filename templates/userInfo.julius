@@ -55,22 +55,13 @@ $(document).ready(function() {
                data: JSON.stringify(data),
                contentType: "application/json",
                dataType: "json",
-               statusCode: {
-                  400: function () {
-                      alert("Malformed json. Please report bug");
-                  },
-                  success: function (d) {
-                      if (d['error'] == null) {
-                          $("#editModalForm")[0].reset();
-                          setmsg("Benutzer bearbeitet.");
-                          document.getElementById("submit").click();
-                          clrerror();
-                      } else {
-                          for(var i in d['error']) {
-                              seterror(d['error'][i]['msg']);
-                          }
-                      }
-                  }
+               statusCode: defaultStatusCode,
+               success: function (d) {
+                   if (d['error'] == null) {
+                       $("#editModalForm")[0].reset();
+                       document.getElementById("submit").click();
+                   }
+                   handleError(d, "Benutzer bearbeitet");
                }
       });
 
@@ -85,11 +76,7 @@ function loadUserInfo(u){
              data: JSON.stringify(data),
              contentType: "application/json",
              dataType: "json",
-             statusCode: {
-                400: function () {
-                    alert("Malformed json. Please report bug");
-                }
-             },
+             statusCode: defaultStatusCode,
              success: function (d) {
                 clrerror();
                 loadGrades();
@@ -139,22 +126,16 @@ function searchUser() {
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 dataType: "json",
-                statusCode: {
-                400: function () {
-                    alert("Malformed json. Please report bug");
-                }
-                },
+                statusCode: defaultStatusCode,
                 success: function (d) {
-                $('#result tbody').empty();
-                for (var u in d) {
-                    addRow(d[u]);
-                }
-                document.getElementById("lastUpdate").innerHTML = "Zuletzt aktualisiert um " + moment().format("H:mm") + " Uhr.";
-                clrerror();
-                },
-                error: function(xhr, status, text) {
-                seterror("Es scheint der Server antwortet nicht.");
-            }
+                    $('#result tbody').empty();
+                    for (var u in d) {
+                        addRow(d[u]);
+                    }
+                    document.getElementById("lastUpdate").innerHTML = "Zuletzt aktualisiert um " + moment().format("H:mm") + " Uhr.";
+                    clrerror();
+                    },
+                error: defaultError
     });
 }
 
@@ -167,28 +148,9 @@ function delUser(u){
              data: JSON.stringify(data),
              contentType: "application/json",
              dataType: "json",
-             statusCode: {
-                400: function (jqXHR) {
-                    alert("malformed json. Please report bug");
-                    seterror(jqXHR.responseText);
-                },
-                403: function(jqXHR) {
-                    d = JSON.parse(jqXHR.responseText);
-                    for (var i in d['error']) {
-                        seterror(d['error'][i]['msg']);
-                    }
-                },
-             },
+             statusCode: defaultStatusCode,
              success: function (d) {
-                if (d["error"] != null) {
-                    for(var i in d['error']) {
-                        seterror(d['error'][i]['msg']);
-                    }
-                } else {
-                    clrerror();
-                    setmsg("Benutzer gelöscht.");
-                    document.getElementById("submit").click();
-                }
+                handleError(d);
              }
     });
 }
@@ -239,6 +201,7 @@ function loadGrades() {
     $.ajax({ url: "@{ApiGradeInfoR}",
              type: "GET",
              dataType: "json",
+             statusCode: defaultStatusCode,
              success: function (d) {
                  classes = d;
                  var gradeName = gradeIdToName(userGradeId);

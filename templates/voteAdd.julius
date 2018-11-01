@@ -55,29 +55,17 @@ $(document).ready(function() {
                   endOfLife: endOfLife,
                   title: doc["titel"].value
                 };
-    console.log(data);
     $.ajax({  url: "@{ApiVoteAddR}",
               type: "POST",
               data: JSON.stringify(data),
               contentType: "application/json",
               dataType: "json",
-              statusCode: {
-                400: function () {
-                  seterror("400 Bad Request");
-                },
-                405: function () {
-                  seterror("405 Method Not Allowed");
-                }
-             },
+              statusCode: defaultStatusCode,
               success: function (d) {
                 if (d.error == null) {
                   $("#voteAdd")[0].reset();
-                  setmsg("Abstimmung wurde veröffentlicht!");
-                }else{
-                    for(var i in d['error']) {
-                        seterror(d['error'][i]['msg']);
-                    }
                 }
+                handleError(d, "Abstimmung wurde veröffentlicht!");
              }
     });
   });

@@ -27,26 +27,17 @@ $(document).ready(function() {
                              customs: doc["customs"].checked,
                              tech: doc["tech"].checked,
                              representative: doc["rep"].checked }};
-        console.log(data);
         $.ajax({ url: "@{ApiUserAddR}",
                  type: "POST",
                  data: JSON.stringify(data),
                  contentType: "application/json",
                  dataType: "json",
-                 statusCode: {
-                    400: function () {
-                        alert("Malformed json. Please report bug");
-                    }
-                 },
+                 statusCode: defaultStatusCode,
                  success: function (d) {
                     if (d.error == null) {
                         $("#addForm")[0].reset();
-                        setmsg("Okay");
-                    } else {
-                        for(var i in d['error']) {
-                            seterror(d['error'][i]['msg']);
-                        }
                     }
+                    handleError(d);
                  }
         });
     });
@@ -56,9 +47,9 @@ function loadGrades() {
     $.ajax({ url: "@{ApiGradeInfoR}",
              type: "GET",
              dataType: "json",
+             statusCode: defaultStatusCode,
              success: function (d) {
                  classes = d;
-                 console.log(d);
                  for (var obj in d) {
                     var newVal = "<option>" + d[obj]["name"] + "</option>";
                     $("#teachGrade")[0].innerHTML += newVal;
