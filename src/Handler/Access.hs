@@ -197,7 +197,7 @@ savePDF pandoc filepath = do
         setUserDataDir Nothing
         writeDocx def pandoc
     case pdf of
-        Left _ -> error "fail"
+        Left e -> error $ show e
         Right p -> BL.writeFile filepath p
 
 showTime :: FormatTime a => a -> String
