@@ -223,7 +223,7 @@ infoToFilter :: InfoUserReq -> [Filter User]
 infoToFilter InfoUserReq{..} = catMaybes [ (UserFirstName =~.) . toMongoRegex <$> infoFirstName
                                          , (UserLastName =~.) . toMongoRegex <$> infoLastName
                                          , (UserGrade ==.) <$> infoGrade
-                                         , (UserUsername =~.) . toMongoRegex <$> infoUsername
+                                         , (UserUsername ==.) . T.toLower <$> infoUsername
                                          , (UserRoles ==.) <$> infoRole ]
 
 {-| Create Regex from text |-}

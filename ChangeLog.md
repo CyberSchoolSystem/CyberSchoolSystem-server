@@ -10,3 +10,6 @@
 
 ## 1.0.4
 * Need Tech role to create/delete users
+
+## 1.1.0
+* Don't use regex on username search
