@@ -17,44 +17,7 @@ function loadVotes() {
 }
 
 function showVotes(d) {
-  var sorted = sortVotes(d),
-    running = sorted[0],
-    terminated = sorted[1],
-    completed = sorted[2];
-  var rowcounter = 1
-  var html = "";
-  for(i in running){
-    var buttons = "";
-      for (var j in running[i]["choices"]) {
-        buttons += "<button class='btn btn-primary btn-primary-spacing' value='" + running[i]["choices"][j] + "' onclick=vote('"
-          + running[i]["id"] + "'," + running[i]["choices"][j]["identity"] + ")>"
-          + running[i]["choices"][j]["description"] + "</button>"
-      }
-
-      var ended = moment(running[i]["endOfLife"]).format('DD.MM.YYYY HH:mm');
-      if (rowcounter == 1){ //All 3 boxes a new row
-        html += "<div class='row'><!-- new row-->";
-      }
-      html  += "<div class='col-md-4'>"
-        + "<div class='box box-solid'>"
-        + "<div class='box-header with-border'>"
-        + "<h3 class='box-title'>" + running[i]["title"] + "</h3>"
-        + "</div>"
-        + "<div class='box-body'>"
-        + running[i]["description"]
-        + "<div>" + buttons + "</div>"
-        + "<div>Ende: " + ended + "</div>"
-        + "</div>"
-        + "</div>"
-        + "</div>";
-
-      if ((rowcounter == 3) || i == running.length-1){ //All 3 boxes a new row
-        html += "</div> <!-- close row-->";
-        rowcounter = 0;
-      }
-      rowcounter++;
-  }
-  $("#running")[0].innerHTML += html;
+  var terminated = sortVotes(d);
   var html = "";
   for(i in terminated){
     html += "<li>"
@@ -100,79 +63,14 @@ function showVotes(d) {
       });
       chart.resize();
     }
-
-
-
-
-
-    var rowcounter = 1
-    var html = "";
-    for(i in completed){
-        var buttons = "";
-        for (var j in completed[i]["choices"]) {
-            buttons += "<button class='btn btn-primary btn-primary-spacing' value='" + completed[i]["choices"][j] + "'>"
-                    + completed[i]["choices"][j]["description"] + "</button>"
-        }
-
-        var ended = moment(completed[i]["endOfLife"]).format('DD.MM.YYYY HH:mm');
-        if (rowcounter == 1){ //All 3 boxes a new row
-          html += "<div class='row'><!-- new row-->";
-        }
-        html  += "<div class='col-md-4'>"
-              + "<div class='box box-solid mute-all'>"
-              + "<div class='box-header with-border'>"
-              + "<h3 class='box-title'>" + completed[i]["title"] + "</h3>"
-              + "</div>"
-              + "<div class='box-body'>"
-              + completed[i]["description"]
-              + "<div>" + buttons + "</div>"
-              + "<div>Ende: " + ended + "</div>"
-              + "</div>"
-              + "</div>"
-              + "</div>";
-
-        if ((rowcounter == 3) || i == completed.length-1){ //All 3 boxes a new row
-          html += "</div> <!-- close row-->";
-          rowcounter = 0;
-        }
-        rowcounter++;
-    }
-    $("#completed")[0].innerHTML += html;
-}
-
-function vote(v, i) {
-    clrmsg();
-    clrerror();
-    $.ajax({ url: "@{ApiVoteActR}",
-             type: "POST",
-             contentType: "application/json",
-             data: JSON.stringify({ vid: v,
-                                   choice: i}),
-             dataType: "json",
-             statusCode: defaultStatusCode,
-             success: function (d) {
-                if (d["error"] == null) {
-                    location.reload();
-                }
-                handleError(d);
-             }
-    });
 }
 
 function sortVotes(d) {
-  var running = [],
-    completed = [],
-    terminated = [];
+  var terminated = [];
   for (var i in d) {
     if(d[i]["terminated"]){
       terminated.push(d[i]);
     }
-    if((d[i]["terminated"] == false) && (d[i]["alreadyVoted"] == false)){
-      running.push(d[i]);
-    }
-    if((d[i]["alreadyVoted"]) && (d[i]["terminated"] == false)){
-      completed.push(d[i]);
-    }
   }
-  return [running, terminated, completed];
+  return terminated;
 }

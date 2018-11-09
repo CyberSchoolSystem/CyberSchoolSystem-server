@@ -1,5 +1,7 @@
 //$(document).ready(function(){$("#result").DataTable()});
 
+var edit_selected_user_grade;
+
 $(document).ready(function() {
     loadGrades();
 
@@ -78,13 +80,14 @@ function loadUserInfo(u){
              dataType: "json",
              statusCode: defaultStatusCode,
              success: function (d) {
+                edit_selected_user_grade = gradeIdToName(d[0]["gradeId"]);
                 clrerror();
                 loadGrades();
                 document.getElementById('editModalVorname').value = d[0]["firstName"];
                 document.getElementById('editModalNachname').value = d[0]["lastName"];
                 document.getElementById('editModalUsername').value = d[0]["username"];
                 document.getElementById('editModalidUsername').value = d[0]["username"];
-                document.getElementById('GradeSelection').value = gradeIdToName(d[0]["gradeId"]);
+                document.getElementById('GradeSelectionModal').value = gradeIdToName(d[0]["gradeId"]);
                 document.getElementById("editModaladmin").checked = d[0]["roles"]["admin"];
                 document.getElementById("editModalrepresentative").checked = d[0]["roles"]["representative"];
                 document.getElementById("editModalcitizen").checked = d[0]["roles"]["citizen"];
@@ -101,7 +104,7 @@ function loadUserInfo(u){
                 document.getElementById('editModalNachname').value = "";
                 document.getElementById('editModalUsername').value = "";
                 document.getElementById('editModalidUsername').value = "";
-                document.getElementById('GradeSelection').value = "";
+                document.getElementById('GradeSelectionModal').value = "";
                 document.getElementById('GradeSelectionTeacher').value = "";
                 document.getElementById("editModaladmin").checked = false;
                 document.getElementById("editModalrepresentative").checked = false;
@@ -204,7 +207,7 @@ function loadGrades() {
              statusCode: defaultStatusCode,
              success: function (d) {
                  classes = d;
-                 var gradeName = gradeIdToName(userGradeId);
+                 //var gradeName = gradeIdToName(userGradeId);
                  $("#GradeSelectionTeacher")[0].innerHTML = "";
                  $("#GradeSelectionModal")[0].innerHTML = "";
                  $("#GradeSelection")[0].innerHTML = "";
@@ -212,7 +215,7 @@ function loadGrades() {
                     var newVal = "<option>" + d[obj]["name"] + "</option>";
                     $("#GradeSelectionTeacher")[0].innerHTML += newVal;
                     $("#GradeSelection")[0].innerHTML += newVal;
-                    if(d[obj]["name"] == gradeName){
+                    if(d[obj]["name"] == edit_selected_user_grade){
                       $("#GradeSelectionModal")[0].innerHTML += "<option selected>" + d[obj]["name"] + "</option>";
                     }
                     else{

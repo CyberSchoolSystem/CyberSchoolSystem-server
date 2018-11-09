@@ -25,23 +25,23 @@
             <div class="form-group">
                 <label>Rollen:
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="admin" id="admin" value="admin">
-                    <label class="form-check-label" for="rolle">Administrator
+                    <input class="form-check-input" type="checkbox" name="citizen" id="citizen" value="citizen">
+                    <label class="form-check-label" for="rolle">Bürger
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="customs" id="teacher" value="teacher">
+                    <label class="form-check-label" for="rolle">Zollbeamter
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="rep" id="representative" value="representative">
                     <label class="form-check-label" for="rolle">Abgeordneter
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="citizen" id="citizen" value="citizen">
-                    <label class="form-check-label" for="rolle">Bürger
-                <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="teacher" id="teacher" value="teacher">
                     <label class="form-check-label" for="rolle">Klassenlehrer
                 <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="admin" id="admin" value="admin">
+                    <label class="form-check-label" for="rolle">Administrator        
+                <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="tech" id="teacher" value="teacher">
                     <label class="form-check-label" for="rolle">Techniker
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="customs" id="teacher" value="teacher">
-                    <label class="form-check-label" for="rolle">Zollbeamter
             <div class="form-group">
                 <label for="klasse">Lehrerklasse
                 <select name="teachGrade" id="teachGrade" class="form-control" disabled="disabled">

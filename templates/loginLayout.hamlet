@@ -7,7 +7,7 @@
         <div class="login-box">
             <div class="login-logo">
                 <a href="/"><b>C</b>yber<b>S</b>chool<b>S</b>ystem</a>
-                <img src="/static/img/GW_Logo.png" alt="Schullogo" class="img-thumbnail">
+                <img src="/static/img/VSG_Logo.jpg" alt="VSG Logo" class="img-thumbnail">
             <div class="login-box-body">
                 $maybe msg <- mmsg
                     #{msg}
