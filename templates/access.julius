@@ -1,4 +1,43 @@
 var state = "in";
+var keys = [];
+var RFIDinput = 0;
+
+function getNumberArray(arr){
+    var newArr = new Array();
+    for(var i = 0; i < arr.length; i++){
+        if(typeof arr[i] == "number"){
+            newArr[newArr.length] = arr[i];
+        }
+    }
+    return newArr;
+}
+
+window.addEventListener("keydown",
+    function(e){
+        keys[e.keyCode] = e.keyCode;
+        var keysArray = getNumberArray(keys);
+        console.log(keysArray.toString());
+        if(keysArray.toString() == "17,49"){
+            RFIDinput = 1;
+            keys = [];
+            $(function() {
+                document.getElementById('inUsername').value='';
+                $('#inUsername').focus().select();
+            });
+        }
+        if(keysArray.toString() == "17,50"){
+            RFIDinput = 0;
+            keys = [];
+            searchUsers();
+        }
+    },
+false);
+
+window.addEventListener('keyup',
+    function(e){
+        keys[e.keyCode] = false;
+    },
+false);
 
 $(document).ready( function () {
     document.getElementById('inForm').oninput = searchUsers;
@@ -22,27 +61,29 @@ function switchState() {
 }
 
 function searchUsers() {
-    clrmsg();
-    clrerror();
-    var doc = document.getElementById("inForm");
-        data = { username: doc["inUsername"].value }
-    $.ajax({ url: "@{ApiUserInfoR}",
-            type: "POST",
-            data: JSON.stringify(data),
-            contentType: "application/json",
-            dataType: "json",
-            statusCode: defaultStatusCode,
-            success: function (d) {
-                var mk = "";
-                for (var i in d) {
-                    mk += "<tr onclick=actUser('" + d[i]['username'] + "')>" + '<td>' +
-                            d[i]['firstName'] + ' ' + d[i]['lastName'] + ' ' +
-                            '(Kl. ' + gradeIdToName(d[i]['gradeId']) + ')' +
-                            "</td></tr>"
+    if(RFIDinput != 1) {
+        clrmsg();
+        clrerror();
+        var doc = document.getElementById("inForm");
+            data = { username: doc["inUsername"].value }
+        $.ajax({ url: "@{ApiUserInfoR}",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                statusCode: defaultStatusCode,
+                success: function (d) {
+                    var mk = "";
+                    for (var i in d) {
+                        mk += "<tr onclick=actUser('" + d[i]['username'] + "')>" + '<td>' +
+                                d[i]['firstName'] + ' ' + d[i]['lastName'] + ' ' +
+                                '(Kl. ' + gradeIdToName(d[i]['gradeId']) + ')' +
+                                "</td></tr>"
+                    }
+                    $('#result tbody')[0].innerHTML = mk;
                 }
-                $('#result tbody')[0].innerHTML = mk;
-            }
-        });
+            });
+    }
 }
 
 function actUser(u) {
