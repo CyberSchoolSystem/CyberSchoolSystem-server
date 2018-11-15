@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    image: f4814n/css-server:test
+    image: f4814n/css-server:v1.1.2
     deploy:
       replicas: 4
       resources:
