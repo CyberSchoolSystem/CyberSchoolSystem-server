@@ -16,6 +16,23 @@ function loadVotes() {
   });
 }
 
+function exportVote(i) {
+    $.ajax({ url: "@{ApiVoteExportR}",
+             type: "POST",
+             data: JSON.stringify( {vid: i }),
+             contentType: "application/json",
+             dataType: "json",
+             statusCode: defaultStatusCode,
+             success: function (d) {
+                handleError(d);
+                if (d['link']) {
+                    window.location.href = d['link'];
+                }
+             }
+    });
+}
+
+
 function showVotes(d) {
   var terminated = sortVotes(d);
   var html = "";

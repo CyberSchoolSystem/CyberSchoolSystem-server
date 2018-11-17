@@ -3,6 +3,7 @@
 /api/vote/vote ApiVoteActR POST
 /api/vote/add  ApiVoteAddR POST
 /api/vote/remove ApiVoteRemoveR POST
+/api/vote/export ApiVoteExportR POST
 
 /api/access/in ApiAccessInR POST
 /api/access/out ApiAccessOutR POST
