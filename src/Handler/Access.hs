@@ -154,7 +154,7 @@ renderGradeTable day zone users gradeN = setTitle "Anwesenheitsliste" $ doc $
     where sorted = sortBy lastName users
           lastName x y = compare (userLastName x) (userLastName y)
           userToRow u = let timestamp = timeInside day zone u in
-              [plain . text . T.unpack $ (userLastName u) <> " " <> (userFirstName u),
+              [plain . text . T.unpack $ (userFirstName u) <> " " <> (userLastName u),
               fst timestamp,
               snd timestamp,
               tblocks ""]
