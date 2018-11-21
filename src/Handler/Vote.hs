@@ -282,13 +282,13 @@ postApiVoteExportR = do
 
 notVoted :: VoteId -> Handler [Entity User]
 notVoted i = do
-    all <- runDB $ selectList [UserUsername !=. ""] []
+    everybody <- runDB $ selectList [UserUsername !=. ""] []
     vote <- runDB $ selectFirst [VoteId ==. i] []
     case vote of
         Just v -> do
             voted <- catMaybes <$> forM (voteVoted . entityVal $ v)
                 (\x -> runDB $ selectFirst [UserId ==. x] [])
-            return $ filter (flip notElem $ voted) all
+            return $ filter (flip notElem $ voted) everybody
         Nothing -> error "Fail!"
 
 getUserInfo :: [Entity User] -> Handler [(Text, Text)]
