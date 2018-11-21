@@ -135,7 +135,6 @@ if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('
 }
 
 $(document).ready(function () {
-    loadProfile();
     $("#submitPW").click( function() {
         var doc = document.getElementById("changePWForm");
         if (doc["newPW"].value != doc["newPWrep"].value) {
@@ -164,6 +163,23 @@ $(document).ready(function () {
     });
 });
 
+function showUserModal(){
+  loadGradesClassesModal();
+  $('#profilModal').modal('show');
+}
+
+function loadGradesClassesModal() {
+    $.ajax({ url: "@{ApiGradeInfoR}",
+             type: "GET",
+             dataType: "json",
+             statusCode: defaultStatusCode,
+             success: function (d) {
+                 classes = d;
+                 loadProfile();
+             }
+    });
+}
+
 function loadProfile() {
     $.ajax({ url: "@{ApiUserSelfInfoR}",
              type: "GET",
@@ -178,10 +194,9 @@ function loadProfile() {
 }
 
 function showProfile(d){
+    $("#class_modal_info")[0].innerHTML = gradeIdToName(d["gradeId"]);
     $("#firstname")[0].innerHTML = formatName(d["firstName"]);
     $("#lastname")[0].innerHTML = formatName(d["lastName"]);
-    userGradeId = d["gradeId"];
-    userGrade = gradeIdToName(d["gradeId"]);
 }
 
 function formatName(d) {
