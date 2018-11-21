@@ -1,0 +1,45 @@
+$(document).ready(function () {
+    loadVotes();
+});
+
+function sortVotes(d) {
+  var running = [],
+    completed = [];
+  for (var i in d) {
+    if((d[i]["terminated"] == false) && (d[i]["alreadyVoted"] == false)){
+      running.push(d[i]);
+    }
+    if((d[i]["alreadyVoted"]) && (d[i]["terminated"] == false)){
+      completed.push(d[i]);
+    }
+  }
+  return [running, completed];
+}
+
+function loadVotes() {
+  $.ajax({ url: "@{ApiVoteInfoR}",
+          type: "POST",
+          data: JSON.stringify( { }),
+          contentType: "application/json",
+          dataType: "json",
+          statusCode: defaultStatusCode,
+          success: function(d) {
+            handleErrorNoOK(d);
+            showVotes(d);
+          }
+  });
+}
+
+function showVotes(d) {
+	var sorted = sortVotes(d),
+    running = sorted[0],
+    completed = sorted[1];
+
+	document.getElementById("umfragen_verfuegbar").innerText = running.length;
+
+	if(running.length == 1){
+		document.getElementById("umfragen_verfuegbar_text").innerText = "Umfrage verfügbar.";
+	}else{
+		document.getElementById("umfragen_verfuegbar_text").innerText = "Umfragen verfügbar.";
+	}
+}

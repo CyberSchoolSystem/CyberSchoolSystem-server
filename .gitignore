@@ -1,4 +1,6 @@
 .DS_Store
+.docx
+.docx"
 .stack-work/
 CyberSchoolSystem-Server.cabal
 client_session_key.aes
