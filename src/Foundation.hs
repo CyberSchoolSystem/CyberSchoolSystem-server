@@ -93,7 +93,7 @@ instance Yesod App where -- TODO: SSL
 
     isAuthorized ApiUserAddR _ = isTech
     isAuthorized ApiUserRemoveR _ = isTech
-    isAuthorized ApiUserInfoR _ = isAdmin
+    isAuthorized ApiUserInfoR _ = aOr <$> isAdmin <*> isCustoms
     isAuthorized ApiUserUpdateR _ = isAdmin
     isAuthorized UiUserAddR _ = isTech
     isAuthorized UiUserInfoR _ = isAdmin
@@ -226,6 +226,11 @@ isAuthenticated = do
     case m of
         Just _ -> return Authorized
         Nothing -> return AuthenticationRequired
+
+aOr :: AuthResult -> AuthResult -> AuthResult
+aOr Authorized _ = Authorized
+aOr _ Authorized = Authorized
+aOr _ _ = AuthenticationRequired
 
 isTeacher :: Handler AuthResult
 isTeacher = maybeAuthId >>= checkAuth isTeach "You are not a teach"
