@@ -17,6 +17,7 @@ import           Data.Aeson
 import           Data.Aeson.Types         (typeMismatch)
 import qualified Data.ByteString.Lazy     as BL
 import           Data.Default             (def)
+import           Data.List                (sortBy)
 import qualified Data.HashMap.Lazy        as HML
 import           Data.Maybe               (catMaybes)
 import           Data.Monoid              ((<>))
@@ -285,13 +286,8 @@ notVoted i = do
     vote <- runDB $ selectFirst [VoteId ==. i] []
     case vote of
         Just v -> do
-            -- let voted = voteVoted . entityVal $ v
-            voted <- forM (voteVoted . entityVal $ v)
-                (\x -> do
-                    y <- runDB $ selectFirst [UserId ==. x] []
-                    case y of
-                        Just z -> return z
-                        Nothing -> error "Unknown user in vote")
+            voted <- catMaybes <$> forM (voteVoted . entityVal $ v)
+                (\x -> runDB $ selectFirst [UserId ==. x] [])
             return $ filter (flip notElem $ voted) all
         Nothing -> error "Fail!"
 
@@ -309,7 +305,8 @@ renderUserTable g = setTitle "Liste von Nichtwählern" $ doc $
     table ""
           [(AlignLeft, 0.2), (AlignLeft, 0.8)]
           (tblocks <$> ["Klasse", "Name"])
-          ((\(x,y) -> tblocks . show <$> [y,x]) <$> g)
+          ((\(x,y) -> tblocks . show <$> [y,x])
+            <$> sortBy (\a b -> fst a `compare` fst b) g)
 
 {-| Save a file if it was saved into the db -}
 saveFile :: Maybe File -> Pandoc -> Handler Value
