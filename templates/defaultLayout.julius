@@ -44,6 +44,26 @@ function handleError(d, c) {
     }
 }
 
+function handleErrorNoOK(d, c) {
+    clrmsg();
+    clrerror();
+    var msg = "";
+    if (d["error"] != null) {
+        for(var i in d['error']) {
+            msg += d['error'][i]['msg'];
+            if (d['error'][i]['info']) {
+                msg += ' (' + d['error'][i]['info'] + ')';
+            }
+        }
+        seterror(msg);
+    } else {
+        if(typeof c === "undefined") {
+        } else {
+            setmsg(c);
+        }
+    }
+}
+
 function clrmsg() {
     //document.getElementById("msg").innerHTML = '';
     document.getElementById('msg-div').style.display = 'none';

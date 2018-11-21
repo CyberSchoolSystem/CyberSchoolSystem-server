@@ -10,7 +10,7 @@ function loadVotes() {
           dataType: "json",
           statusCode: defaultStatusCode,
           success: function(d) {
-            handleError(d);
+            handleErrorNoOK(d);
             showVotes(d);
           }
   });
@@ -24,7 +24,7 @@ function exportVote(i) {
              dataType: "json",
              statusCode: defaultStatusCode,
              success: function (d) {
-                handleError(d);
+                handleErrorNoOK(d);
                 if (d['link']) {
                     window.location.href = d['link'];
                 }

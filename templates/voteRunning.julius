@@ -10,7 +10,7 @@ function loadVotes() {
           dataType: "json",
           statusCode: defaultStatusCode,
           success: function(d) {
-            handleError(d);
+            handleErrorNoOK(d);
             showVotes(d);
           }
   });

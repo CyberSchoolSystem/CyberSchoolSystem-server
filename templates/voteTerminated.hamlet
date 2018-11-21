@@ -1,8 +1,3 @@
-<h2 class="page-header">
-    Aktuell laufend
-<div id="running">
-<div id="completed">
-
 <div class="box">
     <div class="box-header">
         <i class="fa fa-list">

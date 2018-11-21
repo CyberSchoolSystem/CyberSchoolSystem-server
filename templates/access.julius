@@ -12,6 +12,7 @@ function getNumberArray(arr){
     return newArr;
 }
 
+
 window.addEventListener("keydown",
     function(e){
         keys[e.keyCode] = e.keyCode;
