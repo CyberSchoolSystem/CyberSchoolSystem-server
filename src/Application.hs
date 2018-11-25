@@ -54,4 +54,4 @@ appMain = do
                                     roleCustoms = True, roleTech = True}
                 return ()
 
-    warp 3000 foundation
+    warp (appPort settings) foundation

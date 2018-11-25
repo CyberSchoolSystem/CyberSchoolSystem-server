@@ -9,6 +9,7 @@ staticDir: "_env:STATIC:static/"
 motd: "_env:MODT:"
 keyFile: "_env:KEY_FILE:client_session_key.aes"
 tmpFilePath: "_env:TMP_FILE_PATH:/tmp/"
+port: "_env:PORT:3000"
 
 database:
   host: "_env:DB_IP:127.0.0.1"
