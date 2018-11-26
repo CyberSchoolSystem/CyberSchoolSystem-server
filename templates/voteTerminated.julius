@@ -38,7 +38,7 @@ function showVotes(d) {
   var html = "";
   for(i in terminated){
     html += "<li>"
-      + "<a data-toggle='collapse' data-target=#" + terminated[i]["id"] + " href='#'><span class='text'>" + terminated[i]["title"] + "</span></a>";
+         + "<a data-toggle='collapse' data-target=#" + terminated[i]["id"] + " href='#'><span class='text'>" + terminated[i]["title"] + "</span></a>";
     for(x in terminated[i]["choices"]){
       html += " | "
         + terminated[i]["choices"][x]["description"]
@@ -48,9 +48,11 @@ function showVotes(d) {
     html  += "<div id=" + terminated[i]["id"] + " class='collapse'>"
       + "<div class='chart-container' style='width: 600px; height:300px'>"
       + "<canvas id='chart-" + terminated[i]["id"] + "''</canvas>"
-      + "</div>"
       + "</div>";
-    html += "</li>";
+    if(admin){
+      html += "<button type='button' id='" + terminated[i]["id"] + "' class='btn btn-primary' onclick='exportVote(this.id)'><i class='fa fa-download'></i></button> Wählerliste herunterladen";
+    }
+    html += "</div></li>";
   }
   $("#terminated")[0].innerHTML += html;
     for(i in terminated){

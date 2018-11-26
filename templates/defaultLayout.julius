@@ -1,5 +1,6 @@
 var classes;
 var userGradeId;
+var admin;
 var defaultStatusCode = {
     400: function () {
         handleError({'error': {'fail': {'msg': "MalformedJSON. Report bug"}}});
@@ -7,6 +8,13 @@ var defaultStatusCode = {
     500: function (d) {
         handleError(JSON.parse(d.responseText));
     }
+}
+
+if ($('#menu-Verwaltung').length > 0) {
+  admin = true;
+}
+else{
+  admin = false;
 }
 
 var defaultError = function (xhr, status, text) {
