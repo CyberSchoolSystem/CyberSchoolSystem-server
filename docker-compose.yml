@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    image: f4814n/css-server:v1.1.2
+    image: f4814n/css-server:v1.1.5
     deploy:
       replicas: 4
       resources:
@@ -20,6 +20,7 @@ services:
       - webnet
     volumes:
       - "key:/app/key"
+      - "cert:/cert"
 
   mongo:
     image: mongo:4.0
@@ -68,3 +69,4 @@ networks:
 volumes:
   database:
   key:
+  cert:
