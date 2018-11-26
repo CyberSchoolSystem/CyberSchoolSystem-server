@@ -1,9 +1,9 @@
 <form method="post" action="@{action}">
     <div class="form-group has-feedback">
-        <input name="username" class="form-control" placeholder="Benutzername">
+        <input name="username" class="form-control" placeholder="Benutzername" autocomplete="off">
         <span class="form-control-feedback fa fa-user"></span>
     <div class="form-group has-feedback">
-        <input type="password" name="password" class="form-control" placeholder="Passwort">
+        <input type="password" name="password" class="form-control" placeholder="Passwort" autocomplete="off">
         <span class="form-control-feedback fa fa-lock"></span>
     <div class="text-center">
         <button class="btn btn-primary btn-block btn-flat" type="submit" value="Login">Einloggen</button>

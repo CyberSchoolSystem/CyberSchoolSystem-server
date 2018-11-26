@@ -98,6 +98,11 @@ function gradeIdToName(n) {
         }
     }
 }
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 var path = window.location.pathname;
 if(path == "/"){
   document.getElementById("menu-Startseite").className += " active";

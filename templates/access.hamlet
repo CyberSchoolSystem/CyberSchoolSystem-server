@@ -1,7 +1,14 @@
 <div class="box">
     <div class="box-header with-border">
-        <h3 class="box-title" id="directionTitle">Eingang
-        <button onclick="switchState()" id="switchMode" class="btn btn-primary">Ausgang
+
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="directionTitle">Eingang
+            <span class="fa fa-caret-down">
+        <ul class="dropdown-menu">
+            <li>
+                <a href="#" onclick="switchState('in')">Eingang
+            <li>
+                <a href="#" onclick="switchState('out')">Ausgang
+
     <div class="box-body">
         <div class="form-group row">
             <div class="col-sm-10">
@@ -10,3 +17,4 @@
         <div class="table-responsive">
             <table class="table table-bordered" width="100%" cellspacing="0" id="result">
                 <tbody>
+

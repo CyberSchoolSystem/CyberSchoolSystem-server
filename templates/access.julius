@@ -45,17 +45,15 @@ $(document).ready( function () {
     loadGrades();
 });
 
-function switchState() {
+function switchState(d) {
     clrerror();
     clrmsg();
-    if (state == "in") {
-        state = "out";
-        document.getElementById('directionTitle').innerHTML = "Ausgang";
-        document.getElementById('switchMode').innerHTML = "Eingang";
-    } else if (state == "out") {
+    if (d == "in") {
         state = "in";
         document.getElementById('directionTitle').innerHTML = "Eingang";
-        document.getElementById('switchMode').innerHTML = "Ausgang";
+    } else if (d == "out") {
+        state = "out";
+        document.getElementById('directionTitle').innerHTML = "Ausgang";
     } else {
         seterror("Fehler. Bitte Seite neu laden");
     }
@@ -76,10 +74,13 @@ function searchUsers() {
                 success: function (d) {
                     var mk = "";
                     for (var i in d) {
-                        mk += "<tr onclick=actUser('" + d[i]['username'] + "')>" + '<td>' +
-                                d[i]['firstName'] + ' ' + d[i]['lastName'] + ' ' +
-                                '(Kl. ' + gradeIdToName(d[i]['gradeId']) + ')' +
-                                "</td></tr>"
+                        mk += "<tr>" + '<td>' +
+                                "<div class='form-check form-check-inline'>" +
+                                "<label class='form-check-label'>" +
+                                formatName(d[i]['firstName']) + ' ' + formatName(d[i]['lastName']) + ' ' +
+                                '(Kl. ' + gradeIdToName(d[i]['gradeId']) + ')</label>&nbsp;&nbsp;' +
+                                "<button class='btn btn-success' onclick=actUser('" + d[i]['username'] + "')><i class='fa fa-check'></i></button>" +
+                                "</div></td></tr>";
                     }
                     $('#result tbody')[0].innerHTML = mk;
                 }
