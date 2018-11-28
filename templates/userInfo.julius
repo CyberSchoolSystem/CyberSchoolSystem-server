@@ -53,6 +53,7 @@ $(document).ready(function() {
       }
 
       $.ajax({ url: "@{ApiUserUpdateR}",
+               error: defaultError,
                type: "POST",
                data: JSON.stringify(data),
                contentType: "application/json",
@@ -147,6 +148,7 @@ function delUser(u){
     clrerror();
     var data = { idUsername: u };
     $.ajax({ url: "@{ApiUserRemoveR}",
+             error: defaultError,
              type: "POST",
              data: JSON.stringify(data),
              contentType: "application/json",
@@ -202,6 +204,7 @@ function filter(obj) {
 
 function loadGrades() {
     $.ajax({ url: "@{ApiGradeInfoR}",
+             error: defaultError,
              type: "GET",
              dataType: "json",
              statusCode: defaultStatusCode,

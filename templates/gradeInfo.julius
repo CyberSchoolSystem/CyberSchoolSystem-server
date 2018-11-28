@@ -4,6 +4,7 @@ $(document).ready(function() {
 
 function loadGrades() {
     $.ajax({ url: "@{ApiGradeInfoR}",
+             error: defaultError,
              type: "GET",
              dataType: "json",
              statusCode: defaultStatusCode,
@@ -23,6 +24,7 @@ function delGrade(g) {
     clrerror();
     var d = { gradeId: g};
     $.ajax({ url: "@{ApiGradeRemoveR}",
+             error: defaultError,
              type: "POST",
              contentType: "application/json",
              data: JSON.stringify(d),

@@ -159,6 +159,7 @@ $(document).ready(function () {
         var data = { oldPW: doc["oldPW"].value,
                      newPW: doc["newPW"].value }
         $.ajax({ url: "@{ApiUserSelfSetPwR}",
+                 error: defaultError,
                  type: "POST",
                  data: JSON.stringify(data),
                  contentType: "application/json",
@@ -183,6 +184,7 @@ function showUserModal(){
 
 function loadGradesClassesModal() {
     $.ajax({ url: "@{ApiGradeInfoR}",
+             error: defaultError,
              type: "GET",
              dataType: "json",
              statusCode: defaultStatusCode,
@@ -195,6 +197,7 @@ function loadGradesClassesModal() {
 
 function loadProfile() {
     $.ajax({ url: "@{ApiUserSelfInfoR}",
+             error: defaultError,
              type: "GET",
              data: JSON.stringify( { }),
              contentType: "application/json",

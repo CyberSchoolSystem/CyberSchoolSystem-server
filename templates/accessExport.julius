@@ -17,6 +17,7 @@ $('#datetimepicker3').on("dp.change",function (e) {
 $(document).ready(function (){
     $("#export").click( function () {
         $.ajax({ url: "@{ApiAccessExportR}",
+                 error: defaultError,
                     type: "POST",
                     data: JSON.stringify( { day: exportDay }),
                     contentType: "application/json",

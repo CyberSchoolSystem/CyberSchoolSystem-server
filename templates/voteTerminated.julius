@@ -4,6 +4,7 @@ $(document).ready(function () {
 
 function loadVotes() {
   $.ajax({ url: "@{ApiVoteInfoR}",
+          error: defaultError,
           type: "POST",
           data: JSON.stringify( { }),
           contentType: "application/json",
@@ -18,6 +19,7 @@ function loadVotes() {
 
 function exportVote(i) {
     $.ajax({ url: "@{ApiVoteExportR}",
+             error: defaultError,
              type: "POST",
              data: JSON.stringify( {vid: i }),
              contentType: "application/json",

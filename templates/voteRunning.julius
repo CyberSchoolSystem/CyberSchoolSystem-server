@@ -4,6 +4,7 @@ $(document).ready(function () {
 
 function loadVotes() {
   $.ajax({ url: "@{ApiVoteInfoR}",
+          error: defaultError,
           type: "POST",
           data: JSON.stringify( { }),
           contentType: "application/json",
@@ -96,6 +97,7 @@ function vote(v, i) {
     clrmsg();
     clrerror();
     $.ajax({ url: "@{ApiVoteActR}",
+             error: defaultError,
              type: "POST",
              contentType: "application/json",
              data: JSON.stringify({ vid: v,

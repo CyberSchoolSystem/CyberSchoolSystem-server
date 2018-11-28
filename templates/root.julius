@@ -18,6 +18,7 @@ function sortVotes(d) {
 
 function loadVotes() {
   $.ajax({ url: "@{ApiVoteInfoR}",
+          error: defaultError,
           type: "POST",
           data: JSON.stringify( { }),
           contentType: "application/json",

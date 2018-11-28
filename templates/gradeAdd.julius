@@ -5,6 +5,7 @@ $(document).ready(function() {
         var doc = document.getElementById("addForm");
         var data = { grade: doc["name"].value };
         $.ajax({ url: "@{ApiGradeAddR}",
+                 error: defaultError,
                  type: "POST",
                  data: JSON.stringify(data),
                  contentType: "application/json",

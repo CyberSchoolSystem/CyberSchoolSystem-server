@@ -66,6 +66,7 @@ function searchUsers() {
         var doc = document.getElementById("inForm");
             data = { username: doc["inUsername"].value }
         $.ajax({ url: "@{ApiUserInfoR}",
+                error: defaultError,
                 type: "POST",
                 data: JSON.stringify(data),
                 contentType: "application/json",
@@ -97,6 +98,7 @@ function actUser(u) {
     }
 
     $.ajax({ url: url,
+             error: defaultError,
              type: "POST",
              data: JSON.stringify(data),
              contentType: "application/json",
@@ -110,6 +112,7 @@ function actUser(u) {
 
 function loadGrades() {
     $.ajax({ url: "@{ApiGradeInfoR}",
+             error: defaultError,
              type: "GET",
              dataType: "json",
              statusCode: defaultStatusCode,

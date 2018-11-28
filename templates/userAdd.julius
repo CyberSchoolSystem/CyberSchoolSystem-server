@@ -28,6 +28,7 @@ $(document).ready(function() {
                              tech: doc["tech"].checked,
                              representative: doc["rep"].checked }};
         $.ajax({ url: "@{ApiUserAddR}",
+                 error: defaultError,
                  type: "POST",
                  data: JSON.stringify(data),
                  contentType: "application/json",
@@ -45,6 +46,7 @@ $(document).ready(function() {
 
 function loadGrades() {
     $.ajax({ url: "@{ApiGradeInfoR}",
+             error: defaultError,
              type: "GET",
              dataType: "json",
              statusCode: defaultStatusCode,
