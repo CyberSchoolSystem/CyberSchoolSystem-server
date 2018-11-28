@@ -16,7 +16,7 @@ import           Data.List                (sortBy)
 import           Data.Monoid              ((<>))
 import           Data.Time.LocalTime      (ZonedTime(..), TimeZone(), zonedTimeToUTC, utcToLocalTime)
 import qualified Data.Text                as T
-import           Data.Time.Calendar       (Day(), fromGregorian)
+import           Data.Time.Calendar       (Day())
 import           Data.Time.Clock          (UTCTime(..), getCurrentTime, diffUTCTime, addUTCTime)
 import           Data.Time.Format         (FormatTime(..), TimeLocale(..), formatTime)
 import           Database.Persist         ((==.))
@@ -64,9 +64,10 @@ postApiAccessInR = do
     addToDB True req user
 
 {-| Check wether use is inside -}
-isInside :: User -> Bool
-isInside u = accessInside . maximum $ dummy : userAccess u
-    where dummy = Access (UTCTime (fromGregorian 1970 1 1) 0) False
+isInside :: Day -> User -> Bool
+isInside day u = accessInside . maximum .
+    filter (\x -> (utctDay . accessTime $ x) == day) $ dummy : userAccess u
+    where dummy = Access (UTCTime day 0) False
 
 {-| Create a new Access with the current time -}
 newAccess :: Bool -> IO Access
@@ -74,9 +75,10 @@ newAccess dir = Access <$> getCurrentTime <*> return dir
 
 {-| Add a new Access to the db if the user changes state (i.e from inside to outside -}
 addToDB :: Bool -> AccessUser -> Maybe (Entity User) -> Handler Value
-addToDB direction req user =
+addToDB direction req user = do
+    time <- liftIO $ getCurrentTime
     case user of
-        Just u -> if direction `xor` (isInside . entityVal $ u)
+        Just u -> if direction `xor` (isInside (utctDay time) . entityVal $ u)
                       then do
                           access <- liftIO $ newAccess direction
                           runDB $ update (entityKey u) [push UserAccess access]
@@ -188,7 +190,11 @@ accessTuples u = chunk $ accessTime <$> access -- TODO sort
         access         = userAccess u
         chunk []       = []
         chunk [x]      = [(x, Nothing)]
-        chunk (x:y:zs) = (x, Just y) : chunk zs
+        -- chunk (x:y:zs) = (x, Just y) : chunk zs
+        chunk (x:y:zs) =
+            if utctDay x == utctDay y
+                then (x, Just y)  : chunk zs
+                else (x, Nothing) : chunk (y:zs)
 
 {-| Save a File and register it into global context -}
 savePDF :: Pandoc -> FilePath -> IO ()
